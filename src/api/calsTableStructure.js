@@ -75,7 +75,7 @@ define(
 		};
 
 		CalsTableStructure.prototype.buildGridModel = function (element) {
-			return buildGridModel(element, this);
+			return buildGridModel(element);
 		};
 
 		/**

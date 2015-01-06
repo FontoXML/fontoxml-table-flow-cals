@@ -35,7 +35,7 @@ define(
 			BlueprintPosition = blueprints.BlueprintPosition,
 			jsonMLMapper = domUtils.jsonMLMapper,
 			domInfo = domUtils.domInfo,
-			createTableCreater = tableFlow.createTableCreater;
+			createNewTableCreater = tableFlow.primitives.createNewTableCreater;
 
 		var stubFormat = {
 			synthesizer: {
@@ -50,7 +50,7 @@ define(
 			}
 		};
 
-		var createTable = createTableCreater(
+		var createTable = createNewTableCreater(
 				'entry',
 				getDefaultRowSpec,
 				getDefaultColSpec,

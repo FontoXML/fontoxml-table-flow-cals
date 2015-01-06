@@ -5,20 +5,21 @@ define(
 		'fontoxml-table-flow',
 
 		'./getColumnSpecifications',
-
+		'./calsTableStructure'
 	],
 	function (
 		domUtils,
 
 		tableFlow,
 
-		getColumnSpecifications
+		getColumnSpecifications,
+		calsTableStructure
 		) {
 		'use strict';
 		var domQuery = domUtils.domQuery,
 			domInfo = domUtils.domInfo,
 			TableGridBuilder = tableFlow.TableGridBuilder,
-			computeWidths = tableFlow.computeWidths;
+			computeWidths = tableFlow.utils.computeWidths;
 
 		function getFrameAttribute (tgroupNode) {
 			var tableNode = tgroupNode.parentNode,
@@ -149,16 +150,16 @@ define(
 		/**
 		 * Build a generic gridModel from the CALS table
 		 *
-		 * @param   {Node}       tableElement  The root of the table
+		 * @param   {Node}            tableElement  The root of the table
 		 *
 		 * @return  {GridModel}  The build gridModel
 		 */
-		return function buildGridModel (tableElement, tableStructure) {
+		return function buildGridModel (tableElement) {
 			// TODO: perform repairs as necessary, the hook should ensure this is called within an active transaction
 
 			// Table in this case is the <tgroup> element.
 			var table = tableElement,
-				builder = new TableGridBuilder(tableStructure);
+				builder = new TableGridBuilder(calsTableStructure);
 
 			// Get the frame attribute from the <table> element that contains the <tgroup>.
 			//    This determines if the table has (a) border(s).
