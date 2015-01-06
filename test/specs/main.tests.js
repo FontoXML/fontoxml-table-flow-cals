@@ -7,7 +7,7 @@ define(
 		) {
 		'use strict';
 
-		describe('FontoXML/table-flow-calsx', function () {
+		describe('FontoXML/table-flow-cals', function () {
 			it('can be loaded', function () {
 			});
 		});
