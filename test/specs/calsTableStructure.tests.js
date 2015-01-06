@@ -5,7 +5,7 @@ define(
 		'fontoxml-core',
 		'fontoxml-blueprints',
 
-		'fontoxml-table-flow-cals/api/CalsTableStructure',
+		'fontoxml-table-flow-cals/api/calsTableStructure',
 	],
 	function (
 		slimdom,
