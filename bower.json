@@ -1,0 +1,20 @@
+{
+  "name": "fontoxml-table-flow-cals",
+  "version": "0.1.0",
+  "description": "The CALS implementation of tables.",
+  "main": "src/main.js",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "lib",
+    "test"
+  ],
+  "dependencies": {
+    "fontoxml-table-flow": "git@bitbucket.org:liones/fontoxml-table-flow.git#develop",
+    "fontoxml-core": "git@bitbucket.org:liones/fontoxml-core.git#develop",
+    "fontoxml-base-flow": "git@bitbucket.org:liones/fontoxml-base-flow.git#develop",
+    "fontoxml-blueprints": "git@bitbucket.org:liones/fontoxml-blueprints.git#develop",
+    "fontoxml-dom-identification": "git@bitbucket.org:liones/fontoxml-dom-identification.git#develop"
+  }
+}
