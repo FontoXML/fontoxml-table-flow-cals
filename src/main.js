@@ -3,6 +3,9 @@ define(
 		// Implementation of the abstract model
 		'./api/calsTableStructure',
 
+		'./api/buildGridModel',
+		'./api/tableGridModelToCalsTable',
+
 		// Commands
 		'./api/commands/InsertCalsTableCommand',
 		'./api/commands/SetCellHorizontalAlignmentCommand',
@@ -10,6 +13,9 @@ define(
 	],
 	function (
 		calsTableStructure,
+
+		buildGridModel,
+		tableGridModelToCalsTable,
 
 		InsertCalsTableCommand,
 		SetCellHorizontalAlignmentCommand,
@@ -19,6 +25,8 @@ define(
 
 		return {
 			calsTableStructure:                    calsTableStructure,
+			buildGridModel:                        buildGridModel,
+			tableGridModelToCalsTable:             tableGridModelToCalsTable,
 			commands: {
 				InsertCalsTableCommand:            InsertCalsTableCommand,
 				SetCellHorizontalAlignmentCommand: SetCellHorizontalAlignmentCommand,
