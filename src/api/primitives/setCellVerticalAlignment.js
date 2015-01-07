@@ -1,19 +1,12 @@
 define([
-		'fontoxml-dom-identification',
-
-		'../../TableCell',
-		'../../TableGridModelLookupSingleton'
+		'fontoxml-dom-identification'
 	],
 	function(
-		domIdentification,
-
-		TableCell,
-		tableGridModelLookupSingleton
+		domIdentification
 		) {
 		'use strict';
 
-		var getNodeId = domIdentification.getNodeId,
-			structures = tableGridModelLookupSingleton.tableStructures;
+		var getNodeId = domIdentification.getNodeId;
 
 		/**
 		 * Set the vertical alignment of a single cell in a cals table

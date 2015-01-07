@@ -2,17 +2,14 @@ define([
 		'fontoxml-base-flow',
 		'fontoxml-blueprints',
 
-		'../../TableCell',
-		'../../TableGridModelLookupSingleton',
-
-		'../CalsTableStructure'
+		'fontoxml-table-flow',
+		'../calsTableStructure'
 	],
 	function(
 		baseFlow,
 		blueprints,
 
-		TableCell,
-		tableGridModelLookupSingleton,
+		tableFlow,
 
 		calsTableStructure
 		) {
@@ -22,6 +19,9 @@ define([
 
 		var insertNodes = baseFlow.primitives.insertNodes,
 			blueprintQuery = blueprints.blueprintQuery;
+
+		var TableCell = tableFlow.TableCell,
+			tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
 
 		return function insertCalsTable(hasHeader, rows, columns, blueprintPosition, blueprint, format, selectionRange) {
 

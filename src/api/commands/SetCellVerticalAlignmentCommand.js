@@ -5,7 +5,7 @@ define(
 		'fontoxml-dom-identification',
 		'fontoxml-dom-utils',
 
-		'../../TableGridModelLookupSingleton',
+		'fontoxml-table-flow',
 
 		'../primitives/setCellVerticalAlignment'
 	],
@@ -15,7 +15,7 @@ define(
 		domIdentification,
 		domUtils,
 
-		tableGridModelLookupSingleton,
+		tableFlow,
 
 		setCellVerticalAlignment
 		) {
@@ -29,36 +29,31 @@ define(
 
 		var domQuery = domUtils.domQuery;
 
+		var tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
+
 		function draftValidBlueprint (argument, blueprint, format, selectionRange) {
 			// TODO: Extract this to util function?
-			var targetNode = blueprintQuery.findClosestAncestor(blueprint, selectionRange.startContainer, function (node) {
-				return tableGridModelLookupSingleton.tableStructures.some(function (tableStructure) {
-					return tableStructure.isTableCell(node);
-				});
-			});
+			var tableGridModel = tableGridModelLookupSingleton.getGridModel(selectionRange.startContainer);
 
+			if (!tableGridModel) {
+				return false;
+			}
+
+			// TODO: Try and find the tableGridModel for the node by going through the ancestors. Or something similair.
+			//         Apply this for all table related commands.
+			var targetNode = blueprintQuery.findClosestAncestor(
+					blueprint,
+					selectionRange.startContainer,
+					tableGridModel.tableStructure.isTableCell.bind(tableGridModel.tableStructure));
 			if (!targetNode) {
 				return false;
 			}
 
-			var tableDefiningNode;
-
-			// TODO: Extract this to util function?
-			for (var index = 0, length = tableGridModelLookupSingleton.tableStructures.length;
-				index < length; ++index) {
-				var structure = tableGridModelLookupSingleton.tableStructures[index];
-
-				tableDefiningNode = structure.getTableDefiningNode(targetNode);
-			}
-
-			if (!tableDefiningNode) {
-				return false;
-			}
-
-			var tableGridModel = tableGridModelLookupSingleton.getGridModel(tableDefiningNode);
-			if (!tableGridModel) {
-				return false;
-			}
+			// Get the table root node
+			var tableDefiningNode = blueprintQuery.findClosestAncestor(
+					blueprint,
+					targetNode,
+					tableGridModel.tableStructure.isTable.bind(tableGridModel.tableStructure));
 
 			var tableCell = tableGridModel.getCellByNodeId(getNodeId(targetNode));
 			if (!tableCell) {

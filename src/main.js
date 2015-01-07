@@ -1,7 +1,7 @@
 define(
 	[
 		// Implementation of the abstract model
-		'./api/CalsTableStructure',
+		'./api/calsTableStructure',
 
 		// Commands
 		'./api/commands/InsertCalsTableCommand',
@@ -9,7 +9,7 @@ define(
 		'./api/commands/SetCellVerticalAlignmentCommand',
 	],
 	function (
-		CalsTableStructure,
+		calsTableStructure,
 
 		InsertCalsTableCommand,
 		SetCellHorizontalAlignmentCommand,
@@ -18,7 +18,7 @@ define(
 		'use strict';
 
 		return {
-			CalsTableStructure:                    CalsTableStructure,
+			calsTableStructure:                    calsTableStructure,
 			commands: {
 				InsertCalsTableCommand:            InsertCalsTableCommand,
 				SetCellHorizontalAlignmentCommand: SetCellHorizontalAlignmentCommand,

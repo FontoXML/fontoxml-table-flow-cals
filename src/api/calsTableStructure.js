@@ -24,7 +24,7 @@ define(
 		'use strict';
 
 		var TableStructure = tableFlow.TableStructure,
-			createNewTableCreater = tableFlow.createNewTableCreater;
+			createNewTableCreater = tableFlow.primitives.createNewTableCreater;
 
 		/**
 		 * The Cals table structure defines the translation between cals tables and the generic table model.
@@ -75,7 +75,7 @@ define(
 		};
 
 		CalsTableStructure.prototype.buildGridModel = function (element) {
-			return buildGridModel(element);
+			return buildGridModel(this, element);
 		};
 
 		/**

@@ -4,16 +4,14 @@ define(
 
 		'fontoxml-table-flow',
 
-		'./getColumnSpecifications',
-		'./calsTableStructure'
+		'./getColumnSpecifications'
 	],
 	function (
 		domUtils,
 
 		tableFlow,
 
-		getColumnSpecifications,
-		calsTableStructure
+		getColumnSpecifications
 		) {
 		'use strict';
 		var domQuery = domUtils.domQuery,
@@ -132,7 +130,7 @@ define(
 				rowSpan: rowSpan,
 				colSpan: colSpan
 			};
-		}
+	}
 
 		function validateGridModel (builder) {
 			// Loop over all the cells. If one is null, the table is semantically invalid. This is not supported
@@ -150,11 +148,12 @@ define(
 		/**
 		 * Build a generic gridModel from the CALS table
 		 *
-		 * @param   {Node}            tableElement  The root of the table
+		 * @param   {CalsTableStructure}  calsTableStructure  The CalsTableStructure to use to build the gridModel with
+		 * @param   {Node}                tableElement        The root of the table
 		 *
-		 * @return  {GridModel}  The build gridModel
+		 * @return  {GridModel}           The build gridModel
 		 */
-		return function buildGridModel (tableElement) {
+		return function buildGridModel (calsTableStructure, tableElement) {
 			// TODO: perform repairs as necessary, the hook should ensure this is called within an active transaction
 
 			// Table in this case is the <tgroup> element.
