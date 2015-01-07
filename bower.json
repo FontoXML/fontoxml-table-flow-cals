@@ -15,6 +15,7 @@
     "fontoxml-core": "git@bitbucket.org:liones/fontoxml-core.git#develop",
     "fontoxml-base-flow": "git@bitbucket.org:liones/fontoxml-base-flow.git#develop",
     "fontoxml-blueprints": "git@bitbucket.org:liones/fontoxml-blueprints.git#develop",
-    "fontoxml-dom-identification": "git@bitbucket.org:liones/fontoxml-dom-identification.git#develop"
+    "fontoxml-dom-identification": "git@bitbucket.org:liones/fontoxml-dom-identification.git#develop",
+    "fontoxml-modular-schema-experience": "git@bitbucket.org:liones/fontoxml-modular-schema-experience.git#develop"
   }
 }

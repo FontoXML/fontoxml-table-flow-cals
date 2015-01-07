@@ -1,6 +1,10 @@
 define([
-    'text!./schema-experience/operations.json'
+	'fontoxml-modular-schema-experience',
+
+    'text!./sx/operations.json'
 ], function(
+	modularSchemaExperience,
+
     operationsJson
     ) {
     'use strict';
