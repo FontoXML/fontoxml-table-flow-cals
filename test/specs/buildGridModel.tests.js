@@ -6,6 +6,7 @@ define(
 		'fontoxml-blueprints',
 
 		'fontoxml-table-flow-cals/api/buildGridModel',
+		'fontoxml-table-flow-cals/api/calsTableStructure'
 	],
 	function (
 		slimdom,
@@ -13,7 +14,8 @@ define(
 		core,
 		blueprints,
 
-		buildGridModel
+		buildGridModel,
+		calsTableStructure
 		) {
 		'use strict';
 
@@ -78,7 +80,7 @@ define(
 					var tableElement = documentNode.firstChild,
 						tgroupElement = tableElement.firstChild;
 
-					var gridModel = buildGridModel(tgroupElement);
+					var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 					chai.expect(!!gridModel).to.not.equal(false);
 
@@ -130,7 +132,7 @@ define(
 					var tableElement = documentNode.firstChild,
 						tgroupElement = tableElement.firstChild;
 
-					var gridModel = buildGridModel(tgroupElement);
+					var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 					chai.expect(!!gridModel).to.not.equal(false);
 
@@ -203,7 +205,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -265,7 +267,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -323,7 +325,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -384,7 +386,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						chai.expect(buildGridModel.bind(undefined, tgroupElement)).to.throw();
+						chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement)).to.throw();
 					});
 				});
 
@@ -437,7 +439,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -502,7 +504,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -556,7 +558,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						chai.expect(buildGridModel.bind(undefined, tgroupElement)).to.throw();
+						chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement)).to.throw();
 
 					});
 
@@ -609,7 +611,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -674,7 +676,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -794,7 +796,7 @@ define(
 						});
 
 						var tgroupElement = documentNode.firstChild.firstChild;
-						var tableGridModel = buildGridModel(tgroupElement);
+						var tableGridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!tableGridModel).to.equal(true);
 
@@ -850,7 +852,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						chai.expect(buildGridModel.bind(undefined, tgroupElement)).to.throw();
+						chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement)).to.throw();
 					});
 				});
 
@@ -896,7 +898,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -952,7 +954,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
