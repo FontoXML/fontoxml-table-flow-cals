@@ -77,7 +77,7 @@ define(
 
 		return function getColumnSpecifications (tgroup) {
 			// COLS is a required attribute.
-			var columnCount = parseInt(tgroup.getAttribute('cols'));
+			var columnCount = parseInt(tgroup.getAttribute('cols'), 10);
 
 			var colspecs = [];
 
@@ -104,10 +104,9 @@ define(
 					continue;
 				}
 
-				var columnNumber = columnSpecElement.hasAttribute('colnum');
-				if (columnNumber) {
+				if (columnSpecElement.hasAttribute('colnum')) {
 
-					columnNumber = columnSpecElement.getAttribute('colnum');
+					var columnNumber = parseInt(columnSpecElement.getAttribute('colnum'), 10);
 
 					if (columnNumber < previousColnum) {
 						throw new Error('Out of order columns in a colspec are not supported');
