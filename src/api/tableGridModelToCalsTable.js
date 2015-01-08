@@ -247,16 +247,13 @@ define(
 					// The cell may already be present at this location.
 					//   unsafeMoveNodes it to prevent positions from being collapsed wrongly
 					if (blueprint.getParentNode(tableCellElement)) {
-						// Only move if move will do something
-						if (blueprint.getParentNode(tableCellElement) !== row) {
-							unsafeMoveNodes(
-								tableCellElement,
-								tableCellElement,
-								blueprint,
-								row,
-								null,
-								true);
-						}
+						unsafeMoveNodes(
+							tableCellElement,
+							tableCellElement,
+							blueprint,
+							row,
+							null,
+							true);
 					} else {
 						blueprint.appendChild(row, tableCellElement);
 					}
