@@ -17,6 +17,7 @@ define(
 		var domQuery = domUtils.domQuery,
 			domInfo = domUtils.domInfo,
 			TableGridBuilder = tableFlow.TableGridBuilder,
+			normalizeGridModel = tableFlow.mutations.normalizeGridModel,
 			computeWidths = tableFlow.utils.computeWidths;
 
 		function getFrameAttribute (tgroupNode) {
@@ -215,12 +216,13 @@ define(
 					builder.newCell(entry, parsedCell.data, parsedCell.rowSpan, parsedCell.colSpan);
 					columnIndex += parsedCell.colSpan;
 				}
-
 			}
+
+			normalizeGridModel(builder.model);
+
 			validateGridModel(builder);
 
 			computeWidths(builder.model);
-
 
 			return builder.model;
 		};
