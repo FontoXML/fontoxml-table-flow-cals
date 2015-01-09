@@ -29,7 +29,7 @@ define(
 
 		var tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
 
-		function draftValidBlueprint (argument, blueprint, format, selectionRange) {
+		function draftValidBlueprint (argument, blueprint, format, selectionRange, resultingState) {
 			var tableGridModel = tableGridModelLookupSingleton.getGridModel(selectionRange.startContainer);
 
 			if (!tableGridModel) {
@@ -55,6 +55,10 @@ define(
 			var tableCell = tableGridModel.getCellByNodeId(getNodeId(targetNode));
 			if (!tableCell) {
 				return false;
+			}
+
+			if (tableCell.data.alignment === argument.horizontalAlignment) {
+				resultingState.active = true;
 			}
 
 			var rowIndex = tableCell.origin.row,

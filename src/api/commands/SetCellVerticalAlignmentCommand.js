@@ -31,7 +31,7 @@ define(
 
 		var tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
 
-		function draftValidBlueprint (argument, blueprint, format, selectionRange) {
+		function draftValidBlueprint (argument, blueprint, format, selectionRange, resultingState) {
 			// TODO: Extract this to util function?
 			var tableGridModel = tableGridModelLookupSingleton.getGridModel(selectionRange.startContainer);
 
@@ -58,6 +58,10 @@ define(
 			var tableCell = tableGridModel.getCellByNodeId(getNodeId(targetNode));
 			if (!tableCell) {
 				return false;
+			}
+
+			if (tableCell.data.verticalAlignment === argument.verticalAlignment) {
+				resultingState.active = true;
 			}
 
 			var rowIndex = tableCell.origin.row,
