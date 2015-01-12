@@ -21,7 +21,8 @@ define(
 
 		var BlueprintedCommand = baseFlow.BlueprintedCommand,
 			BlueprintPosition = blueprints.BlueprintPosition,
-			blueprintQuery = blueprints.blueprintQuery;
+			blueprintQuery = blueprints.blueprintQuery,
+			blueprintRangeQuery = blueprints.blueprintRangeQuery;
 
 		var getNodeId = domIdentification.getNodeId;
 
@@ -30,55 +31,84 @@ define(
 		var tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
 
 		function draftValidBlueprint (argument, blueprint, format, selectionRange, resultingState) {
-			var tableGridModel = tableGridModelLookupSingleton.getGridModel(selectionRange.startContainer);
-
-			if (!tableGridModel) {
-				return false;
-			}
-
-			// TODO: Try and find the tableGridModel for the node by going through the ancestors. Or something similair.
-			//         Apply this for all table related commands.
-			var targetNode = blueprintQuery.findClosestAncestor(
+			var cellsInSelection = blueprintRangeQuery.findNodesPartiallyInRange(
 					blueprint,
-					selectionRange.startContainer,
-					tableGridModel.tableStructure.isTableCell.bind(tableGridModel.tableStructure));
-			if (!targetNode) {
-				return false;
-			}
+					selectionRange,
+					'entry',
+					true);
 
-			// Get the table root node
-			var tableDefiningNode = blueprintQuery.findClosestAncestor(
+			cellsInSelection = cellsInSelection.concat(blueprintRangeQuery.findNodesContainedInRange(
 					blueprint,
-					targetNode,
-					tableGridModel.tableStructure.isTable.bind(tableGridModel.tableStructure));
+					selectionRange,
+					'entry',
+					true));
 
-			var tableCell = tableGridModel.getCellByNodeId(getNodeId(targetNode));
-			if (!tableCell) {
-				return false;
+			var tableGridModels = [],
+				tableGridModel;
+
+			if (!cellsInSelection[0]) {
+				cellsInSelection.push(selectionRange.startContainer);
 			}
 
-			if (tableCell.data.alignment === argument.horizontalAlignment) {
-				resultingState.active = true;
+			var tableCells = [],
+				tableDefiningNodes = [],
+				activeStates = Object.create(null);
+			for (var i = 0, l = cellsInSelection.length; i < l; ++i) {
+				tableGridModel = tableGridModelLookupSingleton.getGridModel(cellsInSelection[i]);
+				tableGridModels.push(tableGridModel);
+
+				if (!tableGridModel) {
+					return false;
+				}
+
+				var cellNode = cellsInSelection[i];
+
+				// Get the table root node
+				var tableDefiningNode = blueprintQuery.findClosestAncestor(
+						blueprint,
+						cellNode,
+						tableGridModel.tableStructure.isTable.bind(tableGridModel.tableStructure));
+
+				if (!tableDefiningNode) {
+					return false;
+				}
+
+				tableDefiningNodes.push(tableDefiningNode);
+
+				// TODO: Try and find the tableGridModel for the node by going through the ancestors. Or something similair.
+				//         Apply this for all table related commands.
+				var targetNode = blueprintQuery.findClosestAncestor(
+						blueprint,
+						cellNode,
+						tableGridModel.tableStructure.isTableCell.bind(tableGridModel.tableStructure));
+				if (!targetNode) {
+					return false;
+				}
+
+				var tableCell = tableGridModel.getCellByNodeId(getNodeId(targetNode));
+
+				if (!tableCell) {
+					return false;
+				}
+
+				tableCells.push(tableCell);
+
+				// Only set active state if it matches and hasnt allready been set to active.
+				if (tableCell.data.alignment === argument.horizontalAlignment && !activeStates[argument.horizontalAlignment]) {
+					resultingState.active = true;
+					activeStates[argument.horizontalAlignment] = true;
+				}
+
 			}
-
-			var rowIndex = tableCell.origin.row,
-				columnIndex = tableCell.origin.column;
-
-			var blueprintPosition = BlueprintPosition.fromOffset(
-				selectionRange.startContainer,
-				selectionRange.startOffset,
-				blueprint);
 
 			return setCellHorizontalAlignment(
-					tableGridModel,
-					tableDefiningNode,
-					blueprint,
-					format,
-					rowIndex,
-					columnIndex,
-					argument.horizontalAlignment,
-					argument.getState,
-					selectionRange);
+				tableGridModels,
+				tableDefiningNodes,
+				blueprint,
+				format,
+				tableCells,
+				argument.horizontalAlignment,
+				argument.getState);
 		}
 
 		function SetCellHorizontalAlignmentCommand () {
