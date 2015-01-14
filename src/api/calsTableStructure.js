@@ -74,8 +74,8 @@ define(
 			return this.tablePartElements.indexOf(element.nodeName) !== -1;
 		};
 
-		CalsTableStructure.prototype.buildGridModel = function (element) {
-			return buildGridModel(this, element);
+		CalsTableStructure.prototype.buildGridModel = function (element, blueprint) {
+			return buildGridModel(this, element, blueprint);
 		};
 
 		/**
