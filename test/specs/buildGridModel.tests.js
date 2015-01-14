@@ -80,7 +80,7 @@ define(
 					var tableElement = documentNode.firstChild,
 						tgroupElement = tableElement.firstChild;
 
-					var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+					var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 					chai.expect(!!gridModel).to.not.equal(false);
 
@@ -132,7 +132,7 @@ define(
 					var tableElement = documentNode.firstChild,
 						tgroupElement = tableElement.firstChild;
 
-					var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+					var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 					chai.expect(!!gridModel).to.not.equal(false);
 
@@ -205,7 +205,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -267,7 +267,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -325,7 +325,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -439,7 +439,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -504,7 +504,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -611,7 +611,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -676,7 +676,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -796,7 +796,7 @@ define(
 						});
 
 						var tgroupElement = documentNode.firstChild.firstChild;
-						var tableGridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var tableGridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!tableGridModel).to.equal(true);
 
@@ -898,7 +898,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
@@ -954,7 +954,7 @@ define(
 						var tableElement = documentNode.firstChild,
 							tgroupElement = tableElement.firstChild;
 
-						var gridModel = buildGridModel(calsTableStructure, tgroupElement);
+						var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
 
 						chai.expect(!!gridModel).to.not.equal(false);
 
