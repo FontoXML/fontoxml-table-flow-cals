@@ -11,39 +11,35 @@ define([
 		/**
 		 * Set the horizontal alignment of a single cell in a cals table
 		 *
-		 * @param  {Array[TableGridModel]}  tableGridModels    The tableGridModels to use for the tables
-		 * @param  {Blueprint}              blueprint          The blueprint in which to perform the table mutation
-		 * @param  {Format}                 format             The format to use for validation
-		 * @param  {Array[TableCell]}       tableCells         The table cells to adjust
-		 * @param  {string}                 horizontalAlignment  One of the horizontalAlignments enum values
-		 * @param  {Boolean}                isDryRun           Whether this is a dry run and should not persist changes to the internal model
+		 * @param  {TableGridModel}  tableGridModel     The tableGridModel to use for the table
+		 * @param  {Blueprint}       blueprint          The blueprint in which to perform the table mutation
+		 * @param  {Format}          format             The format to use for validation
+		 * @param  {TableCell[]}     tableCells         The tableCells which alignments to adjust
+		 * @param  {string}          horizontalAlignment  One of the horizontalAlignments enum values
+		 * @param  {Boolean}         isDryRun           Whether this is a dry run and should not persist changes to the internal model
+		 * @param  {BlueprintRange}  selectionRange     The selectionRange to change optionally
 		 */
-		return function setCellHorizontalAlignment(tableGridModels, tableDefiningNodes, blueprint, format, tableCells, horizontalAlignment, isDryRun) {
-			var clonedTableGridModels = [],
-				structures = [];
-			for (var index = 0, length = tableCells.length; index < length; ++index) {
-				var tableGridModel = tableGridModels[index],
-					structure = tableGridModel.tableStructure,
-					clonedTableGridModel;
+		return function setCellHorizontalAlignment(tableGridModel, tableDefiningNode, blueprint, format, tableCells, horizontalAlignment, isDryRun, selectionRange) {
+			var structure = tableGridModel.tableStructure,
+				clonedTableGridModel;
 
-				if (!structure) {
-					return false;
-				}
+			if (!structure) {
+				return false;
+			}
 
-				structures.push(structure);
+			if (isDryRun) {
+				clonedTableGridModel = tableGridModel.clone();
+			}
+			else {
+				clonedTableGridModel = tableGridModel;
+			}
 
-				if (isDryRun) {
-					clonedTableGridModel = tableGridModel.clone();
-				}
-				else {
-					clonedTableGridModel = tableGridModel;
-				}
-
-				clonedTableGridModels.push(clonedTableGridModel);
-
-				var rowIndex = tableCells[index].origin.row,
-					columnIndex = tableCells[index].origin.column,
-					cell = clonedTableGridModel.getCellAtCoordinates(rowIndex, columnIndex);
+			for (var i = 0, l = tableCells.length; i < l; ++i) {
+				// Use a clone of the cell,
+				// do not edit it directly
+				var cell = clonedTableGridModel.getCellAtCoordinates(
+					tableCells[i].origin.row,
+					tableCells[i].origin.column);
 
 				if (!cell) {
 					return false;
@@ -52,25 +48,11 @@ define([
 				cell.data.alignment = horizontalAlignment;
 			}
 
-			var tablesThatHaveBeenAppliedToDom = [];
-			for (var i = 0, l = clonedTableGridModels.length; i < l; ++i) {
-				if (tablesThatHaveBeenAppliedToDom.indexOf(tableDefiningNodes[i]) !== -1) {
-					continue;
-				}
-				var succes = structures[i].applyToDom(
-						clonedTableGridModels[i],
-						tableDefiningNodes[i],
-						blueprint,
-						format);
-
-				tablesThatHaveBeenAppliedToDom.push(tableDefiningNodes[i]);
-
-				if (!succes) {
-					return false;
-				}
-			}
-
-			return true;
+			return structure.applyToDom(
+					clonedTableGridModel,
+					tableDefiningNode,
+					blueprint,
+					format);
 		};
 	}
 );

@@ -34,30 +34,26 @@ define(
 
 		function draftValidBlueprint (argument, blueprint, format, selectionRange, resultingState) {
 			var cellsInSelection = blueprintRangeQuery.findNodesPartiallyInRange(
-					blueprint,
-					selectionRange,
-					'entry',
-					true);
+				blueprint,
+				selectionRange,
+				'entry',
+				true);
 
 			cellsInSelection = cellsInSelection.concat(blueprintRangeQuery.findNodesContainedInRange(
-					blueprint,
-					selectionRange,
-					'entry',
-					true));
-
-			var tableGridModels = [],
-				tableGridModel;
+				blueprint,
+				selectionRange,
+				'entry',
+				true));
 
 			if (!cellsInSelection[0]) {
 				cellsInSelection.push(selectionRange.startContainer);
 			}
 
-			var tableCells = [],
-				tableDefiningNodes = [],
-				activeStates = Object.create(null);
+			var	activeStates = Object.create(null),
+				tableInfoByTargetNode = Object.create(null);
+
 			for (var i = 0, l = cellsInSelection.length; i < l; ++i) {
-				tableGridModel = tableGridModelLookupSingleton.getGridModel(cellsInSelection[i]);
-				tableGridModels.push(tableGridModel);
+				var tableGridModel = tableGridModelLookupSingleton.getGridModel(cellsInSelection[i]);
 
 				if (!tableGridModel) {
 					return false;
@@ -67,22 +63,29 @@ define(
 
 				// Get the table root node
 				var tableDefiningNode = blueprintQuery.findClosestAncestor(
-						blueprint,
-						cellNode,
-						tableGridModel.tableStructure.isTable.bind(tableGridModel.tableStructure));
+					blueprint,
+					cellNode,
+					tableGridModel.tableStructure.isTable.bind(tableGridModel.tableStructure));
 
 				if (!tableDefiningNode) {
 					return false;
 				}
 
-				tableDefiningNodes.push(tableDefiningNode);
+				var info = tableInfoByTargetNode[getNodeId(tableDefiningNode)];
+				if (!info) {
+					info = tableInfoByTargetNode[getNodeId(tableDefiningNode)] = {
+						tableNode: tableDefiningNode,
+						tableGridModel: tableGridModel,
+						tableCells: []
+					};
+				}
 
 				// TODO: Try and find the tableGridModel for the node by going through the ancestors. Or something similair.
 				//         Apply this for all table related commands.
 				var targetNode = blueprintQuery.findClosestAncestor(
-						blueprint,
-						cellNode,
-						tableGridModel.tableStructure.isTableCell.bind(tableGridModel.tableStructure));
+					blueprint,
+					cellNode,
+					tableGridModel.tableStructure.isTableCell.bind(tableGridModel.tableStructure));
 				if (!targetNode) {
 					return false;
 				}
@@ -93,24 +96,35 @@ define(
 					return false;
 				}
 
-				tableCells.push(tableCell);
+				info.tableCells.push(tableCell);
 
-				// Only set active state if it matches and hasnt allready been set to active.
-				if (tableCell.data.verticalAlignment === argument.verticalAlignment && !activeStates[argument.verticalAlignment]) {
+				// Only set active state if it matches and hasnt already been set to active.
+				if (tableCell.data.verticalAlignment === argument.verticalAlignment &&
+					!activeStates[argument.verticalAlignment]) {
+
 					resultingState.active = true;
 					activeStates[argument.verticalAlignment] = true;
 				}
-
 			}
 
-			return setCellVerticalAlignment(
-				tableGridModels,
-				tableDefiningNodes,
-				blueprint,
-				format,
-				tableCells,
-				argument.verticalAlignment,
-				argument.getState);
+			blueprint.beginOverlay();
+			for (var table in tableInfoByTargetNode) {
+				var tableInfo = tableInfoByTargetNode[table];
+				if (!setCellVerticalAlignment(
+					tableInfo.tableGridModel,
+					tableInfo.tableNode,
+					blueprint,
+					format,
+					tableInfo.tableCells,
+					argument.verticalAlignment,
+					argument.getState)) {
+					return false;
+				}
+			}
+
+			blueprint.applyOverlay();
+
+			return true;
 		}
 
 		function SetCellVerticalAlignmentCommand () {
