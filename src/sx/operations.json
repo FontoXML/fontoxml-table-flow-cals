@@ -397,6 +397,7 @@
 	"set-cell-horizontal-alignment-left": {
 		"label": "Left",
 		"description": "Align the cells content to the left.",
+		"icon": "align-left",
 		"elements": [
 			"entry"
 		],
@@ -413,6 +414,7 @@
 	"set-cell-horizontal-alignment-right": {
 		"label": "Right",
 		"description": "Align the cells content to the right.",
+		"icon": "align-right",
 		"elements": [
 			"entry"
 		],
@@ -429,6 +431,7 @@
 	"set-cell-horizontal-alignment-center": {
 		"label": "Center",
 		"description": "Align the cells content to the center.",
+		"icon": "align-center",
 		"elements": [
 			"entry"
 		],
@@ -445,6 +448,7 @@
 	"set-cell-horizontal-alignment-justify": {
 		"label": "Justify",
 		"description": "Align the cells content to the left and right.",
+		"icon": "align-justify",
 		"elements": [
 			"entry"
 		],
