@@ -4,7 +4,7 @@ define(
 			LEFT: 'left',
 			RIGHT: 'right',
 			CENTER: 'center',
-			JUSTIFY: 'justify',
+			JUSTIFY: 'justify'
 		};
 	}
 );

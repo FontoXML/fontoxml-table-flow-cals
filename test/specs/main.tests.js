@@ -1,10 +1,5 @@
-define(
-	[
-		'fontoxml-base-flow'
-	],
-	function (
-		baseFlow
-		) {
+define([],
+	function () {
 		'use strict';
 
 		describe('FontoXML/table-flow-cals', function () {

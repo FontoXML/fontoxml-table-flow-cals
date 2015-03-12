@@ -1,12 +1,6 @@
-define([
-		'fontoxml-dom-identification'
-	],
-	function(
-		domIdentification
-		) {
+define([],
+	function () {
 		'use strict';
-
-		var getNodeId = domIdentification.getNodeId;
 
 		/**
 		 * Set the vertical alignment of a single cell in a cals table

@@ -21,10 +21,7 @@ define(
 
 		var CoreDocument = core.Document,
 			Blueprint = blueprints.Blueprint,
-			BlueprintRange = blueprints.BlueprintRange,
-			BlueprintPosition = blueprints.BlueprintPosition,
-			jsonMLMapper = domUtils.jsonMLMapper,
-			domInfo = domUtils.domInfo;
+			jsonMLMapper = domUtils.jsonMLMapper;
 
 		describe('buildGridModel', function() {
 			var documentNode,

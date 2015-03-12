@@ -1,15 +1,13 @@
 define(
 	[
 		'slimdom',
-		'fontoxml-dom-utils',
 		'fontoxml-core',
 		'fontoxml-blueprints',
 
-		'fontoxml-table-flow-cals/api/calsTableStructure',
+		'fontoxml-table-flow-cals/api/calsTableStructure'
 	],
 	function (
 		slimdom,
-		domUtils,
 		core,
 		blueprints,
 
@@ -18,11 +16,7 @@ define(
 		'use strict';
 
 		var CoreDocument = core.Document,
-			Blueprint = blueprints.Blueprint,
-			BlueprintRange = blueprints.BlueprintRange,
-			BlueprintPosition = blueprints.BlueprintPosition,
-			jsonMLMapper = domUtils.jsonMLMapper,
-			domInfo = domUtils.domInfo;
+			Blueprint = blueprints.Blueprint;
 
 		describe('calsTableStructure', function() {
 			var documentNode,

@@ -11,7 +11,7 @@ define(
 		'fontoxml-table-flow-cals/api/createDefaultRowSpec',
 		'fontoxml-table-flow-cals/api/createDefaultCellSpec',
 
-		'fontoxml-table-flow-cals/api/tableGridModelToCalsTable',
+		'fontoxml-table-flow-cals/api/tableGridModelToCalsTable'
 	],
 	function (
 		slimdom,
@@ -31,24 +31,21 @@ define(
 
 		var CoreDocument = core.Document,
 			Blueprint = blueprints.Blueprint,
-			BlueprintRange = blueprints.BlueprintRange,
-			BlueprintPosition = blueprints.BlueprintPosition,
 			jsonMLMapper = domUtils.jsonMLMapper,
-			domInfo = domUtils.domInfo,
 			createNewTableCreater = tableFlow.primitives.createNewTableCreater;
 
 		var stubFormat = {
-			synthesizer: {
-				completeStructure: function () {
-					return true;
+				synthesizer: {
+					completeStructure: function () {
+						return true;
+					}
+				},
+				metadata: {
+					get: function (option, node) {
+						return false;
+					}
 				}
-			},
-			metadata: {
-				get: function (option, node) {
-					return false;
-				}
-			}
-		};
+			};
 
 		var createTable = createNewTableCreater(
 				'entry',
