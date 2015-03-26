@@ -61,7 +61,8 @@ define(
 
 			var columnSeparator = blueprint.getAttribute(colSpec, 'colsep'),
 				rowSeparator = !!blueprint.getAttribute(colSpec, 'rowsep') || true,
-				alignment = !!blueprint.getAttribute(colSpec, 'align') || true;
+				alignment = blueprint.getAttribute(colSpec, 'align');
+				// alignment = !!blueprint.getAttribute(colSpec, 'align') || true;
 
 			return new ColumnSpecification(
 					alignment,
