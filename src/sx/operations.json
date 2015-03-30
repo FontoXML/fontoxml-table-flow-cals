@@ -198,6 +198,9 @@
 		"elements": [
 			"entry"
 		],
+		"flags": [
+			"exclude-from-operations-list"
+		],
 		"steps": {
 			"type": "command/split-cell",
 			"data": {
@@ -227,6 +230,9 @@
 		"description": "Merge cell with the cell(s) to the left",
 		"elements": [
 			"entry"
+		],
+		"flags": [
+			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/merge-cell",
