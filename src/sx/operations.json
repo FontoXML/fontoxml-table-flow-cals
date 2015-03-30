@@ -40,7 +40,8 @@
 		"steps": {
 			"type": "command/column-delete"
 		}
-	},"convert-to-row": {
+	},
+	"convert-to-row": {
 		"label": "Convert header row to row",
 		"description": "Convert the current selected header row into a row.",
 		"elements": [
@@ -52,7 +53,8 @@
 		"steps": {
 			"type": "command/convert-to-row"
 		}
-	},"convert-to-header": {
+	},
+	"convert-to-header": {
 		"label": "Convert row to header row",
 		"description": "Convert the current selected row into a header row.",
 		"elements": [
@@ -67,7 +69,8 @@
 				"rowCount": null
 			}
 		}
-	},"convert-firstrow-to-header": {
+	},
+	"convert-firstrow-to-header": {
 		"label": "Convert first row to header row",
 		"description": "Convert the first row into a header row.",
 		"elements": [
@@ -82,7 +85,8 @@
 				"rowCount": 1
 			}
 		}
-	},"convert-firsttworows-to-header": {
+	},
+	"convert-firsttworows-to-header": {
 		"label": "Convert first two rows to header rows",
 		"description": "Convert the first two rows into a header rows.",
 		"elements": [
@@ -97,7 +101,8 @@
 				"rowCount": 2
 			}
 		}
-	},"convert-firstthreerows-to-header": {
+	},
+	"convert-firstthreerows-to-header": {
 		"label": "Convert first three rows to header rows",
 		"description": "Convert the first three rows into a header rows.",
 		"elements": [
@@ -125,7 +130,8 @@
 		"steps": {
 			"type": "command/row-insert"
 		}
-	},"row-after-insert": {
+	},
+	"row-after-insert": {
 		"label": "Row after",
 		"description": "Insert a new table row after selected row",
 		"elements": [
@@ -337,6 +343,9 @@
 		"elements": [
 			"table"
 		],
+		"flags": [
+			"exclude-from-operations-list"
+		],
 		"steps": {
 			"type": "command/table-insert",
 			"data": {
@@ -352,6 +361,9 @@
 		"icon": "table",
 		"elements": [
 			"table"
+		],
+		"flags": [
+			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/table-insert",
@@ -369,6 +381,9 @@
 		"elements": [
 			"table"
 		],
+		"flags": [
+			"exclude-from-operations-list"
+		],
 		"steps": {
 			"type": "command/table-insert",
 			"data": {
@@ -384,6 +399,9 @@
 		"icon": "table",
 		"elements": [
 			"table"
+		],
+		"flags": [
+			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/table-insert",
@@ -511,4 +529,3 @@
 		}
 	}
 }
-
