@@ -1,32 +1,27 @@
 define(
 	[
-		'fontoxml-base-flow',
+		'fontoxml-core',
 		'fontoxml-blueprints',
 		'fontoxml-dom-identification',
-		'fontoxml-dom-utils',
 		'fontoxml-table-flow',
 
 		'../primitives/setCellHorizontalAlignment'
 	],
 	function (
-		baseFlow,
+		core,
 		blueprints,
 		domIdentification,
-		domUtils,
 		tableFlow,
 
 		setCellHorizontalAlignment
 		) {
 		'use strict';
 
-		var BlueprintedCommand = baseFlow.BlueprintedCommand,
-			BlueprintPosition = blueprints.BlueprintPosition,
+		var BlueprintedCommand = core.BlueprintedCommand,
 			blueprintQuery = blueprints.blueprintQuery,
 			blueprintRangeQuery = blueprints.blueprintRangeQuery;
 
 		var getNodeId = domIdentification.getNodeId;
-
-		var domQuery = domUtils.domQuery;
 
 		var tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
 

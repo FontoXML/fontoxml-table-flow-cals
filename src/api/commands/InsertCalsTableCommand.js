@@ -1,19 +1,19 @@
 define(
 	[
-		'fontoxml-base-flow',
+		'fontoxml-core',
 		'fontoxml-blueprints',
 
 		'../primitives/insertCalsTable'
 	],
 	function (
-		baseFlow,
+		core,
 		blueprints,
 
 		insertCalsTable
 		) {
 		'use strict';
 
-		var BlueprintedCommand = baseFlow.BlueprintedCommand,
+		var BlueprintedCommand = core.BlueprintedCommand,
 			BlueprintPosition = blueprints.BlueprintPosition;
 
 		function draftValidBlueprint (argument, blueprint, format, selectionRange) {

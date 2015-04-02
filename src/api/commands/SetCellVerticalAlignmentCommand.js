@@ -1,6 +1,6 @@
 define(
 	[
-		'fontoxml-base-flow',
+		'fontoxml-core',
 		'fontoxml-blueprints',
 		'fontoxml-dom-identification',
 		'fontoxml-dom-utils',
@@ -10,7 +10,7 @@ define(
 		'../primitives/setCellVerticalAlignment'
 	],
 	function (
-		baseFlow,
+		core,
 		blueprints,
 		domIdentification,
 		domUtils,
@@ -18,17 +18,14 @@ define(
 		tableFlow,
 
 		setCellVerticalAlignment
-		) {
+	) {
 		'use strict';
 
-		var BlueprintedCommand = baseFlow.BlueprintedCommand,
-			BlueprintPosition = blueprints.BlueprintPosition,
+		var BlueprintedCommand = core.BlueprintedCommand,
 			blueprintQuery = blueprints.blueprintQuery,
 			blueprintRangeQuery = blueprints.blueprintRangeQuery;
 
 		var getNodeId = domIdentification.getNodeId;
-
-		var domQuery = domUtils.domQuery;
 
 		var tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
 

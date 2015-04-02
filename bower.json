@@ -16,10 +16,10 @@
     "fontoxml-dom-identification": "git@bitbucket.org:liones/fontoxml-dom-identification.git#develop",
     "fontoxml-dom-utils": "git@bitbucket.org:liones/fontoxml-dom-utils.git#develop",
     "fontoxml-modular-schema-experience": "git@bitbucket.org:liones/fontoxml-modular-schema-experience.git#develop",
-    "fontoxml-table-flow": "git@bitbucket.org:liones/fontoxml-table-flow.git#develop"
+    "fontoxml-table-flow": "git@bitbucket.org:liones/fontoxml-table-flow.git#develop",
+    "fontoxml-core": "git@bitbucket.org:liones/fontoxml-core.git#develop"
   },
   "devDependencies": {
-    "fontoxml-core": "git@bitbucket.org:liones/fontoxml-core.git#develop",
     "slimdom": "~0.5.1"
   }
 }
