@@ -530,7 +530,7 @@
 		"steps": {
 			"type": "command/set-cell-vertical-alignment",
 			"data": {
-				"verticalAlignment": "center"
+				"verticalAlignment": "middle"
 			}
 		}
 	}

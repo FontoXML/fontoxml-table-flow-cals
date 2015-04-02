@@ -3,7 +3,7 @@ define(
 		return {
 			TOP: 'top',
 			BOTTOM: 'bottom',
-			CENTER: 'center'
+			CENTER: 'middle'
 		};
 	}
 );
