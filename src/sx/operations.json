@@ -5,9 +5,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/column-insert"
 
@@ -17,9 +14,6 @@
 		"description": "Insert a new table column after selected column",
 		"elements": [
 			"entry"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/column-insert",
@@ -34,9 +28,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/column-delete"
 		}
@@ -47,9 +38,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/convert-to-row"
 		}
@@ -59,9 +47,6 @@
 		"description": "Convert the current selected row into a header row.",
 		"elements": [
 			"entry"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/convert-to-header",
@@ -76,9 +61,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/convert-to-header",
 			"data": {
@@ -91,9 +73,6 @@
 		"description": "Convert the first two rows into a header rows.",
 		"elements": [
 			"entry"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/convert-to-header",
@@ -108,9 +87,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/convert-to-header",
 			"data": {
@@ -124,9 +100,6 @@
 		"elements": [
 			"row"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/row-insert"
 		}
@@ -136,9 +109,6 @@
 		"description": "Insert a new table row after selected row",
 		"elements": [
 			"row"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/row-insert",
@@ -153,9 +123,6 @@
 		"elements": [
 			"row"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/row-delete"
 		}
@@ -165,9 +132,6 @@
 		"description": "Split the cell to 1 by 1 cells",
 		"elements": [
 			"entry"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/split-cell",
@@ -182,9 +146,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/split-cell",
 			"data": {
@@ -198,9 +159,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/split-cell",
 			"data": {
@@ -213,9 +171,6 @@
 		"description": "Merge cell with the cell(s) to the right",
 		"elements": [
 			"entry"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/merge-cell",
@@ -231,9 +186,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/merge-cell",
 			"data": {
@@ -248,9 +200,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/merge-cell",
 			"data": {
@@ -264,9 +213,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/merge-cell",
 			"data": {
@@ -279,9 +225,6 @@
 		"description": "With borders, with heading style for selected table.",
 		"elements": [
 			"table"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/set-table-styling",
@@ -297,9 +240,6 @@
 		"elements": [
 			"table"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/set-table-styling",
 			"data": {
@@ -313,9 +253,6 @@
 		"description": "Without borders, with heading style for selected table.",
 		"elements": [
 			"table"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/set-table-styling",
@@ -331,9 +268,6 @@
 		"elements": [
 			"table"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/set-table-styling",
 			"data": {
@@ -348,9 +282,6 @@
 		"icon": "table",
 		"elements": [
 			"table"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/table-insert",
@@ -368,9 +299,6 @@
 		"elements": [
 			"table"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/table-insert",
 			"data": {
@@ -386,9 +314,6 @@
 		"icon": "table",
 		"elements": [
 			"table"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/table-insert",
@@ -406,9 +331,6 @@
 		"elements": [
 			"table"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/table-insert",
 			"data": {
@@ -425,9 +347,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/set-cell-horizontal-alignment",
 			"data": {
@@ -441,9 +360,6 @@
 		"icon": "align-right",
 		"elements": [
 			"entry"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/set-cell-horizontal-alignment",
@@ -459,9 +375,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/set-cell-horizontal-alignment",
 			"data": {
@@ -476,9 +389,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/set-cell-horizontal-alignment",
 			"data": {
@@ -491,9 +401,6 @@
 		"description": "Align the cells content to the top.",
 		"elements": [
 			"entry"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/set-cell-vertical-alignment",
@@ -508,9 +415,6 @@
 		"elements": [
 			"entry"
 		],
-		"flags": [
-			"exclude-from-operations-list"
-		],
 		"steps": {
 			"type": "command/set-cell-vertical-alignment",
 			"data": {
@@ -523,9 +427,6 @@
 		"description": "Align the cells content to the center.",
 		"elements": [
 			"entry"
-		],
-		"flags": [
-			"exclude-from-operations-list"
 		],
 		"steps": {
 			"type": "command/set-cell-vertical-alignment",
