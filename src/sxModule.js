@@ -1,20 +1,28 @@
 define([
-	'fontoxml-modular-schema-experience',
+	'fontoxml-modular-schema-experience/configurator',
+	'fontoxml-table-flow/TableValidator',
+
+	'./api/calsTableStructure',
 
     'text!./sx/operations.json'
 ], function(
-	modularSchemaExperience,
+	configurator,
+	TableValidator,
+
+	calsTableStructure,
 
     operationsJson
     ) {
     'use strict';
 
-    var module = modularSchemaExperience.configurator.module('FontoXML:CalsTables');
+    var module = configurator.module('fontoxml-table-flow-cals');
+
     module.register('operations')
         .addOperations(JSON.parse(operationsJson));
 
+	module.register('format')
+		.addRestrictingValidator(new TableValidator(calsTableStructure));
+
     return module.getModuleName();
 });
-
-
 
