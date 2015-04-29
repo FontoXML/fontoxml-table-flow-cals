@@ -51,7 +51,7 @@
 		"steps": {
 			"type": "command/convert-to-header",
 			"data": {
-				"rowCount": null
+				"rowCount": 0
 			}
 		}
 	},
