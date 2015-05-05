@@ -276,7 +276,7 @@
 			}
 		}
 	},
-	"table-insert": {
+	"table-insert-two": {
 		"label": "Table: 2 x 2",
 		"description": "Insert a table",
 		"icon": "table",
