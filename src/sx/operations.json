@@ -276,6 +276,21 @@
 			}
 		}
 	},
+	"table-insert": {
+		"label": "Table",
+		"description": "Insert a table",
+		"icon": "table",
+		"elements": [
+			"table"
+		],
+		"initialData": {
+			"rows": 1,
+			"columns": 1
+		},
+		"steps": {
+			"type": "command/table-insert"
+		}
+	},
 	"table-insert-two": {
 		"label": "Table: 2 x 2",
 		"description": "Insert a table",
