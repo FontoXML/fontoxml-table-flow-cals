@@ -277,21 +277,6 @@
 		}
 	},
 	"table-insert": {
-		"label": "Table",
-		"description": "Insert a table",
-		"icon": "table",
-		"elements": [
-			"table"
-		],
-		"initialData": {
-			"rows": 1,
-			"columns": 1
-		},
-		"steps": {
-			"type": "command/table-insert"
-		}
-	},
-	"table-insert-two": {
 		"label": "Table: 2 x 2",
 		"description": "Insert a table",
 		"icon": "table",
@@ -354,6 +339,25 @@
 				"columns": 5
 			}
 		}
+	},
+	"table-delete": {
+		"label": "Delete table",
+		"description": "Delete table",
+		"icon": "trash",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": ["table"]
+				}
+			},
+			{
+				"type": "command/delete-node",
+				"data": {
+					"contextNodeId": "{{contextNodeId}}"
+				}
+			}
+		]
 	},
 	"set-cell-horizontal-alignment-left": {
 		"label": "Left",
