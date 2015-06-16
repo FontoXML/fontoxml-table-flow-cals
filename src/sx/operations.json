@@ -358,7 +358,7 @@
 	"table-delete": {
 		"label": "Delete table",
 		"description": "Delete table",
-		"icon": "trash",
+		"icon": "times",
 		"steps": [
 			{
 				"type": "transform/setContextNodeIdToSelectionAncestor",
