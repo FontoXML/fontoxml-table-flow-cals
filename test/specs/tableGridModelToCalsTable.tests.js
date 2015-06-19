@@ -5,7 +5,7 @@ define(
 		'fontoxml-core',
 		'fontoxml-blueprints',
 
-		'fontoxml-table-flow',
+		'fontoxml-table-flow/tableManager',
 
 		'fontoxml-table-flow-cals/api/createDefaultColSpec',
 		'fontoxml-table-flow-cals/api/createDefaultRowSpec',
@@ -19,7 +19,7 @@ define(
 		core,
 		blueprints,
 
-		tableFlow,
+		tableManager,
 
 		getDefaultColSpec,
 		getDefaultRowSpec,
@@ -32,7 +32,7 @@ define(
 		var CoreDocument = core.Document,
 			Blueprint = blueprints.Blueprint,
 			jsonMLMapper = domUtils.jsonMLMapper,
-			createNewTableCreater = tableFlow.primitives.createNewTableCreater;
+			createNewTableCreater = tableManager.createNewTableCreater;
 
 		var stubFormat = {
 				synthesizer: {

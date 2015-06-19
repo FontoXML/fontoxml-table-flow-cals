@@ -1,117 +1,109 @@
-define(
-	[
-		'fontoxml-table-flow',
+define([
+	'fontoxml-table-flow/tableManager',
+	'fontoxml-table-flow/TableStructure',
 
-		'./buildGridModel',
+	'./buildGridModel',
+	'./createDefaultCellSpec',
+	'./createDefaultColSpec',
+	'./createDefaultRowSpec',
+	'./tableGridModelToCalsTable'
+], function (
+	tableManager,
+	TableStructure,
 
-		'./createDefaultCellSpec',
-		'./createDefaultColSpec',
-		'./createDefaultRowSpec',
+	buildGridModel,
+	createDefaultCellSpec,
+	createDefaultColSpec,
+	createDefaultRowSpec,
+	tableGridModelToCalsTable
+	) {
+	'use strict';
 
-		'./tableGridModelToCalsTable'
-	],
-	function (
-		tableFlow,
+	/**
+	 * The Cals table structure defines the translation between cals tables and the generic table model.
+	 *   The translation is done in buildGridModel().
+	 */
+	function CalsTableStructure () {
+		this.tableDefiningElements = ['tgroup'];
 
-		buildGridModel,
+		this.tableCellElements = ['entry'];
 
-		createDefaultCellSpec,
-		createDefaultColSpec,
-		createDefaultRowSpec,
+		this.tablePartElements = ['colspec', 'thead', 'tbody', 'row', 'entry'];
+	}
 
-		tableGridModelToCalsTable
-		) {
-		'use strict';
+	CalsTableStructure.prototype = TableStructure;
+	CalsTableStructure.prototype.constructor = CalsTableStructure;
 
-		var TableStructure = tableFlow.TableStructure,
-			createNewTableCreater = tableFlow.primitives.createNewTableCreater;
+	/**
+	 * returns whether the given node is a table node, in the CALS definition
+	 *
+	 * @param   {Node}     element  The node to check
+	 *
+	 * @return  {boolean}  Whether the node is a table root node
+	 */
+	CalsTableStructure.prototype.isTable = function (element) {
+		return this.tableDefiningElements.indexOf(element.nodeName) !== -1;
+	};
 
-		/**
-		 * The Cals table structure defines the translation between cals tables and the generic table model.
-		 *   The translation is done in buildGridModel().
-		 */
-		function CalsTableStructure () {
-			this.tableDefiningElements = ['tgroup'];
+	/**
+	 * Returns whether the given node is the element defining a table cell in the CALS definition
+	 *
+	 * @param   {Node}     element The node to check
+	 *
+	 * @return  {Boolean}  Whether the node is a tablecell element
+	 */
+	CalsTableStructure.prototype.isTableCell = function (element) {
+		return this.tableCellElements.indexOf(element.nodeName) !== -1;
+	};
 
-			this.tableCellElements = ['entry'];
+	/**
+	 * Returns whether the given node is part of a table in the CALS definition
+	 *
+	 * @param   {Node}     element The node to check
+	 *
+	 * @return  {Boolean}  Whether the node is part of a table
+	 */
+	CalsTableStructure.prototype.isTablePart = function (element) {
+		return this.tablePartElements.indexOf(element.nodeName) !== -1;
+	};
 
-			this.tablePartElements = ['colspec', 'thead', 'tbody', 'row', 'entry'];
+	CalsTableStructure.prototype.buildGridModel = function (element, blueprint) {
+		return buildGridModel(this, element, blueprint);
+	};
+
+	/**
+	 * Attempt to synchronize the xml with the tablegridmodel under the given tgroupnode.
+	 *
+	 * @param   {TableGridModel}  tableGridModel  The tableGridModel to serialize
+	 * @param   {Node}            tgroupNode      The TGroupNode to serialize the table under
+	 * @param   {Blueprint}       blueprint       The blueprint to serialize in
+	 * @param   {Format}          format          The format containing the validator and metadata to use
+	 * @return  {boolean}         The success of the serialization. If true, the serialization took place in the given blueprint
+	 */
+	CalsTableStructure.prototype.applyToDom = function (tableGridModel, tgroupNode, blueprint, format) {
+		return tableGridModelToCalsTable(tableGridModel, tgroupNode, blueprint, format);
+	};
+
+	CalsTableStructure.prototype.getNewTableCreater = function () {
+		return tableManager.createNewTableCreater(
+			'entry',
+			createDefaultRowSpec,
+			createDefaultColSpec,
+			createDefaultCellSpec,
+			this);
+	};
+
+	CalsTableStructure.prototype.getTableDefiningNode = function (targetNode) {
+		if (targetNode.nodeName !== 'entry') {
+			return false;
 		}
 
-		CalsTableStructure.prototype = TableStructure;
-		CalsTableStructure.prototype.constructor = CalsTableStructure;
+		//                        ENTRY       ROW    THEAD/TBODY   TGROUP
+		var tableDefiningNode = targetNode.parentNode.parentNode.parentNode;
+		return tableDefiningNode;
+	};
 
-		/**
-		 * returns whether the given node is a table node, in the CALS definition
-		 *
-		 * @param   {Node}     element  The node to check
-		 *
-		 * @return  {boolean}  Whether the node is a table root node
-		 */
-		CalsTableStructure.prototype.isTable = function (element) {
-			return this.tableDefiningElements.indexOf(element.nodeName) !== -1;
-		};
+	var calsTableStructure = new CalsTableStructure();
 
-		/**
-		 * Returns whether the given node is the element defining a table cell in the CALS definition
-		 *
-		 * @param   {Node}     element The node to check
-		 *
-		 * @return  {Boolean}  Whether the node is a tablecell element
-		 */
-		CalsTableStructure.prototype.isTableCell = function (element) {
-			return this.tableCellElements.indexOf(element.nodeName) !== -1;
-		};
-
-		/**
-		 * Returns whether the given node is part of a table in the CALS definition
-		 *
-		 * @param   {Node}     element The node to check
-		 *
-		 * @return  {Boolean}  Whether the node is part of a table
-		 */
-		CalsTableStructure.prototype.isTablePart = function (element) {
-			return this.tablePartElements.indexOf(element.nodeName) !== -1;
-		};
-
-		CalsTableStructure.prototype.buildGridModel = function (element, blueprint) {
-			return buildGridModel(this, element, blueprint);
-		};
-
-		/**
-		 * Attempt to synchronize the xml with the tablegridmodel under the given tgroupnode.
-		 *
-		 * @param   {TableGridModel}  tableGridModel  The tableGridModel to serialize
-		 * @param   {Node}            tgroupNode      The TGroupNode to serialize the table under
-		 * @param   {Blueprint}       blueprint       The blueprint to serialize in
-		 * @param   {Format}          format          The format containing the validator and metadata to use
-		 * @return  {boolean}         The success of the serialization. If true, the serialization took place in the given blueprint
-		 */
-		CalsTableStructure.prototype.applyToDom = function (tableGridModel, tgroupNode, blueprint, format) {
-			return tableGridModelToCalsTable(tableGridModel, tgroupNode, blueprint, format);
-		};
-
-		CalsTableStructure.prototype.getNewTableCreater = function () {
-			return createNewTableCreater(
-				'entry',
-				createDefaultRowSpec,
-				createDefaultColSpec,
-				createDefaultCellSpec,
-				this);
-		};
-
-		CalsTableStructure.prototype.getTableDefiningNode = function (targetNode) {
-			if (targetNode.nodeName !== 'entry') {
-				return false;
-			}
-
-			//                        ENTRY       ROW    THEAD/TBODY   TGROUP
-			var tableDefiningNode = targetNode.parentNode.parentNode.parentNode;
-			return tableDefiningNode;
-		};
-
-		var calsTableStructure = new CalsTableStructure();
-
-		return calsTableStructure;
-	}
-);
+	return calsTableStructure;
+});

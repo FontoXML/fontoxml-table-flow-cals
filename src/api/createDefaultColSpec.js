@@ -1,28 +1,23 @@
-define(
-	[
-		'fontoxml-table-flow'
-	],
-	function (
-		tableFlow
-		) {
-		'use strict';
+define([
+	'fontoxml-table-flow/tableManager'
+], function (
+	tableManager
+	) {
+	'use strict';
 
-		var ColumnSpecification = tableFlow.ColumnSpecification;
+	return function createDefaultColspec (columnIndex) {
 
-		return function createDefaultColspec (columnIndex) {
+		return tableManager.createColumnSpecification(
+				null, //alignment
+				'column-' + columnIndex, //columnName
+				columnIndex, //columnNumber
+				true, //columnSeparator
+				'1*', //columnWidth
+				true, //rowSeparator
+				'*', //unitOfWidth
+				null, //isProportion
+				null //oldColumnName
+			);
 
-			return new ColumnSpecification(
-					null, //alignment
-					'column-' + columnIndex, //columnName
-					columnIndex, //columnNumber
-					true, //columnSeparator
-					'1*', //columnWidth
-					true, //rowSeparator
-					'*', //unitOfWidth
-					null, //isProportion
-					null //oldColumnName
-				);
-
-		};
-	}
-);
+	};
+});
