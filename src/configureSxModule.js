@@ -20,13 +20,12 @@ define([
 	'use strict';
 
 	return function configureSxModule (sxModule) {
-		sxModule.register('commands')
+		sxModule.configure('commands')
 			.addCommand('table-insert', new InsertCalsTableCommand())
 			.addCommand('set-cell-horizontal-alignment', new SetCellHorizontalAlignmentCommand())
 			.addCommand('set-cell-vertical-alignment', new SetCellVerticalAlignmentCommand());
 
-		sxModule.register('format')
+		sxModule.configure('format')
 			.addRestrictingValidator(new TableValidator(calsTableStructure));
 	};
 });
-
