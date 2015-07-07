@@ -19,9 +19,9 @@
 <script>
 	var files = [];
 	{{#serve_files}}
-	files.push("../{{src}}");
+	files.push("../{{& src}}");
 	{{/serve_files}}
-	require(files, function() {
+	require(files, function () {
 		mocha.run();
 	});
 </script>

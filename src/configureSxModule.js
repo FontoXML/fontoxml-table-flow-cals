@@ -3,17 +3,28 @@ define([
 
 	'fontoxml-table-flow/TableValidator',
 
-	'./api/calsTableStructure'
+	'./calsTableStructure',
+	'./sx/commands/InsertCalsTableCommand',
+	'./sx/commands/SetCellHorizontalAlignmentCommand',
+	'./sx/commands/SetCellVerticalAlignmentCommand'
 ], function (
 	operationsManager,
 
 	TableValidator,
 
-	calsTableStructure
+	calsTableStructure,
+	InsertCalsTableCommand,
+	SetCellHorizontalAlignmentCommand,
+	SetCellVerticalAlignmentCommand
 	) {
 	'use strict';
 
 	return function configureSxModule (sxModule) {
+		sxModule.register('commands')
+			.addCommand('table-insert', new InsertCalsTableCommand())
+			.addCommand('set-cell-horizontal-alignment', new SetCellHorizontalAlignmentCommand())
+			.addCommand('set-cell-vertical-alignment', new SetCellVerticalAlignmentCommand());
+
 		sxModule.register('format')
 			.addRestrictingValidator(new TableValidator(calsTableStructure));
 	};
