@@ -226,13 +226,25 @@ define([
 
 				if (tableCell.data.verticalAlignment) {
 					blueprint.setAttribute(tableCellElement, 'valign', tableCell.data.verticalAlignment);
+				} else if (blueprint.getAttribute(tableCellElement, 'valign')) {
+					// Remove the attribute if it was previously set but no longer present on the data object
+					// of the TableCell.
+					blueprint.removeAttribute(tableCellElement, 'valign');
 				}
 
-				if (tableCell.data.alignment) {
-					blueprint.setAttribute(tableCellElement, 'align', tableCell.data.alignment);
+				if (tableCell.data.horizontalAlignment) {
+					blueprint.setAttribute(tableCellElement, 'align', tableCell.data.horizontalAlignment);
+				} else if (blueprint.getAttribute(tableCellElement, 'align')) {
+					blueprint.removeAttribute(tableCellElement, 'align');
 				}
 
-				// Minus one to accomodate for the starting cell
+				if (tableCell.data.outputclass) {
+					blueprint.setAttribute(tableCellElement, 'outputclass', tableCell.data.outputclass);
+				} else if (blueprint.getAttribute(tableCellElement, 'outputclass')) {
+					blueprint.removeAttribute(tableCellElement, 'outputclass');
+				}
+
+				// Minus one to accommodate for the starting cell
 				var endColumnSpecifications = tableGridModel.columnSpecifications[tableCell.origin.column + tableCell.size.columns - 1];
 				blueprint.setAttribute(tableCellElement, 'nameend', endColumnSpecifications.columnName);
 

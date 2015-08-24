@@ -2,9 +2,6 @@
 	"column-insert": {
 		"label": "Column before",
 		"description": "Insert a new table column before selected column",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/column-insert"
 
@@ -12,9 +9,6 @@
 	},"column-after-insert": {
 		"label": "Column after",
 		"description": "Insert a new table column after selected column",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/column-insert",
 			"data": {
@@ -25,9 +19,6 @@
 	"column-delete": {
 		"label": "Delete column",
 		"description": "Delete the selected table column.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/column-delete"
 		}
@@ -35,9 +26,6 @@
 	"convert-to-row": {
 		"label": "Convert header row to row",
 		"description": "Convert the current selected header row into a row.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/convert-to-row"
 		}
@@ -45,9 +33,6 @@
 	"convert-to-header": {
 		"label": "Convert row to header row",
 		"description": "Convert the current selected row into a header row.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/convert-to-header",
 			"data": {
@@ -58,9 +43,6 @@
 	"convert-firstrow-to-header": {
 		"label": "Convert first row to header row",
 		"description": "Convert the first row into a header row.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/convert-to-header",
 			"data": {
@@ -71,9 +53,6 @@
 	"convert-firsttworows-to-header": {
 		"label": "Convert first two rows to header rows",
 		"description": "Convert the first two rows into a header rows.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/convert-to-header",
 			"data": {
@@ -84,9 +63,6 @@
 	"convert-firstthreerows-to-header": {
 		"label": "Convert first three rows to header rows",
 		"description": "Convert the first three rows into a header rows.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/convert-to-header",
 			"data": {
@@ -97,9 +73,6 @@
 	"row-insert": {
 		"label": "Row before",
 		"description": "Insert a new table row before selected row",
-		"elements": [
-			"row"
-		],
 		"steps": {
 			"type": "command/row-insert"
 		}
@@ -107,9 +80,6 @@
 	"row-after-insert": {
 		"label": "Row after",
 		"description": "Insert a new table row after selected row",
-		"elements": [
-			"row"
-		],
 		"steps": {
 			"type": "command/row-insert",
 			"data": {
@@ -120,9 +90,6 @@
 	"row-delete": {
 		"label": "Delete row",
 		"description": "Delete the selected table row.",
-		"elements": [
-			"row"
-		],
 		"steps": {
 			"type": "command/row-delete"
 		}
@@ -130,9 +97,6 @@
 	"split-cell-completely": {
 		"label": "Split cell completely",
 		"description": "Split the cell to 1 by 1 cells",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/split-cell",
 			"data": {
@@ -143,9 +107,6 @@
 	"split-cell-into-rows": {
 		"label": "Split cell into rows",
 		"description": "Split the cell's rowspan in half",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/split-cell",
 			"data": {
@@ -156,9 +117,6 @@
 	"split-cell-into-columns": {
 		"label": "Split cell into columns",
 		"description": "Split the cell's columnsspan in half",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/split-cell",
 			"data": {
@@ -169,9 +127,6 @@
 	"merge-cell-right": {
 		"label": "Merge cell with cell to the right",
 		"description": "Merge cell with the cell(s) to the right",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/merge-cell",
 			"data": {
@@ -183,9 +138,6 @@
 	"merge-cell-left": {
 		"label": "Merge cell with cell to the left",
 		"description": "Merge cell with the cell(s) to the left",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/merge-cell",
 			"data": {
@@ -197,9 +149,6 @@
 	"merge-cell-above": {
 		"label": "Merge cell with cell above",
 		"description": "Merge cell with the cell(s) above",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/merge-cell",
 			"data": {
@@ -210,9 +159,6 @@
 	"merge-cell-below": {
 		"label": "Merge cell with cell below",
 		"description": "Merge cell with the cell(s) below",
-		"elements": [
-			"entry"
-		],
 		"steps": {
 			"type": "command/merge-cell",
 			"data": {
@@ -223,9 +169,6 @@
 	"set-table-styling": {
 		"label": "With borders, with heading",
 		"description": "With borders, with heading style for selected table.",
-		"elements": [
-			"table"
-		],
 		"steps": {
 			"type": "command/set-table-styling",
 			"data": {
@@ -237,9 +180,6 @@
 	"set-table-styling-borderless-headerless": {
 		"label": "Without borders, without heading",
 		"description": "Without borders, without heading style for selected table.",
-		"elements": [
-			"table"
-		],
 		"steps": {
 			"type": "command/set-table-styling",
 			"data": {
@@ -251,9 +191,6 @@
 	"set-table-styling-borderless": {
 		"label": "Without borders, with heading",
 		"description": "Without borders, with heading style for selected table.",
-		"elements": [
-			"table"
-		],
 		"steps": {
 			"type": "command/set-table-styling",
 			"data": {
@@ -265,9 +202,6 @@
 	"set-table-styling-headerless": {
 		"label": "With borders, without heading",
 		"description": "With borders, without heading style for selected table.",
-		"elements": [
-			"table"
-		],
 		"steps": {
 			"type": "command/set-table-styling",
 			"data": {
@@ -280,9 +214,6 @@
 		"label": "Table",
 		"description": "Insert a table",
 		"icon": "table",
-		"elements": [
-			"table"
-		],
 		"initialData": {
 			"rows": 1,
 			"columns": 1
@@ -295,9 +226,6 @@
 		"label": "Table: 2 x 2",
 		"description": "Insert a table",
 		"icon": "table",
-		"elements": [
-			"table"
-		],
 		"steps": {
 			"type": "command/table-insert",
 			"data": {
@@ -311,9 +239,6 @@
 		"label": "Table: 3 x 3",
 		"description": "Insert a table",
 		"icon": "table",
-		"elements": [
-			"table"
-		],
 		"steps": {
 			"type": "command/table-insert",
 			"data": {
@@ -327,9 +252,6 @@
 		"label": "Table: 4 x 4",
 		"description": "Insert a table",
 		"icon": "table",
-		"elements": [
-			"table"
-		],
 		"steps": {
 			"type": "command/table-insert",
 			"data": {
@@ -343,9 +265,6 @@
 		"label": "Table: 5 x 5",
 		"description": "Insert a table",
 		"icon": "table",
-		"elements": [
-			"table"
-		],
 		"steps": {
 			"type": "command/table-insert",
 			"data": {
@@ -378,13 +297,13 @@
 		"label": "Left",
 		"description": "Align the cells content to the left.",
 		"icon": "align-left",
-		"elements": [
-			"entry"
-		],
 		"steps": {
-			"type": "command/set-cell-horizontal-alignment",
+			"type": "command/toggle-cell-data",
 			"data": {
-				"horizontalAlignment": "left"
+				"nodeName": "entry",
+				"cellData": {
+					"horizontalAlignment": "left"
+				}
 			}
 		}
 	},
@@ -392,13 +311,13 @@
 		"label": "Right",
 		"description": "Align the cells content to the right.",
 		"icon": "align-right",
-		"elements": [
-			"entry"
-		],
 		"steps": {
-			"type": "command/set-cell-horizontal-alignment",
+			"type": "command/toggle-cell-data",
 			"data": {
-				"horizontalAlignment": "right"
+				"nodeName": "entry",
+				"cellData": {
+					"horizontalAlignment": "right"
+				}
 			}
 		}
 	},
@@ -406,13 +325,13 @@
 		"label": "Center",
 		"description": "Align the cells content to the center.",
 		"icon": "align-center",
-		"elements": [
-			"entry"
-		],
 		"steps": {
-			"type": "command/set-cell-horizontal-alignment",
+			"type": "command/toggle-cell-data",
 			"data": {
-				"horizontalAlignment": "center"
+				"nodeName": "entry",
+				"cellData": {
+					"horizontalAlignment": "center"
+				}
 			}
 		}
 	},
@@ -420,52 +339,52 @@
 		"label": "Justify",
 		"description": "Align the cells content to the left and right.",
 		"icon": "align-justify",
-		"elements": [
-			"entry"
-		],
 		"steps": {
-			"type": "command/set-cell-horizontal-alignment",
+			"type": "command/toggle-cell-data",
 			"data": {
-				"horizontalAlignment": "justify"
+				"nodeName": "entry",
+				"cellData": {
+					"horizontalAlignment": "justify"
+				}
 			}
 		}
 	},
 	"set-cell-vertical-alignment-top": {
 		"label": "Top",
 		"description": "Align the cells content to the top.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
-			"type": "command/set-cell-vertical-alignment",
+			"type": "command/toggle-cell-data",
 			"data": {
-				"verticalAlignment": "top"
+				"nodeName": "entry",
+				"cellData": {
+					"verticalAlignment": "top"
+				}
 			}
 		}
 	},
 	"set-cell-vertical-alignment-bottom": {
 		"label": "Bottom",
 		"description": "Align the cells content to the bottom.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
-			"type": "command/set-cell-vertical-alignment",
+			"type": "command/toggle-cell-data",
 			"data": {
-				"verticalAlignment": "bottom"
+				"nodeName": "entry",
+				"cellData": {
+					"verticalAlignment": "bottom"
+				}
 			}
 		}
 	},
 	"set-cell-vertical-alignment-center": {
 		"label": "Center",
 		"description": "Align the cells content to the center.",
-		"elements": [
-			"entry"
-		],
 		"steps": {
-			"type": "command/set-cell-vertical-alignment",
+			"type": "command/toggle-cell-data",
 			"data": {
-				"verticalAlignment": "middle"
+				"nodeName": "entry",
+				"cellData": {
+					"verticalAlignment": "middle"
+				}
 			}
 		}
 	}

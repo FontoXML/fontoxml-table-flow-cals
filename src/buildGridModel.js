@@ -97,10 +97,13 @@ define([
 		data = setDataAttribute(data, 'columnSeparator', cellColSep, columnSpecs[columnIndex]);
 
 		var cellAlign = blueprint.getAttribute(entryElement, 'align');
-		data = setDataAttribute(data, 'alignment', cellAlign, columnSpecs[columnIndex]);
+		data = setDataAttribute(data, 'horizontalAlignment', cellAlign, columnSpecs[columnIndex]);
 
-		var cellVerticalAlignment = blueprint.getAttribute(entryElement, 'valign');
-		data = setDataAttribute(data, 'verticalAlignment', cellVerticalAlignment, columnSpecs[columnIndex]);
+		var cellValign = blueprint.getAttribute(entryElement, 'valign');
+		data = setDataAttribute(data, 'verticalAlignment', cellValign, columnSpecs[columnIndex]);
+
+		var cellOutputclass = blueprint.getAttribute(entryElement, 'outputclass');
+		data = setDataAttribute(data, 'outputclass', cellOutputclass, columnSpecs[columnIndex]);
 
 		// Calculate the colspan
 		var endColumnName = nameEnd,
