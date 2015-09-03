@@ -1,12 +1,16 @@
 define([
 	'fontoxml-base-flow',
 	'fontoxml-blueprints',
+	'fontoxml-dom-identification/getNodeId',
+	'fontoxml-operations/operationsManager',
 	'fontoxml-table-flow',
 
 	'../../../calsTableStructure'
 ], function (
 	baseFlow,
 	blueprints,
+	getNodeId,
+	operationsManager,
 	tableFlow,
 
 	calsTableStructure
@@ -16,12 +20,11 @@ define([
 	var createNewTable = calsTableStructure.getNewTableCreater();
 
 	var insertNodes = baseFlow.primitives.insertNodes,
-		blueprintQuery = blueprints.blueprintQuery,
 		tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
 
-	return function insertCalsTable (hasHeader, rows, columns, blueprintPosition, blueprint, format, selectionRange) {
+	return function insertCalsTable (argument, blueprintPosition, blueprint, format) {
 		var ownerDocument = blueprintPosition.container.ownerDocument,
-			tableGridModel = createNewTable(rows, columns, hasHeader, ownerDocument),
+			tableGridModel = createNewTable(argument.rows, argument.columns, argument.hasHeader, ownerDocument),
 			tableNode = ownerDocument.createElement('table'),
 			tgroupNode = ownerDocument.createElement('tgroup'),
 			tbodyNode = ownerDocument.createElement('tbody');
@@ -47,10 +50,7 @@ define([
 
 		tableGridModelLookupSingleton.addToLookup(tgroupNode, tableGridModel, true);
 
-		//Set the selection
-		var firstCell = blueprintQuery.findDescendants(blueprint, tableNode, 'entry')[0];
-		selectionRange.setStart(firstCell, 0);
-		selectionRange.collapse(true);
+		argument.tableNodeId = getNodeId(tgroupNode);
 
 		return true;
 	};

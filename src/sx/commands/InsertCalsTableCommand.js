@@ -27,13 +27,10 @@ define([
 				blueprint);
 
 		var succes = insertCalsTable(
-				argument.hasHeader,
-				argument.rows,
-				argument.columns,
+				argument,
 				blueprintPosition,
 				blueprint,
-				format,
-				selectionRange);
+				format);
 
 		return succes;
 	}
