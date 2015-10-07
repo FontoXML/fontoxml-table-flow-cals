@@ -185,9 +185,9 @@ define([
 					continue;
 				}
 
-				if (unseenEntries[tableCell.nodeId]) {
+				if (unseenEntries[getNodeId(tableCell.element)]) {
 					// This entry still exists under the current row
-					delete unseenEntries[tableCell.nodeId];
+					delete unseenEntries[getNodeId(tableCell.element)];
 				}
 
 
@@ -310,4 +310,3 @@ define([
 		return false;
 	};
 });
-

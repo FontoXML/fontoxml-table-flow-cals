@@ -1,5 +1,6 @@
 define([
 	'fontoxml-blueprints',
+	'fontoxml-dom-identification/getNodeId',
 	'fontoxml-core',
 	'fontoxml-dom-utils/jsonMLMapper',
 	'slimdom',
@@ -8,6 +9,7 @@ define([
 	'fontoxml-table-flow-cals/calsTableStructure'
 ], function (
 	blueprints,
+	getNodeId,
 	core,
 	jsonMLMapper,
 	slimdom,
@@ -208,7 +210,7 @@ define([
 
 					var firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 					var secondSpanningCell = gridModel.getCellAtCoordinates(0, 1);
-					chai.expect(firstSpanningCell.nodeId).to.equal(secondSpanningCell.nodeId);
+					chai.expect(getNodeId(firstSpanningCell.element)).to.equal(getNodeId(secondSpanningCell.element));
 				});
 
 
@@ -270,7 +272,7 @@ define([
 
 					var firstSpanningCell = gridModel.getCellAtCoordinates(1, 0);
 					var secondSpanningCell = gridModel.getCellAtCoordinates(1, 1);
-					chai.expect(firstSpanningCell.nodeId).to.equal(secondSpanningCell.nodeId);
+					chai.expect(getNodeId(firstSpanningCell.element)).to.equal(getNodeId(secondSpanningCell.element));
 				});
 
 				it('can build a gridModel from a cals table containing colspans but not all colspecs', function () {
@@ -328,7 +330,7 @@ define([
 
 					var firstSpanningCell = gridModel.getCellAtCoordinates(1, 0);
 					var secondSpanningCell = gridModel.getCellAtCoordinates(1, 1);
-					chai.expect(firstSpanningCell.nodeId).to.equal(secondSpanningCell.nodeId);
+					chai.expect(getNodeId(firstSpanningCell.element)).to.equal(getNodeId(secondSpanningCell.element));
 				});
 
 				it('throws when building a gridModel from a cals table containing incorrect colspans', function () {
@@ -442,7 +444,7 @@ define([
 
 					var firstSpanningCell = gridModel.getCellAtCoordinates(1, 0);
 					var secondSpanningCell = gridModel.getCellAtCoordinates(2, 0);
-					chai.expect(firstSpanningCell.nodeId).to.deep.equal(secondSpanningCell.nodeId);
+					chai.expect(getNodeId(firstSpanningCell.element)).to.deep.equal(getNodeId(secondSpanningCell.element));
 				});
 
 				it('can build a gridModel from a cals table containing rowspans that overlap entire rows', function () {
@@ -682,9 +684,9 @@ define([
 					var thirdSpanningCell = gridModel.getCellAtCoordinates(1, 1);
 					var fourthSpanningCell = gridModel.getCellAtCoordinates(2, 1);
 					chai.expect(!!firstSpanningCell).to.equal(true);
-					chai.expect(firstSpanningCell.nodeId).to.equal(secondSpanningCell.nodeId);
-					chai.expect(secondSpanningCell.nodeId).to.equal(thirdSpanningCell.nodeId);
-					chai.expect(thirdSpanningCell.nodeId).to.equal(fourthSpanningCell.nodeId);
+					chai.expect(getNodeId(firstSpanningCell.element)).to.equal(getNodeId(secondSpanningCell.element));
+					chai.expect(getNodeId(secondSpanningCell.element)).to.equal(getNodeId(thirdSpanningCell.element));
+					chai.expect(getNodeId(thirdSpanningCell.element)).to.equal(getNodeId(fourthSpanningCell.element));
 				});
 
 				it('can build a table containing row and colspans on the first row', function () {
@@ -899,9 +901,8 @@ define([
 					chai.expect(gridModel.getHeight()).to.equal(4, 'height');
 					chai.expect(gridModel.getWidth()).to.equal(3, 'width');
 
-					// @TODO: Remove dirty use of .userDataByKey.__id.value.nodeId
-					var leftColumn = gridModel.getCellByNodeId(tgroupElement.lastChild.lastChild.firstChild.userDataByKey.__id.value.nodeId),
-						rightColumn = gridModel.getCellByNodeId(tgroupElement.lastChild.lastChild.lastChild.userDataByKey.__id.value.nodeId);
+					var leftColumn = gridModel.getCellByNodeId(getNodeId(tgroupElement.lastChild.lastChild.firstChild)),
+						rightColumn = gridModel.getCellByNodeId(getNodeId(tgroupElement.lastChild.lastChild.lastChild));
 
 					chai.expect(leftColumn.data.width).to.equal('25*');
 					chai.expect(rightColumn.data.width).to.equal('50*');
@@ -955,9 +956,8 @@ define([
 					chai.expect(gridModel.getHeight()).to.equal(4, 'height');
 					chai.expect(gridModel.getWidth()).to.equal(3, 'width');
 
-					// @TODO: Remove dirty use of .userDataByKey.__id.value.nodeId
-					var leftColumn = gridModel.getCellByNodeId(tgroupElement.lastChild.lastChild.firstChild.userDataByKey.__id.value.nodeId),
-						rightColumn = gridModel.getCellByNodeId(tgroupElement.lastChild.lastChild.lastChild.userDataByKey.__id.value.nodeId);
+					var leftColumn = gridModel.getCellByNodeId(getNodeId(tgroupElement.lastChild.lastChild.firstChild)),
+						rightColumn = gridModel.getCellByNodeId(getNodeId(tgroupElement.lastChild.lastChild.lastChild));
 
 					chai.expect(leftColumn.data.width).to.equal('10pt');
 					chai.expect(rightColumn.data.width).to.equal('20pt');
@@ -966,4 +966,3 @@ define([
 		});
 	});
 });
-
