@@ -1,4 +1,20 @@
 {
+	"table-delete": {
+		"label": "Delete table",
+		"description": "Delete table",
+		"icon": "times",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "table"
+				}
+			},
+			{
+				"type": "operation/table-contextual-delete"
+			}
+		]
+	},
 	"table-insert": {
 		"label": "Table",
 		"description": "Insert a table",
@@ -18,25 +34,6 @@
 				"type": "operation/set-cursor-to-first-text-position",
 				"data": {
 					"contextNodeId": "{{tableNodeId}}"
-				}
-			}
-		]
-	},
-	"table-delete": {
-		"label": "Delete table",
-		"description": "Delete table",
-		"icon": "times",
-		"steps": [
-			{
-				"type": "transform/setContextNodeIdToSelectionAncestor",
-				"data": {
-					"selectionAncestorNodeSpec": ["table"]
-				}
-			},
-			{
-				"type": "command/delete-node",
-				"data": {
-					"contextNodeId": "{{contextNodeId}}"
 				}
 			}
 		]
