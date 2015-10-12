@@ -37,10 +37,6 @@ require.config({
 			"location": "../lib/fontoxml-dom-utils/src"
 		},
 		{
-			"name": "fontoxml-editor",
-			"location": "../lib/fontoxml-editor/src"
-		},
-		{
 			"name": "fontoxml-base-flow",
 			"location": "../lib/fontoxml-base-flow/src"
 		}
