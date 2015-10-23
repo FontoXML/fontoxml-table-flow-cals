@@ -38,6 +38,42 @@
 			}
 		]
 	},
+	"table-desc-insert": {
+		"label": "Add description",
+		"description": "Add a description to this table figure.",
+		"steps": [
+			{
+				"type": "command/horizontal-insert",
+				"data": {
+					"childNodeStructure": [
+						"desc",
+						[{ "bindTo": "selection.start", "empty": true }],
+						["?fontoxml-text-placeholder", "text=\"Insert description here\""],
+						[{ "bindTo": "selection.end", "empty": true }]
+					],
+					"contextNodeId": "{{contextNodeId}}"
+				}
+			}
+		]
+	},
+	"table-title-insert": {
+		"label": "Add title",
+		"description": "Add a title to this table figure.",
+		"steps": [
+			{
+				"type": "command/horizontal-insert",
+				"data": {
+					"childNodeStructure": [
+						"title",
+						[{ "bindTo": "selection.start", "empty": true }],
+						["?fontoxml-text-placeholder", "text=\"Insert title here\""],
+						[{ "bindTo": "selection.end", "empty": true }]
+					],
+					"contextNodeId": "{{contextNodeId}}"
+				}
+			}
+		]
+	},
 	"set-cell-horizontal-alignment-left": {
 		"label": "Left",
 		"description": "Align the cells content to the left.",
