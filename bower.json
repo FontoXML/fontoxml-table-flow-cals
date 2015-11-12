@@ -12,11 +12,11 @@
   ],
   "dependencies": {
     "fontoxml-base-flow": "git@bitbucket.org:liones/fontoxml-base-flow.git#develop",
-    "fontoxml-blueprints": "git@bitbucket.org:liones/fontoxml-blueprints.git#1.0.0",
-    "fontoxml-core": "git@bitbucket.org:liones/fontoxml-core.git#1.0.0",
-    "fontoxml-dom-identification": "git@bitbucket.org:liones/fontoxml-dom-identification.git#1.0.0",
-    "fontoxml-dom-utils": "git@bitbucket.org:liones/fontoxml-dom-utils.git#1.0.0",
-    "fontoxml-modular-schema-experience": "git@bitbucket.org:liones/fontoxml-modular-schema-experience.git#1.0.0",
+    "fontoxml-blueprints": "git@bitbucket.org:liones/fontoxml-blueprints.git#^1.0.0",
+    "fontoxml-core": "git@bitbucket.org:liones/fontoxml-core.git#^1.0.0",
+    "fontoxml-dom-identification": "git@bitbucket.org:liones/fontoxml-dom-identification.git#^1.0.0",
+    "fontoxml-dom-utils": "git@bitbucket.org:liones/fontoxml-dom-utils.git#^1.0.0",
+    "fontoxml-modular-schema-experience": "git@bitbucket.org:liones/fontoxml-modular-schema-experience.git#^1.0.0",
     "fontoxml-operations": "git@bitbucket.org:liones/fontoxml-operations.git#develop",
     "fontoxml-table-flow": "git@bitbucket.org:liones/fontoxml-table-flow.git#develop"
   },
