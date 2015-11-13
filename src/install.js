@@ -1,7 +1,7 @@
 define([
 	'fontoxml-operations/operationsManager',
 
-    'text!./sx/operations.json'
+    'json!./sx/operations.json'
 ], function (
 	operationsManager,
 
@@ -10,7 +10,6 @@ define([
 	'use strict';
 
 	return function install () {
-		operationsManager.addOperations(JSON.parse(operationsJson));
+		operationsManager.addOperations(operationsJson);
 	};
 });
-
