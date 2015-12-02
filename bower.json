@@ -1,6 +1,6 @@
 {
   "name": "fontoxml-table-flow-cals",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The CALS implementation of tables.",
   "main": "src/main.js",
   "private": true,
@@ -21,6 +21,6 @@
     "fontoxml-table-flow": "git@bitbucket.org:liones/fontoxml-table-flow.git#^2.0.0"
   },
   "devDependencies": {
-    "slimdom": "~0.5.1"
+    "fontoxml-vendor-slimdom": "git@bitbucket.org:liones/fontoxml-vendor-slimdom.git#0.5.2"
   }
 }
