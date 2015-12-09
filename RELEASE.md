@@ -1,5 +1,9 @@
 # fontoxml-table-flow-cals
 
+## 1.0.4
+
+Use fontoxml-table-flow#3.0.0
+
 ## 1.0.3
 
 Use fontoxml-vendor forks for external dependencies.
