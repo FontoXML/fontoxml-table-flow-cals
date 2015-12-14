@@ -1,6 +1,6 @@
 {
   "name": "fontoxml-table-flow-cals",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The CALS implementation of tables.",
   "main": "src/main.js",
   "private": true,

@@ -1,7 +1,7 @@
 {
 	"table-delete": {
-		"label": "Delete table",
-		"description": "Delete table",
+		"label": "Remove table",
+		"description": "Remove the current table from the topic.",
 		"icon": "times",
 		"steps": [
 			{
@@ -17,7 +17,7 @@
 	},
 	"table-insert": {
 		"label": "Table",
-		"description": "Insert a table",
+		"description": "Insert a table.",
 		"icon": "table",
 		"initialData": {
 			"rows": 1,
@@ -40,7 +40,7 @@
 	},
 	"table-desc-insert": {
 		"label": "Add description",
-		"description": "Add a description to this table figure.",
+		"description": "Add a description to this figure.",
 		"steps": [
 			{
 				"type": "operation/horizontal-insert",
@@ -48,7 +48,7 @@
 					"childNodeStructure": [
 						"desc",
 						[{ "bindTo": "selection.start", "empty": true }],
-						["?fontoxml-text-placeholder", "text=\"Insert description here\""],
+						["?fontoxml-text-placeholder", "text=\"type the description\""],
 						[{ "bindTo": "selection.end", "empty": true }]
 					],
 					"contextNodeId": "{{contextNodeId}}"
@@ -58,7 +58,7 @@
 	},
 	"table-title-insert": {
 		"label": "Add title",
-		"description": "Add a title to this table figure.",
+		"description": "Add a title to this figure.",
 		"steps": [
 			{
 				"type": "operation/horizontal-insert",
@@ -66,7 +66,7 @@
 					"childNodeStructure": [
 						"title",
 						[{ "bindTo": "selection.start", "empty": true }],
-						["?fontoxml-text-placeholder", "text=\"Insert title here\""],
+						["?fontoxml-text-placeholder", "text=\"type the title\""],
 						[{ "bindTo": "selection.end", "empty": true }]
 					],
 					"contextNodeId": "{{contextNodeId}}"
@@ -75,8 +75,8 @@
 		]
 	},
 	"set-cell-horizontal-alignment-left": {
-		"label": "Left",
-		"description": "Align the cells content to the left.",
+		"label": "Align left",
+		"description": "Align the content of the current cell to its left.",
 		"icon": "align-left",
 		"steps": {
 			"type": "command/toggle-cell-data",
@@ -89,8 +89,8 @@
 		}
 	},
 	"set-cell-horizontal-alignment-right": {
-		"label": "Right",
-		"description": "Align the cells content to the right.",
+		"label": "Align right",
+		"description": "Align the content of the current cell to its right.",
 		"icon": "align-right",
 		"steps": {
 			"type": "command/toggle-cell-data",
@@ -103,8 +103,8 @@
 		}
 	},
 	"set-cell-horizontal-alignment-center": {
-		"label": "Center",
-		"description": "Align the cells content to the center.",
+		"label": "Align center",
+		"description": "Center the content of the current cell.",
 		"icon": "align-center",
 		"steps": {
 			"type": "command/toggle-cell-data",
@@ -118,7 +118,7 @@
 	},
 	"set-cell-horizontal-alignment-justify": {
 		"label": "Justify",
-		"description": "Align the cells content to the left and right.",
+		"description": "Justify the content of the current cell.",
 		"icon": "align-justify",
 		"steps": {
 			"type": "command/toggle-cell-data",
@@ -131,8 +131,8 @@
 		}
 	},
 	"set-cell-vertical-alignment-top": {
-		"label": "Top",
-		"description": "Align the cells content to the top.",
+		"label": "Align top",
+		"description": "Align the content of the current cell to its top.",
 		"steps": {
 			"type": "command/toggle-cell-data",
 			"data": {
@@ -144,8 +144,8 @@
 		}
 	},
 	"set-cell-vertical-alignment-bottom": {
-		"label": "Bottom",
-		"description": "Align the cells content to the bottom.",
+		"label": "Align bottom",
+		"description": "Align the content of the current cell to its bottom.",
 		"steps": {
 			"type": "command/toggle-cell-data",
 			"data": {
@@ -157,8 +157,8 @@
 		}
 	},
 	"set-cell-vertical-alignment-center": {
-		"label": "Center",
-		"description": "Align the cells content to the center.",
+		"label": "Align center",
+		"description": "Align the content of the current cell to its center.",
 		"steps": {
 			"type": "command/toggle-cell-data",
 			"data": {

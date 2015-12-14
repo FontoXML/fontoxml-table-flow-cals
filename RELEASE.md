@@ -1,5 +1,9 @@
 # fontoxml-table-flow-cals
 
+## 1.0.5
+
+Apply configuration guidelines.
+
 ## 1.0.4
 
 Use fontoxml-table-flow#3.0.0
