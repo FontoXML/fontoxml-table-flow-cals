@@ -18,7 +18,7 @@
     "fontoxml-dom-utils": "git@bitbucket.org:liones/fontoxml-dom-utils.git#^1.0.0",
     "fontoxml-modular-schema-experience": "git@bitbucket.org:liones/fontoxml-modular-schema-experience.git#^1.0.0",
     "fontoxml-operations": "git@bitbucket.org:liones/fontoxml-operations.git#^1.0.0",
-    "fontoxml-table-flow": "git@bitbucket.org:liones/fontoxml-table-flow.git#^3.0.0"
+    "fontoxml-table-flow": "git@bitbucket.org:liones/fontoxml-table-flow.git#^3.1.0"
   },
   "devDependencies": {
     "fontoxml-vendor-slimdom": "git@bitbucket.org:liones/fontoxml-vendor-slimdom.git#0.5.2"

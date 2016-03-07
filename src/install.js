@@ -16,7 +16,7 @@ define([
 	'use strict';
 
 	return function install () {
-		tableManager.setTableStructures([calsTableStructure]);
+		tableManager.addTableStructure(calsTableStructure);
 
 		operationsManager.addOperations(operationsJson);
 	};
