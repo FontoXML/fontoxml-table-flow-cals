@@ -1,5 +1,9 @@
 # fontoxml-table-flow-cals
 
+## next (1.0.6)
+
+Update dependencies to depend on version 2.0.0 of fontoxml-base-flow.
+
 ## 1.0.5
 
 Apply configuration guidelines.

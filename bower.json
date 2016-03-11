@@ -11,7 +11,7 @@
     "test"
   ],
   "dependencies": {
-    "fontoxml-base-flow": "git@bitbucket.org:liones/fontoxml-base-flow.git#^1.0.0",
+    "fontoxml-base-flow": "git@bitbucket.org:liones/fontoxml-base-flow.git#^2.0.0",
     "fontoxml-blueprints": "git@bitbucket.org:liones/fontoxml-blueprints.git#^1.0.0",
     "fontoxml-core": "git@bitbucket.org:liones/fontoxml-core.git#^1.0.0",
     "fontoxml-dom-identification": "git@bitbucket.org:liones/fontoxml-dom-identification.git#^1.0.0",
