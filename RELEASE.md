@@ -1,9 +1,9 @@
 # fontoxml-table-flow-cals
 
-## next (1.0.6)
+## 1.0.6
 
 Use the newly added addTableStructure instead of the deprecated setTableStructures.
-Update dependencies to depend on version 2.0.0 of fontoxml-base-flow.
+Update dependencies.
 
 ## 1.0.5
 
