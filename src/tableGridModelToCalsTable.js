@@ -62,7 +62,6 @@ define([
 
 	/**
 	 * Attempt to serialize the given table under the given tgroup
-	 * The tgroupNode is assumed to be located under a table element.
 	 *
 	 * @param   {TableGridModel}  tableGridModel  The tableGridModel to serialize
 	 * @param   {Node}            tgroupNode      The TGroupNode to serialize the table under
@@ -76,15 +75,16 @@ define([
 
 		//  Set the frame attribute on the <table> node.
 		var tableNode = blueprint.getParentNode(tgroupNode);
+		if (tableNode && domInfo.isElement(tableNode, 'table')) {
+			// TODO: Expand the .borders so it is both abstract and can contain all different options.
+			var frame = tableGridModel.borders ? 'all' : 'none';
 
-		// TODO: Expand the .borders so it is both abstract and can contain all different options.
-		var frame = tableGridModel.borders ? 'all' : 'none';
-
-		blueprint.setAttribute(tableNode, 'frame', frame);
+			blueprint.setAttribute(tableNode, 'frame', frame);
+		}
 
 		// Get the already existing rows in the table
 		var tableHeaderNode = blueprintQuery.findChild(blueprint, tgroupNode, 'thead'),
-			tableBodyNode = blueprintQuery.findChild(blueprint, tgroupNode, 'tbody'),
+			tableBodyNode = blueprintQuery.findChild(blueprint, tgroupNode, 'tbody') || blueprint.appendChild(tgroupNode, document.createElement('tbody')),
 			headerRows = [],
 			bodyRows = blueprintQuery.findDescendants(blueprint, tableBodyNode, 'row', false);
 

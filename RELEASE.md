@@ -1,5 +1,9 @@
 # fontoxml-table-flow-cals
 
+## 1.0.7
+
+Allow pasting tables by not assuming a table node around a tgroup.
+
 ## 1.0.6
 
 Use the newly added addTableStructure instead of the deprecated setTableStructures.

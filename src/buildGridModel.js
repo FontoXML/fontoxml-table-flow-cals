@@ -19,7 +19,7 @@ define([
 
 	function getFrameAttribute (tgroupNode, blueprint) {
 		var tableNode = blueprint.getParentNode(tgroupNode),
-			frameAttribute = blueprint.getAttribute(tableNode, 'frame');
+			frameAttribute = tableNode && blueprint.getAttribute(tableNode, 'frame');
 
 		// 'all' is the implied value of the FRAME attribute.
 		return frameAttribute || 'all';
@@ -224,4 +224,3 @@ define([
 		return builder.model;
 	};
 });
-
