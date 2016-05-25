@@ -84,6 +84,55 @@ define([
 				chai.expect(gridModel.getWidth()).to.equal(3, 'width');
 			});
 
+			it('can build a gridModel from a CALS table with colnum starting a 0', function () {
+				coreDocument.dom.mutate(function () {
+					jsonMLMapper.parse(
+						['table',
+							['tgroup', {
+								'cols': 3
+								}, ['colspec', {colnum: 0}],
+								['colspec', {colnum: 1}],
+								['colspec', {colnum: 2}],
+								['thead',
+									['row',
+										['entry'],
+										['entry'],
+										['entry']
+									]
+								],
+								['tbody',
+									['row',
+										['entry'],
+										['entry'],
+										['entry']
+									],
+									['row',
+										['entry'],
+										['entry'],
+										['entry']
+									],
+									['row',
+										['entry'],
+										['entry'],
+										['entry']
+									]
+								]
+							]
+						],
+					documentNode);
+				});
+
+				var tableElement = documentNode.firstChild,
+					tgroupElement = tableElement.firstChild;
+
+				var gridModel = buildGridModel(calsTableStructure, tgroupElement, blueprint);
+
+				chai.expect(!!gridModel).to.not.equal(false);
+
+				chai.expect(gridModel.getHeight()).to.equal(4, 'height');
+				chai.expect(gridModel.getWidth()).to.equal(3, 'width');
+			});
+
 			it('can build a gridModel from a table containing comments and precessing instructions', function () {
 				coreDocument.dom.mutate(function () {
 					jsonMLMapper.parse(
@@ -147,14 +196,14 @@ define([
 								}, [
 									'colspec', {
 										'colname': 'column-0',
-										'colnum': '0',
+										'colnum': '1',
 										'colwidth': '1*',
 										'colsep': '1',
 										'rowsep': '1'
 								}],	[
 									'colspec', {
 										'colname': 'column-1',
-										'colnum': '1',
+										'colnum': '2',
 										'colwidth': '1*',
 										'colsep': '1',
 										'rowsep': '1'
@@ -162,7 +211,7 @@ define([
 								}],	[
 									'colspec', {
 										'colname': 'column-2',
-										'colnum': '1',
+										'colnum': '3',
 										'colwidth': '1*',
 										'colsep': '1',
 										'rowsep': '1'
@@ -382,7 +431,7 @@ define([
 					var tableElement = documentNode.firstChild,
 						tgroupElement = tableElement.firstChild;
 
-					chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement)).to.throw();
+					chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement, blueprint)).to.throw();
 				});
 			});
 
@@ -554,7 +603,7 @@ define([
 					var tableElement = documentNode.firstChild,
 						tgroupElement = tableElement.firstChild;
 
-					chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement)).to.throw();
+					chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement, blueprint)).to.throw();
 
 				});
 
@@ -714,7 +763,7 @@ define([
 									}
 								], [
 									'colspec', {
-										'colnum': '5',
+										'colnum': '6',
 										'colname':'c5',
 										'colwidth': '2*'
 									}
@@ -848,7 +897,7 @@ define([
 					var tableElement = documentNode.firstChild,
 						tgroupElement = tableElement.firstChild;
 
-					chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement)).to.throw();
+					chai.expect(buildGridModel.bind(undefined, calsTableStructure, tgroupElement, blueprint)).to.throw();
 				});
 			});
 

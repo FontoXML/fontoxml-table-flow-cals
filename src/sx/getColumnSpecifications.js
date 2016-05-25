@@ -80,8 +80,8 @@ define([
 		// Loop over the children of the TGROUP then add the COLSPECs to the array.
 		//   This is done to accomodate for nested tables.
 		for (var potentialColspec = blueprint.getFirstChild(tgroup);
-			 potentialColspec;
-			 potentialColspec = blueprint.getNextSibling(potentialColspec)) {
+			potentialColspec;
+			potentialColspec = blueprint.getNextSibling(potentialColspec)) {
 			if (domInfo.isElement(potentialColspec, 'colspec')) {
 				colspecs.push(potentialColspec);
 			}
@@ -90,6 +90,9 @@ define([
 		var columnSpecifications = [],
 			oldColnamesToNewColnames = {},
 			previousColnum = 0;
+
+		// We used to generate non-standard colspecs, starting a 0. This is not right, according to spec.
+		var colnumsStartWith0 = colspecs[0] && blueprint.getAttribute(colspecs[0], 'colnum') === '0';
 
 		for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 			var columnSpecElement = colspecs[columnIndex];
@@ -101,7 +104,11 @@ define([
 
 			var columnNumber = blueprint.getAttribute(columnSpecElement, 'colnum');
 			if (columnNumber) {
-				columnNumber = parseInt(columnNumber, 10);
+				columnNumber = parseInt(columnNumber, 10) - 1;
+				if (colnumsStartWith0) {
+					// This table is generated not according to spec. The colnums should be considered as off by one: starting at 0 instead of 1.
+					columnNumber += 1;
+				}
 
 				if (columnNumber < previousColnum) {
 					throw new Error('Out of order columns in a colspec are not supported');
@@ -131,4 +138,3 @@ define([
 		};
 	};
 });
-

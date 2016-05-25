@@ -77,14 +77,14 @@ define([
 
 			chai.expect(jsonMLMapper.serialize(documentNode.firstChild)).to.deep.equal([
 				'table', {
-					'frame': 'none'
+					'frame': 'all'
 					}, [
 					'tgroup', {
 						'cols': '1'
 					}, [
 						'colspec', {
 							'colname': 'column-0',
-							'colnum': '0',
+							'colnum': '1',
 							'colwidth': '1*',
 							'colsep': '1',
 							'rowsep': '1'
@@ -118,21 +118,13 @@ define([
 
 			chai.expect(jsonMLMapper.serialize(documentNode.firstChild)).to.deep.equal([
 				'table', {
-					'frame': 'none'
+					'frame': 'all'
 				}, [
 					'tgroup', {
 						'cols': '4'
 					}, [
 						'colspec', {
 							'colname': 'column-0',
-							'colnum': '0',
-							'colwidth': '1*',
-							'colsep': '1',
-							'rowsep': '1'
-						}
-					], [
-						'colspec', {
-							'colname': 'column-1',
 							'colnum': '1',
 							'colwidth': '1*',
 							'colsep': '1',
@@ -140,7 +132,7 @@ define([
 						}
 					], [
 						'colspec', {
-							'colname': 'column-2',
+							'colname': 'column-1',
 							'colnum': '2',
 							'colwidth': '1*',
 							'colsep': '1',
@@ -148,8 +140,16 @@ define([
 						}
 					], [
 						'colspec', {
-							'colname': 'column-3',
+							'colname': 'column-2',
 							'colnum': '3',
+							'colwidth': '1*',
+							'colsep': '1',
+							'rowsep': '1'
+						}
+					], [
+						'colspec', {
+							'colname': 'column-3',
+							'colnum': '4',
 							'colwidth': '1*',
 							'colsep': '1',
 							'rowsep': '1'
@@ -286,21 +286,13 @@ define([
 
 			chai.expect(jsonMLMapper.serialize(documentNode.firstChild)).to.deep.equal([
 				'table', {
-					'frame': 'none'
+					'frame': 'all'
 				}, [
 					'tgroup', {
 						'cols': '4'
 						}, [
 							'colspec', {
 								'colname': 'column-0',
-								'colnum': '0',
-								'colwidth': '1*',
-								'colsep': '1',
-								'rowsep': '1'
-							}
-						], [
-							'colspec', {
-								'colname': 'column-1',
 								'colnum': '1',
 								'colwidth': '1*',
 								'colsep': '1',
@@ -308,7 +300,7 @@ define([
 							}
 						], [
 							'colspec', {
-								'colname': 'column-2',
+								'colname': 'column-1',
 								'colnum': '2',
 								'colwidth': '1*',
 								'colsep': '1',
@@ -316,8 +308,16 @@ define([
 							}
 						], [
 							'colspec', {
-								'colname': 'column-3',
+								'colname': 'column-2',
 								'colnum': '3',
+								'colwidth': '1*',
+								'colsep': '1',
+								'rowsep': '1'
+							}
+						], [
+							'colspec', {
+								'colname': 'column-3',
+								'colnum': '4',
 								'colwidth': '1*',
 								'colsep': '1',
 								'rowsep': '1'
@@ -411,4 +411,3 @@ define([
 		});
 	});
 });
-

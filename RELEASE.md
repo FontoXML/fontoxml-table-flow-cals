@@ -1,5 +1,9 @@
 # fontoxml-table-flow-cals
 
+## next (1.0.8)
+
+Do not start colnum from 0, but from 1.
+
 ## 1.0.7
 
 Allow pasting tables by not assuming a table node around a tgroup.

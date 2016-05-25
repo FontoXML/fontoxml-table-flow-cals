@@ -2,12 +2,14 @@ define([
 	'fontoxml-blueprints',
 	'fontoxml-core',
 	'slimdom',
+	'fontoxml-dom-utils/jsonMLMapper',
 
 	'fontoxml-table-flow-cals/calsTableStructure'
 ], function (
 	blueprints,
 	core,
 	slimdom,
+	jsonMLMapper,
 
 	calsTableStructure
 	) {
@@ -48,67 +50,5 @@ define([
 				chai.expect(result).to.equal(true, 'is table part');
 			});
 		});
-
-	/*	describe('getColumnSpecifications()', function () {
-			it('Can specify the correct columns specifications from the source XML', function () {
-				coreDocument.dom.mutate(function () {
-					jsonMLMapper.parse(
-						['table',
-							['tgroup',
-								['colspec', {
-									'colname': 'c1',
-									'colwidth': '1*' // The 2* makes the col size proportional
-								}],
-								['colspec', {
-									'colname': 'c2',
-									'colwidth': '2*'
-								}],
-								['colspec', {
-									'colname': 'c3',
-									'colwidth': '3*'
-								}],
-								['thead',
-									['row',
-										['entry'],
-										['entry'],
-										['entry']
-									]
-								],
-								['tbody',
-									['row',
-										['entry'],
-										['entry'],
-										['entry']
-									],
-									['row',
-										['entry'],
-										['entry'],
-										['entry']
-									],
-									['row',
-										['entry'],
-										['entry'],
-										['entry']
-									]
-								]
-							]
-						],
-					documentNode);
-				});
-
-				var tableElement = documentNode.firstChild,
-					tgroupElement = tableElement.firstChild;
-
-				var colSpecs = calsTableStructure.getColumnSpecifications(tgroupElement);
-				chai.expect(colSpecs.isProportion).to.equal(true, 'isProportion');
-				chai.expect(colSpecs.colwidths).to.deep.equal({
-					'c1': '1*',
-					'c2': '2*',
-					'c3': '3*'
-				}, 'isProportion');
-			});
-
-		});*/
 	});
 });
-

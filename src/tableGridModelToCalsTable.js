@@ -43,7 +43,7 @@ define([
 			// These options are optional, but we will always fill them for completeness sake.
 			// They are used heavily in rendering
 			newColspec.setAttribute('colname', colName);
-			newColspec.setAttribute('colnum', columnSpecification.columnNumber);
+			newColspec.setAttribute('colnum', columnSpecification.columnNumber + 1 + '');
 			newColspec.setAttribute('colwidth', columnSpecification.columnWidth);
 
 			// The following are optional
