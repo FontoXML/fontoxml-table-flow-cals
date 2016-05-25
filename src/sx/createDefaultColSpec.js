@@ -15,7 +15,7 @@ define([
 			'column-' + columnIndex,
 			// columnNumber
 			columnIndex,
-			 // columnSeparator
+			// columnSeparator
 			true,
 			// columnWidth
 			'1*',
@@ -29,4 +29,3 @@ define([
 			null);
 	};
 });
-

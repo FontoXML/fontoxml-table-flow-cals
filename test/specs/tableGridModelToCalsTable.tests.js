@@ -95,10 +95,8 @@ define([
 							'row', [
 								'entry', {
 									'colname': 'column-0',
-									'namest': 'column-0',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-0'
+									'rowsep': '1'
 								}
 							]
 						]
@@ -159,34 +157,26 @@ define([
 							'row', [
 								'entry', {
 									'colname': 'column-0',
-									'namest': 'column-0',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-0',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-1',
-									'namest': 'column-1',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-1',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-2',
-									'namest': 'column-2',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-2',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-3',
-									'namest': 'column-3',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-3',
+									'rowsep': '1'
 								}
 							]
 						]
@@ -195,68 +185,52 @@ define([
 							'row', [
 								'entry', {
 									'colname': 'column-0',
-									'namest': 'column-0',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-0',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-1',
-									'namest': 'column-1',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-1',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-2',
-									'namest': 'column-2',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-2',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-3',
-									'namest': 'column-3',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-3',
+									'rowsep': '1'
 								}
 							]
 						], [
 							'row', [
 								'entry', {
 									'colname': 'column-0',
-									'namest': 'column-0',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-0',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-1',
-									'namest': 'column-1',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-1',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-2',
-									'namest': 'column-2',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-2',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-3',
-									'namest': 'column-3',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-3',
+									'rowsep': '1'
 								}
 							]
 						]
@@ -327,34 +301,26 @@ define([
 							'row', [
 								'entry', {
 									'colname': 'column-0',
-									'namest': 'column-0',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-0',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-1',
-									'namest': 'column-1',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-1',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-2',
-									'namest': 'column-2',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-2',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-3',
-									'namest': 'column-3',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-3',
+									'rowsep': '1'
 								}
 							]
 						]
@@ -363,14 +329,11 @@ define([
 							'row', [
 								'entry', {
 									'colname': 'column-0',
-									'namest': 'column-0',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-0',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
-									'colname': 'column-1',
 									'namest': 'column-1',
 									'colsep': '1',
 									'rowsep': '1',
@@ -380,28 +343,22 @@ define([
 							], [
 								'entry', {
 									'colname': 'column-3',
-									'namest': 'column-3',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-3',
+									'rowsep': '1'
 								}
 							]
 						], [
 							'row', [
 								'entry', {
 									'colname': 'column-0',
-									'namest': 'column-0',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-0',
+									'rowsep': '1'
 								}
 							], [
 								'entry', {
 									'colname': 'column-3',
-									'namest': 'column-3',
 									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-3',
+									'rowsep': '1'
 								}
 							]
 						]

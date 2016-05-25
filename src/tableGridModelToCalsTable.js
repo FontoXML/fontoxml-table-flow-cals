@@ -195,8 +195,17 @@ define([
 
 				// Set the needed attributes on the element.
 				var startColumn = tableGridModel.columnSpecifications[columnIndex];
-				blueprint.setAttribute(tableCellElement, 'colname', startColumn.columnName);
-				blueprint.setAttribute(tableCellElement, 'namest', startColumn.columnName);
+				if (tableCell.size.columns > 1) {
+					blueprint.setAttribute(tableCellElement, 'namest', startColumn.columnName);
+					// Minus one to accommodate for the starting cell
+					var endColumnSpecifications = tableGridModel.columnSpecifications[tableCell.origin.column + tableCell.size.columns - 1];
+					blueprint.setAttribute(tableCellElement, 'nameend', endColumnSpecifications.columnName);
+					blueprint.setAttribute(tableCellElement, 'colname', null);
+				} else {
+					blueprint.setAttribute(tableCellElement, 'colname', startColumn.columnName);
+					blueprint.setAttribute(tableCellElement, 'nameend', null);
+					blueprint.setAttribute(tableCellElement, 'namest', null);
+				}
 
 				if (tableCell.size.rows !== 1) {
 					// Set the morerows attribute, indicating rowSpans
@@ -243,10 +252,6 @@ define([
 				} else if (blueprint.getAttribute(tableCellElement, 'outputclass')) {
 					blueprint.removeAttribute(tableCellElement, 'outputclass');
 				}
-
-				// Minus one to accommodate for the starting cell
-				var endColumnSpecifications = tableGridModel.columnSpecifications[tableCell.origin.column + tableCell.size.columns - 1];
-				blueprint.setAttribute(tableCellElement, 'nameend', endColumnSpecifications.columnName);
 
 				// The cell may already be present at this location.
 				//   unsafeMoveNodes it to prevent positions from being collapsed wrongly
