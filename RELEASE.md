@@ -1,6 +1,6 @@
 # fontoxml-table-flow-cals
 
-## next (1.0.8)
+## 1.0.8
 
 Do not start colnum from 0, but from 1.
 Do not set namest / nameend when not spanning.
