@@ -1,0 +1,77 @@
+{
+	"table-delete": {
+		"label": "Remove table",
+		"description": "Remove the current table from the topic.",
+		"icon": "times",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "table"
+				}
+			},
+			{
+				"type": "operation/table-contextual-delete"
+			}
+		]
+	},
+	"table-insert": {
+		"label": "Table",
+		"description": "Insert a table.",
+		"icon": "table",
+		"initialData": {
+			"rows": 1,
+			"columns": 1
+		},
+		"getStateSteps": {
+			"type": "command/table-insert"
+		},
+		"steps": [
+			{
+				"type": "command/table-insert"
+			},
+			{
+				"type": "operation/set-cursor-to-first-text-position",
+				"data": {
+					"contextNodeId": "{{tableNodeId}}"
+				}
+			}
+		]
+	},
+	"table-desc-insert": {
+		"label": "Add description",
+		"description": "Add a description to this figure.",
+		"steps": [
+			{
+				"type": "operation/horizontal-insert",
+				"data": {
+					"childNodeStructure": [
+						"desc",
+						[{ "bindTo": "selection.start", "empty": true }],
+						["?fontoxml-text-placeholder", "text=\"type the description\""],
+						[{ "bindTo": "selection.end", "empty": true }]
+					],
+					"contextNodeId": "{{contextNodeId}}"
+				}
+			}
+		]
+	},
+	"table-title-insert": {
+		"label": "Add title",
+		"description": "Add a title to this figure.",
+		"steps": [
+			{
+				"type": "operation/horizontal-insert",
+				"data": {
+					"childNodeStructure": [
+						"title",
+						[{ "bindTo": "selection.start", "empty": true }],
+						["?fontoxml-text-placeholder", "text=\"type the title\""],
+						[{ "bindTo": "selection.end", "empty": true }]
+					],
+					"contextNodeId": "{{contextNodeId}}"
+				}
+			}
+		]
+	}
+}

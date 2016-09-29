@@ -1,5 +1,9 @@
 # fontoxml-table-flow-cals
 
+## next (1.1.0)
+
+Provide ToggleCellBorderCommand for toggling borders on individual cells
+
 ## 1.0.8
 
 Do not start colnum from 0, but from 1.
