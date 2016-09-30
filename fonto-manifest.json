@@ -5,7 +5,6 @@
 		"fontoxml-core": "^1.0.0",
 		"fontoxml-dom-identification": "^1.0.0",
 		"fontoxml-dom-utils": "^1.0.0",
-		"fontoxml-modular-schema-experience": "^1.0.0",
 		"fontoxml-operations": "^1.0.0",
 		"fontoxml-table-flow": "^3.1.0"
 	},

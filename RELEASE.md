@@ -1,5 +1,9 @@
 # fontoxml-table-flow-cals
 
+## 1.1.1
+
+Remove obsolete dependency on modular-schema-experience.
+
 ## 1.1.0
 
 Provide ToggleCellBorderCommand for toggling borders on individual cells
