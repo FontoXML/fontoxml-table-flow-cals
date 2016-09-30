@@ -1,6 +1,6 @@
 # fontoxml-table-flow-cals
 
-## next (1.1.0)
+## 1.1.0
 
 Provide ToggleCellBorderCommand for toggling borders on individual cells
 
