@@ -55,8 +55,8 @@ define([
 
 		var unitOfWidth = getUnitOfWidth(colSpec, blueprint);
 
-		var columnSeparator = blueprint.getAttribute(colSpec, 'colsep'),
-			rowSeparator = !!blueprint.getAttribute(colSpec, 'rowsep') || true,
+		var hasColumnSeparator = blueprint.getAttribute(colSpec, 'colsep') === "0" ? false : true,
+			hasRowSeparator = blueprint.getAttribute(colSpec, 'rowsep') === "0" ? false : true,
 			alignment = blueprint.getAttribute(colSpec, 'align');
 			// alignment = !!blueprint.getAttribute(colSpec, 'align') || true;
 
@@ -64,9 +64,9 @@ define([
 				alignment,
 				'column-' + (columnIndex),
 				columnIndex,
-				columnSeparator,
+				hasColumnSeparator,
 				columnWidth,
-				rowSeparator,
+				hasRowSeparator,
 				unitOfWidth,
 				isProportion,
 				blueprint.getAttribute(colSpec, 'colname'));

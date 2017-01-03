@@ -179,21 +179,21 @@ define([
 						colname: 'column-0',
 						colnum: '1',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['colspec', {
 						colname: 'column-1',
 						colnum: '2',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['colspec', {
 						colname: 'column-2',
 						colnum: '3',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['tbody',
@@ -250,21 +250,21 @@ define([
 						colname: 'column-0',
 						colnum: '1',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['colspec', {
 						colname: 'column-1',
 						colnum: '2',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['colspec', {
 						colname: 'column-2',
 						colnum: '3',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['tbody',
@@ -321,21 +321,21 @@ define([
 						colname: 'column-0',
 						colnum: '1',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['colspec', {
 						colname: 'column-1',
 						colnum: '2',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['colspec', {
 						colname: 'column-2',
 						colnum: '3',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['tbody',
@@ -392,21 +392,21 @@ define([
 						colname: 'column-0',
 						colnum: '1',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['colspec', {
 						colname: 'column-1',
 						colnum: '2',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['colspec', {
 						colname: 'column-2',
 						colnum: '3',
 						colwidth: '1*',
-						colsep: '1', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
+						colsep: '0', // colsep is set to '1' by table grid model, even though it is always overwritten on entry level
 						rowsep: '1'
 					}],
 					['tbody',
