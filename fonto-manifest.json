@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"fontoxml-base-flow": "^2.0.0",
+		"fontoxml-base-flow": "^3.0.0",
 		"fontoxml-blueprints": "^1.0.0",
 		"fontoxml-core": "^1.0.0",
 		"fontoxml-dom-identification": "^1.0.0",
