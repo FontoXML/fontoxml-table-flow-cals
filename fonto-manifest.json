@@ -9,6 +9,6 @@
 		"fontoxml-table-flow": "^3.1.0"
 	},
 	"devDependencies": {
-		"fontoxml-vendor-slimdom": "^0.5.3"
+		"fontoxml-vendors": "^1.3.0"
 	}
 }
