@@ -50,7 +50,7 @@ define([
 			tgroupNode;
 
 		beforeEach(function () {
-			documentNode = slimdom.createDocument();
+			documentNode = new slimdom.Document();
 			coreDocument = new CoreDocument(documentNode);
 
 			blueprint = new Blueprint(coreDocument.dom);

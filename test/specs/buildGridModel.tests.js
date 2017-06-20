@@ -28,7 +28,7 @@ define([
 			blueprint;
 
 		beforeEach(function () {
-			documentNode = slimdom.createDocument();
+			documentNode = new slimdom.Document();
 			coreDocument = new CoreDocument(documentNode);
 
 			blueprint = new Blueprint(coreDocument.dom);
@@ -39,9 +39,9 @@ define([
 				coreDocument.dom.mutate(function () {
 					jsonMLMapper.parse(
 						['table',
-							['tgroup', {
-								'cols': 3
-								}, ['colspec'],
+							['tgroup',
+								{ cols: 3 },
+								['colspec'],
 								['colspec'],
 								['colspec'],
 								['thead',
@@ -88,11 +88,11 @@ define([
 				coreDocument.dom.mutate(function () {
 					jsonMLMapper.parse(
 						['table',
-							['tgroup', {
-								'cols': 3
-								}, ['colspec', {colnum: 0}],
-								['colspec', {colnum: 1}],
-								['colspec', {colnum: 2}],
+							['tgroup',
+								{ cols: 3 },
+								['colspec', { colnum: 0 }],
+								['colspec', { colnum: 1 }],
+								['colspec', { colnum: 2 }],
 								['thead',
 									['row',
 										['entry'],
@@ -133,45 +133,45 @@ define([
 				chai.expect(gridModel.getWidth()).to.equal(3, 'width');
 			});
 
-			it('can build a gridModel from a table containing comments and precessing instructions', function () {
+			it('can build a gridModel from a table containing comments and processing instructions', function () {
 				coreDocument.dom.mutate(function () {
 					jsonMLMapper.parse(
 						['table',
-								['tgroup', {
-									'cols': 3
-									}, ['colspec'],
-									['colspec'],
-									['colspec'],
-									['thead',
-										['row',
-											['entry'],
-											['?someProcessingInstruction',  'someContent'],
-											['entry'],
-											['entry']
-										]
+							['tgroup',
+								{ cols: 3 },
+								['colspec'],
+								['colspec'],
+								['colspec'],
+								['thead',
+									['row',
+										['entry'],
+										['?someProcessingInstruction', 'someContent'],
+										['entry'],
+										['entry']
+									]
+								],
+								['tbody',
+									['row',
+										['entry'],
+										['entry'],
+										['!', 'some comment'],
+										['entry']
 									],
-									['tbody',
-										['row',
-											['entry'],
-											['entry'],
-											['!some comment'],
-											['entry']
-										],
-										['row',
-											['entry'],
-											['entry'],
-											['entry']
-										],
-										['row',
-											['entry'],
-											['entry'],
-											['entry']
-										]
+									['row',
+										['entry'],
+										['entry'],
+										['entry']
+									],
+									['row',
+										['entry'],
+										['entry'],
+										['entry']
 									]
 								]
-							],
-
-					documentNode);
+							]
+						],
+						documentNode
+					);
 				});
 
 				var tableElement = documentNode.firstChild,
@@ -189,62 +189,81 @@ define([
 			describe('colSpans', function () {
 				it('can build a gridModel from a cals table containing colspans on the first row', function () {
 					coreDocument.dom.mutate(function () {
-						jsonMLMapper.parse([
-							'table', [
-								'tgroup', {
-									'cols': 3
-								}, [
-									'colspec', {
-										'colname': 'column-0',
-										'colnum': '1',
-										'colwidth': '1*',
-										'colsep': '1',
-										'rowsep': '1'
-								}],	[
-									'colspec', {
-										'colname': 'column-1',
-										'colnum': '2',
-										'colwidth': '1*',
-										'colsep': '1',
-										'rowsep': '1'
+						jsonMLMapper.parse(
+							[
+								'table',
+								[
+									'tgroup',
+									{ 'cols': 3 },
+									[
+										'colspec',
+										{
+											colname: 'column-0',
+											colnum: '1',
+											colwidth: '1*',
+											colsep: '1',
+											rowsep: '1'
+										}
+									],
+									[
+										'colspec',
+										{
+											colname: 'column-1',
+											colnum: '2',
+											colwidth: '1*',
+											colsep: '1',
+											rowsep: '1'
 
-								}],	[
-									'colspec', {
-										'colname': 'column-2',
-										'colnum': '3',
-										'colwidth': '1*',
-										'colsep': '1',
-										'rowsep': '1'
-
-								}], [
-									'tbody', [
-										'row',	[
-											'entry', {
-												'namest': 'column-0',
-												'colname': 'column-0',
-												'nameend': 'column-1'
-										}], [
-											'entry', {
-												'namest': 'column-2',
-												'colname': 'column-2',
-												'nameend': 'column-2'
-											}
+										}
+									],
+									[
+										'colspec',
+										{
+											colname: 'column-2',
+											colnum: '3',
+											colwidth: '1*',
+											colsep: '1',
+											rowsep: '1'
+										}
+									],
+									[
+										'tbody',
+										[
+											'row',
+											[
+												'entry',
+												{
+													namest: 'column-0',
+													colname: 'column-0',
+													nameend: 'column-1'
+												}
+											],
+											[
+												'entry',
+												{
+													namest: 'column-2',
+													colname: 'column-2',
+													nameend: 'column-2'
+												}
+											]
+										],
+										[
+											'row',
+											['entry'],
+											['entry'],
+											['entry']
+										],
+										[
+											'row',
+											['entry'],
+											['entry'],
+											['entry']
 										]
-									], [
-										'row',
-										['entry'],
-										['entry'],
-										['entry']
-									], [
-										'row',
-										['entry'],
-										['entry'],
-										['entry']
 									]
 								]
-							]
-						],
-							documentNode);
+							],
+							documentNode
+						);
 					});
 
 					var tableElement = documentNode.firstChild,
