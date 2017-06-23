@@ -1,5 +1,5 @@
 {
-	"table-delete": {
+	"cals-table-delete": {
 		"label": "t__Remove table",
 		"description": "t__Remove the current table from the document.",
 		"icon": "times",
@@ -15,30 +15,7 @@
 			}
 		]
 	},
-	"table-insert": {
-		"label": "t__Table",
-		"description": "t__Insert a table.",
-		"icon": "table",
-		"initialData": {
-			"rows": 1,
-			"columns": 1
-		},
-		"getStateSteps": {
-			"type": "command/table-insert"
-		},
-		"steps": [
-			{
-				"type": "command/table-insert"
-			},
-			{
-				"type": "operation/set-cursor-to-first-text-position",
-				"data": {
-					"contextNodeId": "{{tableNodeId}}"
-				}
-			}
-		]
-	},
-	"table-desc-insert": {
+	"cals-table-desc-insert": {
 		"label": "t__Add description",
 		"description": "t__Add a description to this figure.",
 		"steps": [
@@ -56,7 +33,7 @@
 			}
 		]
 	},
-	"table-title-insert": {
+	"cals-table-title-insert": {
 		"label": "t__Add title",
 		"description": "t__Add a title to this figure.",
 		"steps": [

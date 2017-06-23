@@ -2,12 +2,12 @@ define([
 	'fontoxml-table-flow'
 ], function (
 	tableFlow
-	) {
+) {
 	'use strict';
 
 	var ColumnSpecification = tableFlow.ColumnSpecification;
 
-	return function createDefaultColspec (columnIndex) {
+	return function createDefaultColSpec (columnIndex) {
 		return new ColumnSpecification(
 			// alignment
 			null,

@@ -1,5 +1,5 @@
 {
-	"set-cell-horizontal-alignment-left": {
+	"cals-set-cell-horizontal-alignment-left": {
 		"label": "t__Align left",
 		"description": "t__Align the content of the current cell to its left.",
 		"icon": "align-left",
@@ -20,7 +20,7 @@
 			}
 		]
 	},
-	"set-cell-horizontal-alignment-right": {
+	"cals-set-cell-horizontal-alignment-right": {
 		"label": "t__Align right",
 		"description": "t__Align the content of the current cell to its right.",
 		"icon": "align-right",
@@ -41,7 +41,7 @@
 			}
 		]
 	},
-	"set-cell-horizontal-alignment-center": {
+	"cals-set-cell-horizontal-alignment-center": {
 		"label": "t__Align center",
 		"description": "t__Center the content of the current cell.",
 		"icon": "align-center",
@@ -62,7 +62,7 @@
 			}
 		]
 	},
-	"set-cell-horizontal-alignment-justify": {
+	"cals-set-cell-horizontal-alignment-justify": {
 		"label": "t__Justify",
 		"description": "t__Justify the content of the current cell.",
 		"icon": "align-justify",
@@ -83,7 +83,7 @@
 			}
 		]
 	},
-	"set-cell-vertical-alignment-top": {
+	"cals-set-cell-vertical-alignment-top": {
 		"label": "t__Align top",
 		"description": "t__Align the content of the current cell to its top.",
 		"steps": [
@@ -103,7 +103,7 @@
 			}
 		]
 	},
-	"set-cell-vertical-alignment-bottom": {
+	"cals-set-cell-vertical-alignment-bottom": {
 		"label": "t__Align bottom",
 		"description": "t__Align the content of the current cell to its bottom.",
 		"steps": [
@@ -123,7 +123,7 @@
 			}
 		]
 	},
-	"set-cell-vertical-alignment-center": {
+	"cals-set-cell-vertical-alignment-center": {
 		"label": "t__Align center",
 		"description": "t__Center the content of the current cell.",
 		"steps": [

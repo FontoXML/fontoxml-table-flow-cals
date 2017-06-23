@@ -1,39 +1,49 @@
 define([
-	'fontoxml-blueprints',
-	'fontoxml-dom-utils/domInfo',
+	'fontoxml-selectors/evaluateXPathToBoolean',
+	'fontoxml-selectors/evaluateXPathToNodes',
+	'fontoxml-selectors/evaluateXPathToNumber',
+	'fontoxml-selectors/evaluateXPathToString',
 	'fontoxml-table-flow',
+	'fontoxml-table-flow/validateGridModel',
 
-	'./sx/getColumnSpecifications'
+	'./getColumnSpecifications'
 ], function (
-	blueprints,
-	domInfo,
+	evaluateXPathToBoolean,
+	evaluateXPathToNodes,
+	evaluateXPathToNumber,
+	evaluateXPathToString,
 	tableFlow,
+	validateGridModel,
 
 	getColumnSpecifications
-	) {
+) {
 	'use strict';
-	var blueprintQuery = blueprints.blueprintQuery,
-		TableGridBuilder = tableFlow.TableGridBuilder,
+	var TableGridBuilder = tableFlow.TableGridBuilder,
 		normalizeGridModel = tableFlow.mutations.normalizeGridModel,
 		computeWidths = tableFlow.utils.computeWidths;
 
 	function getFrameAttribute (tgroupNode, blueprint) {
-		var tableNode = blueprint.getParentNode(tgroupNode),
-			frameAttribute = tableNode && blueprint.getAttribute(tableNode, 'frame');
-
 		// 'all' is the implied value of the FRAME attribute.
-		return frameAttribute || 'all';
+		return evaluateXPathToString(
+			'let $frame := ./parent::*/@frame return if ($frame) then $frame else "all"',
+			tgroupNode,
+			blueprint);
 	}
 
-	function parseRowSpecifications (rowIndex, rowNode, blueprint) {
+	function parseRowSpecifications (_rowIndex, rowNode, blueprint) {
 		// TODO: Named object with constructor.
 		return {
-			'valign': blueprint.getAttribute(rowNode, 'valign') || 'bottom'
+			valign: evaluateXPathToString('let $valign := ./@valign return if ($valign) then $valign else "bottom"', rowNode, blueprint)
 		};
 	}
 
-	function getRowSpecifications (tgroup, blueprint) {
-		var rowNodes = blueprintQuery.findDescendants(blueprint, tgroup, 'row', false),
+	function getRowSpecifications (tgroup, blueprint, selectorParts) {
+		var rowNodes = evaluateXPathToNodes(
+				'./' + selectorParts.row +
+				' | ./' + selectorParts.thead + '/' + selectorParts.row +
+				' | ./' + selectorParts.tbody + '/' + selectorParts.row +
+				' | ./' + selectorParts.tfoot + '/' + selectorParts.row
+				, tgroup, blueprint),
 			rowSpecs = [];
 
 		for (var i = 0, l = rowNodes.length; i < l; ++i) {
@@ -46,7 +56,8 @@ define([
 	function setDataAttribute (data, name, value, columnSpecification) {
 		if (value !== null) {
 			data[name] = value;
-		} else {
+		}
+		else {
 			// If there was no value supplied extract it from the column specifications.
 			data[name] = columnSpecification[name];
 		}
@@ -54,55 +65,58 @@ define([
 		return data;
 	}
 
-	function parseTableEntryElement (entryElement, columnIndex, columnSpecs, rowIndex, rowSpecs, oldColnamesToNewColnames, blueprint) {
+	function parseTableEntryElement (entryElement, columnIndex, columnSpecs, _rowIndex, _rowSpecs, oldColnamesToNewColnames, calsTableStructure, blueprint) {
 		var data = Object.create(null);
 
 		// We need to get the value of the colname attribute to determine the column the entry is in.
 		// To determine horizontal size we need to look at the NAMEST and NAMEEND attributes.
 		// And for vertical size we need to look at the MOREROWS attribute.
-		var oldColName = blueprint.getAttribute(entryElement, 'colname'),
-			oldNamest = blueprint.getAttribute(entryElement, 'namest'),
-			oldNameend = blueprint.getAttribute(entryElement, 'nameend');
+		var oldColName = evaluateXPathToString('./@colname', entryElement, blueprint),
+			oldNamest = evaluateXPathToString('./@namest', entryElement, blueprint),
+			oldNameend = evaluateXPathToString('./@nameend', entryElement, blueprint);
 
-		var columnName, nameStart, nameEnd;
+		var nameStart, nameEnd;
 
-		if (oldColName) {
-			data.columnName = columnName = oldColnamesToNewColnames[oldColName];
-		} else {
-			data.columnName = columnName = 'column-' + columnIndex;
+		if (oldColName !== '') {
+			data.columnName = oldColnamesToNewColnames[oldColName];
+		}
+		else {
+			data.columnName = 'column-' + columnIndex;
 		}
 
-		if (oldNamest) {
+		if (oldNamest !== '') {
 			// NAMEST takes precedence over any COLNAME value.
-			data.columnName = columnName = data.nameStart = nameStart = oldColnamesToNewColnames[oldNamest];
-		} else {
+			data.columnName = data.nameStart = nameStart = oldColnamesToNewColnames[oldNamest];
+		}
+		else {
 			data.nameStart = nameStart = 'column-' + columnIndex;
 		}
 
-		if (oldNameend) {
+		if (oldNameend !== '') {
 			data.nameEnd = nameEnd = oldColnamesToNewColnames[oldNameend];
-		} else {
+		}
+		else {
 			data.nameEnd = nameEnd = 'column-' + columnIndex;
 		}
 
 		// MOREROWS: Specifies the number of additional rows to add in a vertical span.
 		//   +1 to account for the starting row.
-		var rowSpan = parseInt(blueprint.getAttribute(entryElement, 'morerows') || 0, 10) + 1;
+		var rowSpan = evaluateXPathToNumber('let $morerows := ./@morerows return if ($morerows) then number($morerows) + 1 else 1', entryElement, blueprint);
 
 		// Set the attributes which could be respecified on the cell, overriding the colspecs
-		var cellRowSep = blueprint.getAttribute(entryElement, 'rowsep');
-		data = setDataAttribute(data, 'rowSeparator', cellRowSep, columnSpecs[columnIndex]);
+		var cellRowSep = evaluateXPathToString('./@rowsep', entryElement, blueprint);
+		data = setDataAttribute(data, 'rowSeparator', cellRowSep === calsTableStructure.yesValue ? '1' : '0', columnSpecs[columnIndex]);
 
-		var cellColSep = blueprint.getAttribute(entryElement, 'colsep');
-		data = setDataAttribute(data, 'columnSeparator', cellColSep, columnSpecs[columnIndex]);
+		var cellColSep = evaluateXPathToString('./@colsep', entryElement, blueprint);
+		data = setDataAttribute(data, 'columnSeparator', cellColSep === calsTableStructure.yesValue ? '1' : '0', columnSpecs[columnIndex]);
 
-		var cellAlign = blueprint.getAttribute(entryElement, 'align');
+		var cellAlign = evaluateXPathToString('./@align', entryElement, blueprint);
 		data = setDataAttribute(data, 'horizontalAlignment', cellAlign, columnSpecs[columnIndex]);
 
-		var cellValign = blueprint.getAttribute(entryElement, 'valign');
+		var cellValign = evaluateXPathToString('./@valign', entryElement, blueprint);
 		data = setDataAttribute(data, 'verticalAlignment', cellValign, columnSpecs[columnIndex]);
 
-		var cellOutputclass = blueprint.getAttribute(entryElement, 'outputclass');
+		var cellOutputclass = evaluateXPathToString('./@outputclass', entryElement, blueprint);
 		data = setDataAttribute(data, 'outputclass', cellOutputclass, columnSpecs[columnIndex]);
 
 		// Calculate the colspan
@@ -133,19 +147,6 @@ define([
 		};
 	}
 
-	function validateGridModel (builder) {
-		// Loop over all the cells. If one is null, the table is semantically invalid. This is not supported
-		for (var i = 0, l = builder.model.getHeight(); i < l; ++i) {
-			for (var j = 0, k = builder.model.getWidth(); j < k; ++j) {
-				if (!builder.model.getCellAtCoordinates(i, j)) {
-					throw new Error('Semantically incorrect tables are not supported.' +
-						'The colspans / rowspans of this table do not add up!' +
-						'There was no cell at location: ' + i + ', ' + j);
-				}
-			}
-		}
-	}
-
 	/**
 	 * Build a generic gridModel from the CALS table
 	 *
@@ -166,11 +167,11 @@ define([
 		//    This determines if the table has (a) border(s).
 		var frame = getFrameAttribute(table, blueprint);
 		// TODO: Expand the .borders so it is both abstract and can contain all different options.
-		builder.model.borders = frame !== 'none' ? true : false;
+		builder.model.borders = frame !== 'none';
 
 		// Get the column specifications for this table so we can set them on the cells
 		//   for rendering purposes.
-		var columnInfo = getColumnSpecifications(table, blueprint);
+		var columnInfo = getColumnSpecifications(table, calsTableStructure, blueprint);
 
 		var oldColnamesToNewColnames = columnInfo.oldColnamesToNewColnames,
 			columnSpecifications = columnInfo.columnSpecifications;
@@ -178,9 +179,13 @@ define([
 		// Get the nodes we need for determining colspecifications.
 		// For getting the row element we use specific lookups to support nested tables.
 		// TODO: Why no lookup? this works?
-		var rowElements = blueprintQuery.findDescendants(blueprint, table, 'row', false); //TODO: Get specific elements, do not do a lookup.
-
-		var rowSpecifications = getRowSpecifications(table, blueprint);
+		// TODO: Get specific elements, do not do a lookup.
+		var rowElements = evaluateXPathToNodes('./' + calsTableStructure.selectorParts.row +
+				' | ./' + calsTableStructure.selectorParts.thead + '/' + calsTableStructure.selectorParts.row +
+				' | ./' + calsTableStructure.selectorParts.tbody + '/' + calsTableStructure.selectorParts.row +
+				' | ./' + calsTableStructure.selectorParts.tfoot + '/' + calsTableStructure.selectorParts.row
+				, table, blueprint);
+		var rowSpecifications = getRowSpecifications(table, blueprint, calsTableStructure.selectorParts);
 
 		builder.model.rowSpecifications = rowSpecifications;
 		builder.model.columnSpecifications = columnSpecifications;
@@ -190,29 +195,29 @@ define([
 			builder.newRow();
 			var rowElement = rowElements[row];
 
-			var rowEntries = blueprintQuery.findChildren(blueprint, rowElement, 'entry');
+			var rowEntries = evaluateXPathToNodes('./child::' + calsTableStructure.selectorParts.entry, rowElement, blueprint);
 
 			// See if this a headerRow
-			if (domInfo.isElement(blueprint.getParentNode(rowElement), 'thead')) {
+			if (evaluateXPathToBoolean('./parent::' + calsTableStructure.selectorParts.thead, rowElement, blueprint)) {
 				builder.model.headerRowCount += 1;
 			}
 
 			var columnIndex = 0;
 
-			for (var i = 0, l = rowEntries.length; i < l; i++) {
-				var entry = rowEntries[i],
-					parsedCell = parseTableEntryElement(
-						entry,
-						columnIndex,
-						columnSpecifications,
-						row,
-						rowSpecifications,
-						oldColnamesToNewColnames,
-						blueprint);
+			rowEntries.forEach(function (entry) {
+				var parsedCell = parseTableEntryElement(
+					entry,
+					columnIndex,
+					columnSpecifications,
+					row,
+					rowSpecifications,
+					oldColnamesToNewColnames,
+					calsTableStructure,
+					blueprint);
 
 				builder.newCell(entry, parsedCell.data, parsedCell.rowSpan, parsedCell.colSpan);
 				columnIndex += parsedCell.colSpan;
-			}
+			});
 		}
 
 		normalizeGridModel(builder.model);

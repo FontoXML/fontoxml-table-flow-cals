@@ -9,15 +9,14 @@ define([
 ) {
 	'use strict';
 
-	var blueprintQuery = blueprints.blueprintQuery;
-
-	var tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
+	var blueprintQuery = blueprints.blueprintQuery,
+		tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
 
 	var tableGridModelCache = null,
 		tableGridModelIndexForCellNodeId = null;
 
 	// Retrieves (and adds just in time) a cached tableGridModel and tableDefiningNode
-	function getTableGridModel(blueprint, cellNodeId) {
+	function getTableGridModel (blueprint, cellNodeId) {
 		if (!tableGridModelIndexForCellNodeId[cellNodeId]) {
 			var tableGridModel = tableGridModelLookupSingleton.getGridModel(blueprint.lookup(cellNodeId));
 

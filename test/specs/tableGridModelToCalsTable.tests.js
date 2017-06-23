@@ -1,370 +1,178 @@
-define([
-	'fontoxml-blueprints',
-	'fontoxml-core',
-	'fontoxml-dom-utils/jsonMLMapper',
-	'fontoxml-table-flow',
-	'slimdom',
+import blueprints from 'fontoxml-blueprints';
+import core from 'fontoxml-core';
+import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
+import tableFlow from 'fontoxml-table-flow';
+import * as slimdom from 'slimdom';
 
-	'fontoxml-table-flow-cals/sx/createDefaultColSpec',
-	'fontoxml-table-flow-cals/sx/createDefaultRowSpec',
-	'fontoxml-table-flow-cals/sx/createDefaultCellSpec',
-	'fontoxml-table-flow-cals/tableGridModelToCalsTable'
-], function (
-	blueprints,
-	core,
-	jsonMLMapper,
-	tableFlow,
-	slimdom,
+import createDefaultColSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultColSpec';
+import createDefaultRowSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultRowSpec';
+import createDefaultCellSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultCellSpec';
+import tableGridModelToCalsTable from 'fontoxml-table-flow-cals/tableStructure/tableGridModelToCalsTable';
+import CalsTableStructure from 'fontoxml-table-flow-cals/tableStructure/CalsTableStructure';
+import TableStructureManager from 'fontoxml-table-flow/TableStructureManager';
 
-	createDefaultColSpec,
-	createDefaultRowSpec,
-	createDefaultCellSpec,
+const Blueprint = blueprints.Blueprint;
+const CoreDocument = core.Document;
+const createNewTableCreater = tableFlow.primitives.createNewTableCreater;
 
-	tableGridModelToCalsTable
-	) {
-	'use strict';
+const stubFormat = {
+		synthesizer: {
+			completeStructure: () => true
+		},
+		metadata: {
+			get: (_option, _node) => false
+		}
+	};
 
-	var Blueprint = blueprints.Blueprint,
-		CoreDocument = core.Document,
-		createNewTableCreater = tableFlow.primitives.createNewTableCreater;
+const createTable = createNewTableCreater('entry', createDefaultRowSpec, createDefaultColSpec, createDefaultCellSpec);
 
-	var stubFormat = {
-			synthesizer: {
-				completeStructure: function () {
-					return true;
-				}
+describe('tableGridModelToCalsTable', () => {
+	let documentNode,
+		coreDocument,
+		blueprint,
+		tgroupNode,
+		calsTableStructure;
+
+	beforeEach(() => {
+		documentNode = new slimdom.Document();
+		coreDocument = new CoreDocument(documentNode);
+
+		blueprint = new Blueprint(coreDocument.dom);
+
+		tgroupNode = documentNode.createElement('tgroup');
+		const tbodyNode = documentNode.createElement('tbody');
+		const tableNode = documentNode.createElement('table');
+
+		calsTableStructure = new CalsTableStructure({
+			table: {
+				localName: 'table',
+				namespaceUri: ''
 			},
-			metadata: {
-				get: function (option, node) {
-					return false;
-				}
+			tgroup: {
+				namespaceUri: ''
 			}
-		};
-
-	var createTable = createNewTableCreater('entry', createDefaultRowSpec, createDefaultColSpec, createDefaultCellSpec);
-
-	describe('tableGridModelToCalsTable', function () {
-		var documentNode,
-			coreDocument,
-			blueprint,
-			tgroupNode;
-
-		beforeEach(function () {
-			documentNode = new slimdom.Document();
-			coreDocument = new CoreDocument(documentNode);
-
-			blueprint = new Blueprint(coreDocument.dom);
-
-			tgroupNode = documentNode.createElement('tgroup');
-			var tbodyNode = documentNode.createElement('tbody');
-			var tableNode = documentNode.createElement('table');
-
-			coreDocument.dom.mutate(function () {
-				tgroupNode.appendChild(tbodyNode);
-				tableNode.appendChild(tgroupNode);
-				documentNode.appendChild(tableNode);
-			});
 		});
+		TableStructureManager.addTableStructure(calsTableStructure);
 
-		it('can serialize a calsTable in a basic one by one GridModel to an actual cals table', function () {
-			// Create a new one-by-one table
-			var tableGridModel = createTable(1, 1, true, documentNode);
+		coreDocument.dom.mutate(() => {
+			tgroupNode.appendChild(tbodyNode);
+			tableNode.appendChild(tgroupNode);
+			documentNode.appendChild(tableNode);
+		});
+	});
 
-			var success = tableGridModelToCalsTable(tableGridModel, tgroupNode, blueprint, stubFormat);
-			chai.expect(success).to.equal(true);
+	it('can serialize a calsTable in a basic one by one GridModel to an actual cals table', () => {
+		// Create a new one-by-one table
+		const tableGridModel = createTable(1, 1, true, documentNode);
 
-			blueprint.realize();
+		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
 
-			chai.expect(jsonMLMapper.serialize(documentNode.firstChild)).to.deep.equal([
-				'table', {
-					'frame': 'all'
-					}, [
-					'tgroup', {
-						'cols': '1'
-					}, [
-						'colspec', {
-							'colname': 'column-0',
-							'colnum': '1',
-							'colwidth': '1*',
-							'colsep': '1',
-							'rowsep': '1'
-
-						}
-						], [
-						'tbody', [
-							'row', [
-								'entry', {
-									'colname': 'column-0',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							]
+		blueprint.realize();
+		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
+			['table',
+				{ frame: 'all' },
+				['tgroup',
+					{ cols: '1' },
+					['colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['tbody',
+						['row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }]
 						]
 					]
 				]
 			]);
-		});
+	});
 
-		it('can serialize a calsTable in a basic n by n GridModel to an actual cals table', function () {
-			// Create a new four-by-four table
-			var tableGridModel = createTable(3, 4, true, documentNode);
+	it('can serialize a calsTable in a basic n by n GridModel to an actual cals table', () => {
+		// Create a new four-by-four table
+		const tableGridModel = createTable(3, 4, true, documentNode);
 
-			var success = tableGridModelToCalsTable(tableGridModel, tgroupNode, blueprint, stubFormat);
-			chai.expect(success).to.equal(true);
+		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
 
-			blueprint.realize();
-
-			chai.expect(jsonMLMapper.serialize(documentNode.firstChild)).to.deep.equal([
-				'table', {
-					'frame': 'all'
-				}, [
-					'tgroup', {
-						'cols': '4'
-					}, [
-						'colspec', {
-							'colname': 'column-0',
-							'colnum': '1',
-							'colwidth': '1*',
-							'colsep': '1',
-							'rowsep': '1'
-						}
-					], [
-						'colspec', {
-							'colname': 'column-1',
-							'colnum': '2',
-							'colwidth': '1*',
-							'colsep': '1',
-							'rowsep': '1'
-						}
-					], [
-						'colspec', {
-							'colname': 'column-2',
-							'colnum': '3',
-							'colwidth': '1*',
-							'colsep': '1',
-							'rowsep': '1'
-						}
-					], [
-						'colspec', {
-							'colname': 'column-3',
-							'colnum': '4',
-							'colwidth': '1*',
-							'colsep': '1',
-							'rowsep': '1'
-						}
-					], [
-						'thead', [
-							'row', [
-								'entry', {
-									'colname': 'column-0',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-1',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-2',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-3',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							]
+		blueprint.realize();
+		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
+			['table',
+				{ frame: 'all' },
+				['tgroup',
+					{ cols: '4' },
+					['colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['colspec', { colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['colspec', { colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['colspec', { colname: 'column-3', colnum: '4', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['thead',
+						['row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
-					], [
-						'tbody', [
-							'row', [
-								'entry', {
-									'colname': 'column-0',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-1',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-2',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-3',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							]
-						], [
-							'row', [
-								'entry', {
-									'colname': 'column-0',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-1',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-2',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-3',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							]
+					],
+					['tbody',
+						['row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						['row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
 					]
 				]
 			]);
-		});
+	});
 
-		it('can serialize a calsTable in a GridModel containing colspans to an actual cals table', function () {
-			// Create a new three-by-four table
-			var tableGridModel = createTable(3, 4, true, documentNode);
+	it('can serialize a calsTable in a GridModel containing colspans to an actual cals table', () => {
+		// Create a new three-by-four table
+		const tableGridModel = createTable(3, 4, true, documentNode);
 
-			var spanningCell = tableGridModel.getCellAtCoordinates(1, 1);
-			spanningCell.size.rows = 2;
-			spanningCell.size.columns = 2;
+		const spanningCell = tableGridModel.getCellAtCoordinates(1, 1);
+		spanningCell.size.rows = 2;
+		spanningCell.size.columns = 2;
 
-			tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
-			tableGridModel.setCellAtCoordinates(spanningCell, 1, 2);
-			tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
-			tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
+		tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
+		tableGridModel.setCellAtCoordinates(spanningCell, 1, 2);
+		tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
+		tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
 
+		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
 
-			var success = tableGridModelToCalsTable(tableGridModel, tgroupNode, blueprint, stubFormat);
-			chai.expect(success).to.equal(true);
-
-			blueprint.realize();
-
-			chai.expect(jsonMLMapper.serialize(documentNode.firstChild)).to.deep.equal([
-				'table', {
-					'frame': 'all'
-				}, [
-					'tgroup', {
-						'cols': '4'
-						}, [
-							'colspec', {
-								'colname': 'column-0',
-								'colnum': '1',
-								'colwidth': '1*',
-								'colsep': '1',
-								'rowsep': '1'
-							}
-						], [
-							'colspec', {
-								'colname': 'column-1',
-								'colnum': '2',
-								'colwidth': '1*',
-								'colsep': '1',
-								'rowsep': '1'
-							}
-						], [
-							'colspec', {
-								'colname': 'column-2',
-								'colnum': '3',
-								'colwidth': '1*',
-								'colsep': '1',
-								'rowsep': '1'
-							}
-						], [
-							'colspec', {
-								'colname': 'column-3',
-								'colnum': '4',
-								'colwidth': '1*',
-								'colsep': '1',
-								'rowsep': '1'
-							}
-						], [
-						'thead', [
-							'row', [
-								'entry', {
-									'colname': 'column-0',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-1',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-2',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-3',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							]
+		blueprint.realize();
+		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
+			['table',
+				{ frame: 'all' },
+				['tgroup',
+					{ cols: '4' },
+					['colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['colspec', { colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['colspec', { colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['colspec', { colname: 'column-3', colnum: '4', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['thead',
+						['row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
-					], [
-						'tbody', [
-							'row', [
-								'entry', {
-									'colname': 'column-0',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'namest': 'column-1',
-									'colsep': '1',
-									'rowsep': '1',
-									'nameend': 'column-2',
-									'morerows': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-3',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							]
-						], [
-							'row', [
-								'entry', {
-									'colname': 'column-0',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							], [
-								'entry', {
-									'colname': 'column-3',
-									'colsep': '1',
-									'rowsep': '1'
-								}
-							]
+					],
+					['tbody',
+						['row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { namest: 'column-1', colsep: '1', rowsep: '1', nameend: 'column-2', morerows: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						['row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
 					]
 				]
 			]);
-		});
 	});
 });

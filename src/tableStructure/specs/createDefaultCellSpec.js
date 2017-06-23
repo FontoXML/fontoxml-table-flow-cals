@@ -1,9 +1,9 @@
 define([
 ], function (
-	) {
+) {
 	'use strict';
 
-	return function createDefaultCellspec (rowIndex, columnIndex, amountOfColumns) {
+	return function createDefaultCellspec (_rowIndex, columnIndex, amountOfColumns) {
 		// For a default cell specification we directly set a % width with a proportional (*) marker.
 		var width = 100 / amountOfColumns;
 
@@ -14,7 +14,8 @@ define([
 		if (amountOfColumns > 1) {
 			cellspec.nameStart = 'column-' + columnIndex;
 			cellspec.nameEnd = 'column-' + columnIndex;
-		} else {
+		}
+		else {
 			cellspec.columnName = 'column-' + columnIndex;
 		}
 

@@ -1,54 +1,34 @@
-define([
-	'fontoxml-blueprints',
-	'fontoxml-core',
-	'slimdom',
-	'fontoxml-dom-utils/jsonMLMapper',
+import * as slimdom from 'slimdom';
+import CalsTableStructure from 'fontoxml-table-flow-cals/tableStructure/CalsTableStructure';
 
-	'fontoxml-table-flow-cals/calsTableStructure'
-], function (
-	blueprints,
-	core,
-	slimdom,
-	jsonMLMapper,
+describe('CalsTableStructure', () => {
+	let documentNode,
+		calsTableStructure;
 
-	calsTableStructure
-	) {
-	'use strict';
-
-	var Blueprint = blueprints.Blueprint,
-		CoreDocument = core.Document;
-
-	describe('calsTableStructure', function () {
-		var documentNode,
-			coreDocument,
-			blueprint;
-
-		beforeEach(function () {
-			documentNode = new slimdom.Document();
-			coreDocument = new CoreDocument(documentNode);
-
-			blueprint = new Blueprint(coreDocument.dom);
+	beforeEach(() => {
+		documentNode = new slimdom.Document();
+		calsTableStructure = new CalsTableStructure({
+			table: {
+				localName: 'table',
+				namespaceUri: ''
+			},
+			tgroup: {
+				namespaceUri: ''
+			}
 		});
+	});
 
-		describe('calsTableStructure()', function () {
-			it('can be initialized', function () {
-			});
-		});
+	describe('calsTableStructure()', () => {
+		it('can be initialized', () => {});
+	});
 
-		describe('isTable()', function () {
-			it('can recognize a table element', function () {
-				var result = calsTableStructure.isTable(documentNode.createElement('tgroup'));
+	describe('isTable()', () => {
+		it('can recognize a table element',
+			() => chai.assert.isTrue(calsTableStructure.isTable(documentNode.createElement('table'))));
+	});
 
-				chai.expect(result).to.equal(true, 'is table');
-			});
-		});
-
-		describe('isTablePart()', function () {
-			it('can recognize a table part element', function () {
-				var result = calsTableStructure.isTablePart(documentNode.createElement('tbody'));
-
-				chai.expect(result).to.equal(true, 'is table part');
-			});
-		});
+	describe('isTablePart()', function () {
+		it('can recognize a table part element',
+			() => chai.assert.isTrue(calsTableStructure.isTablePart(documentNode.createElement('tbody'))));
 	});
 });

@@ -1,12 +1,16 @@
 define([
-	'fontoxml-dom-utils/domInfo',
-	'fontoxml-dom-utils/domQuery',
+	'fontoxml-selectors/evaluateXPathToBoolean',
+	'fontoxml-selectors/evaluateXPathToNodes',
+	'fontoxml-selectors/evaluateXPathToNumber',
+	'fontoxml-selectors/evaluateXPathToString',
 	'fontoxml-table-flow'
 ], function (
-	domInfo,
-	domQuery,
+	evaluateXPathToBoolean,
+	evaluateXPathToNodes,
+	evaluateXPathToNumber,
+	evaluateXPathToString,
 	tableFlow
-	) {
+) {
 	'use strict';
 
 	var ColumnSpecification = tableFlow.ColumnSpecification;
@@ -17,7 +21,8 @@ define([
 				'column-' + (columnIndex),
 				columnIndex,
 				null,
-				'1*', // 1* is the implied columnwidth value (https://www.oasis-open.org/specs/a502.htm)
+				// 1* is the implied columnwidth value (https://www.oasis-open.org/specs/a502.htm)
+				'1*',
 				null,
 				'*',
 				true,
@@ -25,20 +30,17 @@ define([
 	}
 
 	function getUnitOfWidth (colSpecNode, blueprint) {
-		var colWidth = blueprint.getAttribute(colSpecNode, 'colwidth');
-
-		if (!colWidth) {
-			colWidth = '1*'; // 1* is the implied value (https://www.oasis-open.org/specs/a502.htm)
-		}
+		// 1* is the implied value (https://www.oasis-open.org/specs/a502.htm)
+		var colWidth = evaluateXPathToString('let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "*1"', colSpecNode, blueprint);
 
 		// Get the part after any digits and an optional dot.
 		var unit = colWidth.match(/[\d.]*(.*)$/);
 		return unit ? unit[1] : '';
 	}
 
-	function parseColumnSpecification (columnIndex, colSpec, blueprint) {
+	function parseColumnSpecification (columnIndex, colSpec, blueprint, tableStructure) {
 		// This is the implied value when COLWIDTH is set as null or not present.
-		var columnWidth = blueprint.getAttribute(colSpec, 'colwidth') || '1*',
+		var columnWidth = evaluateXPathToString('let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "*1"', colSpec, blueprint),
 			isProportion;
 
 		// @TODO: Add support for mixed values such as 121*+3px.
@@ -55,10 +57,9 @@ define([
 
 		var unitOfWidth = getUnitOfWidth(colSpec, blueprint);
 
-		var hasColumnSeparator = blueprint.getAttribute(colSpec, 'colsep') === "0" ? false : true,
-			hasRowSeparator = blueprint.getAttribute(colSpec, 'rowsep') === "0" ? false : true,
-			alignment = blueprint.getAttribute(colSpec, 'align');
-			// alignment = !!blueprint.getAttribute(colSpec, 'align') || true;
+		var hasColumnSeparator = evaluateXPathToBoolean('not(./@colsep = "' + tableStructure.noValue + '")', colSpec, blueprint),
+			hasRowSeparator = evaluateXPathToBoolean('not(./@rowsep = "' + tableStructure.noValue + '")', colSpec, blueprint),
+			alignment = evaluateXPathToString('./@align', colSpec, blueprint);
 
 		return new ColumnSpecification(
 				alignment,
@@ -69,30 +70,20 @@ define([
 				hasRowSeparator,
 				unitOfWidth,
 				isProportion,
-				blueprint.getAttribute(colSpec, 'colname'));
+				evaluateXPathToString('./@colname', colSpec, blueprint));
 	}
 
-	return function getColumnSpecifications (tgroup, blueprint) {
+	return function getColumnSpecifications (tgroup, tableStructure, blueprint) {
 		// COLS is a required attribute.
-		var columnCount = parseInt(blueprint.getAttribute(tgroup, 'cols'), 10),
-			colspecs = [];
-
-		// Loop over the children of the TGROUP then add the COLSPECs to the array.
-		//   This is done to accomodate for nested tables.
-		for (var potentialColspec = blueprint.getFirstChild(tgroup);
-			potentialColspec;
-			potentialColspec = blueprint.getNextSibling(potentialColspec)) {
-			if (domInfo.isElement(potentialColspec, 'colspec')) {
-				colspecs.push(potentialColspec);
-			}
-		}
+		var columnCount = evaluateXPathToNumber('./@cols => number()', tgroup, blueprint),
+			colspecs = evaluateXPathToNodes('./child::' + tableStructure.selectorParts.colspec, tgroup, blueprint);
 
 		var columnSpecifications = [],
 			oldColnamesToNewColnames = {},
 			previousColnum = 0;
 
 		// We used to generate non-standard colspecs, starting a 0. This is not right, according to spec.
-		var colnumsStartWith0 = colspecs[0] && blueprint.getAttribute(colspecs[0], 'colnum') === '0';
+		var colnumsStartWith0 = colspecs[0] && evaluateXPathToBoolean('./@colnum = "0"', colspecs[0], blueprint);
 
 		for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 			var columnSpecElement = colspecs[columnIndex];
@@ -102,9 +93,8 @@ define([
 				continue;
 			}
 
-			var columnNumber = blueprint.getAttribute(columnSpecElement, 'colnum');
-			if (columnNumber) {
-				columnNumber = parseInt(columnNumber, 10) - 1;
+			var columnNumber = evaluateXPathToNumber('number(./@colnum) - 1', columnSpecElement, blueprint);
+			if (!Number.isNaN(columnNumber)) {
 				if (colnumsStartWith0) {
 					// This table is generated not according to spec. The colnums should be considered as off by one: starting at 0 instead of 1.
 					columnNumber += 1;
@@ -120,12 +110,12 @@ define([
 					// Generate missing colspecs.
 					columnSpecifications[columnIndex] = generateColumnSpecification(columnIndex);
 
-					columnIndex ++;
+					columnIndex++;
 				}
 			}
 
 			// Just parse as is
-			columnSpecifications[columnIndex] = parseColumnSpecification(columnIndex, columnSpecElement, blueprint);
+			columnSpecifications[columnIndex] = parseColumnSpecification(columnIndex, columnSpecElement, blueprint, tableStructure);
 		}
 
 		for (var i = 0, l = columnSpecifications.length; i < l; ++i) {

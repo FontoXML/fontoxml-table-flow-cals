@@ -1,11 +1,11 @@
 {
-	"toggle-cell-border": {
+	"cals-toggle-cell-border": {
 		"steps":
 		{
 			"type": "command/toggle-cell-border"
 		}
 	},
-	"set-cell-border-all": {
+	"cals-set-cell-border-all": {
 		"label": "t__All borders",
 		"description": "t__Draw borders on all sides of every selected cell.",
 		"steps": [
@@ -26,7 +26,7 @@
 			}
 		]
 	},
-	"set-cell-border-none": {
+	"cals-set-cell-border-none": {
 		"label": "t__No borders",
 		"description": "t__Don't draw any borders on the selected cells.",
 		"steps": [
@@ -47,7 +47,7 @@
 			}
 		]
 	},
-	"set-cell-border-top": {
+	"cals-set-cell-border-top": {
 		"label": "t__Top",
 		"description": "t__Toggle the border at the top of the selected cells.",
 		"steps": [
@@ -65,7 +65,7 @@
 			}
 		]
 	},
-	"set-cell-border-bottom": {
+	"cals-set-cell-border-bottom": {
 		"label": "t__Bottom",
 		"description": "t__Toggle the border at the bottom of the selected cells.",
 		"steps": [
@@ -83,7 +83,7 @@
 			}
 		]
 	},
-	"set-cell-border-left": {
+	"cals-set-cell-border-left": {
 		"label": "t__Left",
 		"description": "t__Toggle the border on the left of the selected cells.",
 		"steps": [
@@ -101,7 +101,7 @@
 			}
 		]
 	},
-	"set-cell-border-right": {
+	"cals-set-cell-border-right": {
 		"label": "t__Right",
 		"description": "t__Toggle the border on the right of the selected cells.",
 		"steps": [

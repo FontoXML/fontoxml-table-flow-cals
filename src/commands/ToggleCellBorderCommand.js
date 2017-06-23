@@ -6,12 +6,12 @@ define([
 	core,
 
 	toggleCellBorder
-	) {
+) {
 	'use strict';
 
 	var BlueprintedCommand = core.BlueprintedCommand;
 
-	function draftValidBlueprint (argument, blueprint, format, selectionRange, resultingState) {
+	function draftValidBlueprint (argument, blueprint, format, _selectionRange, resultingState) {
 		if (!argument.cellNodeIds.length) {
 			// Not doing this check will not have an effect on performance, but it will produce an incorrect "active"
 			// state, so we might as well exit early
@@ -49,4 +49,3 @@ define([
 
 	return ToggleCellBorderCommand;
 });
-
