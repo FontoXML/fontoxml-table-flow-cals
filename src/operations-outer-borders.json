@@ -1,0 +1,122 @@
+{
+	"set-outer-border-none": {
+		"label": "t__No borders",
+		"description": "t__Don't draw any outer borders on the selected table.",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "self::table"
+				}
+			},
+			{
+				"type": "operation/set-attributes",
+				"data": {
+					"attributes": {
+						"frame": "none"
+					}
+				}
+			}
+		]
+	},
+	"set-outer-border-all": {
+		"label": "t__All borders",
+		"description": "t__Draw borders on all outer edges of the selected table.",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "self::table"
+				}
+			},
+			{
+				"type": "operation/set-attributes",
+				"data": {
+					"attributes": {
+						"frame": "all"
+					}
+				}
+			}
+		]
+	},
+	"set-outer-border-bottom": {
+		"label": "t__Bottom",
+		"description": "t__Draw a border on the outer bottom edge of the selected table.",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "self::table"
+				}
+			},
+			{
+				"type": "operation/set-attributes",
+				"data": {
+					"attributes": {
+						"frame": "bottom"
+					}
+				}
+			}
+		]
+	},
+	"set-outer-border-top": {
+		"label": "t__Top",
+		"description": "t__Draw a border on the outer top edge of the selected table.",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "self::table"
+				}
+			},
+			{
+				"type": "operation/set-attributes",
+				"data": {
+					"attributes": {
+						"frame": "top"
+					}
+				}
+			}
+		]
+	},
+	"set-outer-border-sides": {
+		"label": "t__Sides",
+		"description": "t__Draw a border on the left and right outer edges of the selected table.",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "self::table"
+				}
+			},
+			{
+				"type": "operation/set-attributes",
+				"data": {
+					"attributes": {
+						"frame": "sides"
+					}
+				}
+			}
+		]
+	},
+	"set-outer-border-topbot": {
+		"label": "t__Top and bottom",
+		"description": "t__Draw a border on the top and bottom outer edges of the selected table.",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "self::table"
+				}
+			},
+			{
+				"type": "operation/set-attributes",
+				"data": {
+					"attributes": {
+						"frame": "topbot"
+					}
+				}
+			}
+		]
+	}
+}
