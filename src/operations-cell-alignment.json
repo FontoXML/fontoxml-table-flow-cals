@@ -83,6 +83,26 @@
 			}
 		]
 	},
+	"set-cell-horizontal-alignment-char": {
+		"label": "t__Character",
+		"description": "t__Align the content of the current cell on a specific character.",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": "entry"
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "char"
+					}
+				}
+			}
+		]
+	},
 	"set-cell-vertical-alignment-top": {
 		"label": "t__Align top",
 		"description": "t__Align the content of the current cell to its top.",
