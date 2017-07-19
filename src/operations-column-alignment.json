@@ -1,0 +1,155 @@
+{
+	"_set-cell-node-ids-for-selection-column": {
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": "entry"
+				}
+			},
+			{
+				"type": "transform/includeCellNodeIdsInSameColumnAsCellNodeIds"
+			}
+		]
+	},
+	"set-column-horizontal-alignment-left": {
+		"label": "t__Align left",
+		"description": "t__Align the content of the current column to its left.",
+		"icon": "align-left",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-column"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "left"
+					}
+				}
+			}
+		]
+	},
+	"set-column-horizontal-alignment-right": {
+		"label": "t__Align right",
+		"description": "t__Align the content of the current column to its right.",
+		"icon": "align-right",
+		"steps":  [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-column"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "right"
+					}
+				}
+			}
+		]
+	},
+	"set-column-horizontal-alignment-center": {
+		"label": "t__Align center",
+		"description": "t__Center the content of the current column.",
+		"icon": "align-center",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-column"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "center"
+					}
+				}
+			}
+		]
+	},
+	"set-column-horizontal-alignment-justify": {
+		"label": "t__Justify",
+		"description": "t__Justify the content of the current column.",
+		"icon": "align-justify",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-column"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "justify"
+					}
+				}
+			}
+		]
+	},
+	"set-column-horizontal-alignment-char": {
+		"label": "t__Character",
+		"description": "t__Align the content of the current column on a specific character.",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-column"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "char"
+					}
+				}
+			}
+		]
+	},
+	"set-column-vertical-alignment-top": {
+		"label": "t__Align top",
+		"description": "t__Align the content of the current column to its top.",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-column"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "top"
+					}
+				}
+			}
+		]
+	},
+	"set-column-vertical-alignment-bottom": {
+		"label": "t__Align bottom",
+		"description": "t__Align the content of the current column to its bottom.",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-column"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "bottom"
+					}
+				}
+			}
+		]
+	},
+	"set-column-vertical-alignment-center": {
+		"label": "t__Align center",
+		"description": "t__Center the content of the current column.",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-column"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "middle"
+					}
+				}
+			}
+		]
+	}
+}

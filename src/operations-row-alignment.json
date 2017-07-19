@@ -1,19 +1,24 @@
 {
-	"_set-cell-node-ids-for-selection": {
-		"steps": {
-			"type": "transform/setCellNodeIdsToSelectionAncestors",
-			"data": {
-				"nodeName": "entry"
+	"_set-cell-node-ids-for-selection-row": {
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": "entry"
+				}
+			},
+			{
+				"type": "transform/includeCellNodeIdsInSameRowAsCellNodeIds"
 			}
-		}
+		]
 	},
-	"set-cell-horizontal-alignment-left": {
+	"set-row-horizontal-alignment-left": {
 		"label": "t__Align left",
-		"description": "t__Align the content of the current cell to its left.",
+		"description": "t__Align the content of the current row to its left.",
 		"icon": "align-left",
 		"steps": [
 			{
-				"type": "operation/_set-cell-node-ids-for-selection"
+				"type": "operation/_set-cell-node-ids-for-selection-row"
 			},
 			{
 				"type": "operation/toggle-cell-data",
@@ -25,13 +30,13 @@
 			}
 		]
 	},
-	"set-cell-horizontal-alignment-right": {
+	"set-row-horizontal-alignment-right": {
 		"label": "t__Align right",
-		"description": "t__Align the content of the current cell to its right.",
+		"description": "t__Align the content of the current row to its right.",
 		"icon": "align-right",
 		"steps":  [
 			{
-				"type": "operation/_set-cell-node-ids-for-selection"
+				"type": "operation/_set-cell-node-ids-for-selection-row"
 			},
 			{
 				"type": "operation/toggle-cell-data",
@@ -43,13 +48,13 @@
 			}
 		]
 	},
-	"set-cell-horizontal-alignment-center": {
+	"set-row-horizontal-alignment-center": {
 		"label": "t__Align center",
-		"description": "t__Center the content of the current cell.",
+		"description": "t__Center the content of the current row.",
 		"icon": "align-center",
 		"steps": [
 			{
-				"type": "operation/_set-cell-node-ids-for-selection"
+				"type": "operation/_set-cell-node-ids-for-selection-row"
 			},
 			{
 				"type": "operation/toggle-cell-data",
@@ -61,13 +66,13 @@
 			}
 		]
 	},
-	"set-cell-horizontal-alignment-justify": {
+	"set-row-horizontal-alignment-justify": {
 		"label": "t__Justify",
-		"description": "t__Justify the content of the current cell.",
+		"description": "t__Justify the content of the current row.",
 		"icon": "align-justify",
 		"steps": [
 			{
-				"type": "operation/_set-cell-node-ids-for-selection"
+				"type": "operation/_set-cell-node-ids-for-selection-row"
 			},
 			{
 				"type": "operation/toggle-cell-data",
@@ -79,12 +84,12 @@
 			}
 		]
 	},
-	"set-cell-horizontal-alignment-char": {
+	"set-row-horizontal-alignment-char": {
 		"label": "t__Character",
-		"description": "t__Align the content of the current cell on a specific character.",
+		"description": "t__Align the content of the current row on a specific character.",
 		"steps": [
 			{
-				"type": "operation/_set-cell-node-ids-for-selection"
+				"type": "operation/_set-cell-node-ids-for-selection-row"
 			},
 			{
 				"type": "operation/toggle-cell-data",
@@ -96,12 +101,12 @@
 			}
 		]
 	},
-	"set-cell-vertical-alignment-top": {
+	"set-row-vertical-alignment-top": {
 		"label": "t__Align top",
-		"description": "t__Align the content of the current cell to its top.",
+		"description": "t__Align the content of the current row to its top.",
 		"steps": [
 			{
-				"type": "operation/_set-cell-node-ids-for-selection"
+				"type": "operation/_set-cell-node-ids-for-selection-row"
 			},
 			{
 				"type": "operation/toggle-cell-data",
@@ -113,12 +118,12 @@
 			}
 		]
 	},
-	"set-cell-vertical-alignment-bottom": {
+	"set-row-vertical-alignment-bottom": {
 		"label": "t__Align bottom",
-		"description": "t__Align the content of the current cell to its bottom.",
+		"description": "t__Align the content of the current row to its bottom.",
 		"steps": [
 			{
-				"type": "operation/_set-cell-node-ids-for-selection"
+				"type": "operation/_set-cell-node-ids-for-selection-row"
 			},
 			{
 				"type": "operation/toggle-cell-data",
@@ -130,12 +135,12 @@
 			}
 		]
 	},
-	"set-cell-vertical-alignment-center": {
+	"set-row-vertical-alignment-center": {
 		"label": "t__Align center",
-		"description": "t__Center the content of the current cell.",
+		"description": "t__Center the content of the current row.",
 		"steps": [
 			{
-				"type": "operation/_set-cell-node-ids-for-selection"
+				"type": "operation/_set-cell-node-ids-for-selection-row"
 			},
 			{
 				"type": "operation/toggle-cell-data",

@@ -1,0 +1,158 @@
+{
+	"_set-cell-node-ids-for-selection-table": {
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": "entry"
+				}
+			},
+			{
+				"type": "transform/includeCellNodeIdsInSameRowAsCellNodeIds"
+			},
+			{
+				"type": "transform/includeCellNodeIdsInSameColumnAsCellNodeIds"
+			}
+		]
+	},
+	"set-table-horizontal-alignment-left": {
+		"label": "t__Align left",
+		"description": "t__Align the content of the entire table to its left.",
+		"icon": "align-left",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-table"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "left"
+					}
+				}
+			}
+		]
+	},
+	"set-table-horizontal-alignment-right": {
+		"label": "t__Align right",
+		"description": "t__Align the content of the entire table to its right.",
+		"icon": "align-right",
+		"steps":  [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-table"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "right"
+					}
+				}
+			}
+		]
+	},
+	"set-table-horizontal-alignment-center": {
+		"label": "t__Align center",
+		"description": "t__Center the content of the entire table.",
+		"icon": "align-center",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-table"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "center"
+					}
+				}
+			}
+		]
+	},
+	"set-table-horizontal-alignment-justify": {
+		"label": "t__Justify",
+		"description": "t__Justify the content of the entire table.",
+		"icon": "align-justify",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-table"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "justify"
+					}
+				}
+			}
+		]
+	},
+	"set-table-horizontal-alignment-char": {
+		"label": "t__Character",
+		"description": "t__Align the content of the entire table on a specific character.",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-table"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "char"
+					}
+				}
+			}
+		]
+	},
+	"set-table-vertical-alignment-top": {
+		"label": "t__Align top",
+		"description": "t__Align the content of the entire table to its top.",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-table"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "top"
+					}
+				}
+			}
+		]
+	},
+	"set-table-vertical-alignment-bottom": {
+		"label": "t__Align bottom",
+		"description": "t__Align the content of the entire table to its bottom.",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-table"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "bottom"
+					}
+				}
+			}
+		]
+	},
+	"set-table-vertical-alignment-center": {
+		"label": "t__Align center",
+		"description": "t__Center the content of the entire table.",
+		"steps": [
+			{
+				"type": "operation/_set-cell-node-ids-for-selection-table"
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "middle"
+					}
+				}
+			}
+		]
+	}
+}
