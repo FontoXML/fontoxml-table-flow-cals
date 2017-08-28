@@ -41,8 +41,8 @@ define([
 		this.footLocalName = options.tfoot && options.tfoot.localName ? options.tfoot.localName : 'tfoot';
 
 		// Configurable namespace URIs
-		this.tableNamespaceUri = options.table.namespaceUri || '';
-		this.namespaceUri = options.tgroup.namespaceUri || '';
+		this.tableNamespaceUri = options.table && options.table.namespaceUri ? options.table.namespaceUri : '';
+		this.namespaceUri = options.tgroup && options.tgroup.namespaceUri ? options.tgroup.namespaceUri : '';
 
 		this.yesValue = (options.yesOrNo && options.yesOrNo.yesValue) ? options.yesOrNo.yesValue : '1';
 		this.noValue = (options.yesOrNo && options.yesOrNo.noValue) ? options.yesOrNo.noValue : '0';

@@ -65,15 +65,16 @@ define([
 
 		// Table (tgroup)
 		var tgroupSelector = 'self::' + tableStructure.selectorParts.tgroup;
+		var tgroupVisualization = options.tgroup && options.tgroup.visualization ? options.tgroup.visualization : {};
 		configureAsTable(sxModule, tgroupSelector, undefined, {
 			isRemovableIfEmpty: false,
 			priority: priority,
-			visualization: options.tgroup.visualization || {}
+			visualization: tgroupVisualization
 		});
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')
 			.renderNodesMatching(tgroupSelector, priority)
-				.withTemplate(new TgroupTemplate(options.tgroup.visualization));
+				.withTemplate(new TgroupTemplate(tgroupVisualization));
 
 		// Column (colspec)
 		var colspecSelector = 'self::' + tableStructure.selectorParts.colspec;
