@@ -31,7 +31,7 @@ define([
 
 	function getUnitOfWidth (colSpecNode, blueprint) {
 		// 1* is the implied value (https://www.oasis-open.org/specs/a502.htm)
-		var colWidth = evaluateXPathToString('let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "*1"', colSpecNode, blueprint);
+		var colWidth = evaluateXPathToString('let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"', colSpecNode, blueprint);
 
 		// Get the part after any digits and an optional dot.
 		var unit = colWidth.match(/[\d.]*(.*)$/);
@@ -40,7 +40,7 @@ define([
 
 	function parseColumnSpecification (columnIndex, colSpec, blueprint, tableStructure) {
 		// This is the implied value when COLWIDTH is set as null or not present.
-		var columnWidth = evaluateXPathToString('let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "*1"', colSpec, blueprint),
+		var columnWidth = evaluateXPathToString('let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"', colSpec, blueprint),
 			isProportion;
 
 		// @TODO: Add support for mixed values such as 121*+3px.

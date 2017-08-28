@@ -117,7 +117,7 @@ define([
 	 * @return  {boolean}         The success of the serialization. If true, the serialization took place in the given blueprint
 	 */
 	CalsTableStructure.prototype.applyToDom = function (tableGridModel, tableNode, blueprint, format) {
-		var actualTableNode = tableNode.firstChild;
+		var actualTableNode = evaluateXPathToFirstNode('descendant-or-self::' + this.selectorParts.tgroup, tableNode, blueprint);
 		return tableGridModelToCalsTable(this, tableGridModel, actualTableNode, blueprint, format);
 	};
 
