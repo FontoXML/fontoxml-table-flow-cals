@@ -118,6 +118,11 @@ define([
 	 */
 	CalsTableStructure.prototype.applyToDom = function (tableGridModel, tableNode, blueprint, format) {
 		var actualTableNode = evaluateXPathToFirstNode('descendant-or-self::' + this.selectorParts.tgroup, tableNode, blueprint);
+		if (!actualTableNode) {
+			actualTableNode = blueprint.appendChild(
+				tableNode,
+				namespaceManager.createElementNS(tableNode.ownerDocument, this.defaultNamespaceUri, 'tgroup'));
+		}
 		return tableGridModelToCalsTable(this, tableGridModel, actualTableNode, blueprint, format);
 	};
 
