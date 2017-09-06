@@ -2,7 +2,7 @@ import blueprints from 'fontoxml-blueprints';
 import core from 'fontoxml-core';
 import getNodeId from 'fontoxml-dom-identification/getNodeId';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import TableStructureManager from 'fontoxml-table-flow/TableStructureManager';
+import tableStructureManager from 'fontoxml-table-flow/tableStructureManager';
 import * as slimdom from 'slimdom';
 
 import buildGridModel from 'fontoxml-table-flow-cals/tableStructure/buildGridModel';
@@ -31,7 +31,7 @@ describe('buildGridModel()', () => {
 				namespaceUri: ''
 			}
 		});
-		TableStructureManager.addTableStructure(calsTableStructure);
+		tableStructureManager.addTableStructure(calsTableStructure);
 	});
 
 	it('can build a gridModel from a basic table', () => {

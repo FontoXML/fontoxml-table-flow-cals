@@ -9,7 +9,7 @@ import createDefaultRowSpec from 'fontoxml-table-flow-cals/tableStructure/specs/
 import createDefaultCellSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultCellSpec';
 import tableGridModelToCalsTable from 'fontoxml-table-flow-cals/tableStructure/tableGridModelToCalsTable';
 import CalsTableStructure from 'fontoxml-table-flow-cals/tableStructure/CalsTableStructure';
-import TableStructureManager from 'fontoxml-table-flow/TableStructureManager';
+import tableStructureManager from 'fontoxml-table-flow/tableStructureManager';
 
 const Blueprint = blueprints.Blueprint;
 const CoreDocument = core.Document;
@@ -52,7 +52,7 @@ describe('tableGridModelToCalsTable', () => {
 				namespaceUri: ''
 			}
 		});
-		TableStructureManager.addTableStructure(calsTableStructure);
+		tableStructureManager.addTableStructure(calsTableStructure);
 
 		coreDocument.dom.mutate(() => {
 			tgroupNode.appendChild(tbodyNode);

@@ -10,7 +10,7 @@ import evaluateXPathToNodes from 'fontoxml-selectors/evaluateXPathToNodes';
 import tableFlow from 'fontoxml-table-flow';
 import buildGridModel from 'fontoxml-table-flow-cals/tableStructure/buildGridModel';
 import CalsTableStructure from 'fontoxml-table-flow-cals/tableStructure/CalsTableStructure';
-import tableStructureManager from 'fontoxml-table-flow/TableStructureManager';
+import tableStructureManager from 'fontoxml-table-flow/tableStructureManager';
 import toggleCellBorder from 'fontoxml-table-flow-cals/commands/primitives/toggleCellBorder';
 
 const Blueprint = blueprints.Blueprint;
