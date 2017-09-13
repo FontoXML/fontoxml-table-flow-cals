@@ -6,6 +6,8 @@ define([
 	'use strict';
 
 	return function configureSxModule (sxModule) {
+		sxModule.markAsAddon();
+
 		sxModule.configure('commands')
 			.addCommand('toggle-cell-border', new ToggleCellBorderCommand());
 	};
