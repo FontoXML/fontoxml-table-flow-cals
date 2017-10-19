@@ -1,10 +1,10 @@
-FontoXML/table-flow-cals
-------------------------
-Provides a CALS-specific implementation of the generic table-flow package.
+category: add-on/fontoxml-table-flow-cals
+
+# Cals table support (fontoxml-table-flow-cals)
+
+Privode support for CALS compatible tables.
 
 This packages exposes a single configureAsCalsTableElements function for configuring CALS table elements.
-
----
 
 Use the configureAsCalsTableElements like this:
 
@@ -52,4 +52,4 @@ configureAsCalsTableElements(sxModule, {
 });
 ```
 
-To configure the markup labels and contextual operations, use the `configureMarkupLabel` and `configureContextualOperations` functions.
+To configure the markup labels and contextual operations, use the {@link configureProperties} function.

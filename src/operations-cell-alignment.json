@@ -124,6 +124,11 @@
 		]
 	},
 	"cals-set-cell-vertical-alignment-center": {
+		"__documentation": {
+			"summary": "Set the vertical alignment of this cell to the middle",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
 		"label": "t__Align center",
 		"description": "t__Center the content of the current cell.",
 		"steps": [

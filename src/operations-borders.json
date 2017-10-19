@@ -6,6 +6,11 @@
 		}
 	},
 	"cals-set-cell-border-all": {
+		"__documentation": {
+			"summary": "Set all borders of this cell",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
 		"label": "t__All borders",
 		"description": "t__Draw borders on all sides of every selected cell.",
 		"steps": [
@@ -27,6 +32,11 @@
 		]
 	},
 	"cals-set-cell-border-none": {
+		"__documentation": {
+			"summary": "Remove all borders of this cell",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
 		"label": "t__No borders",
 		"description": "t__Don't draw any borders on the selected cells.",
 		"steps": [
@@ -48,6 +58,11 @@
 		]
 	},
 	"cals-set-cell-border-top": {
+		"__documentation": {
+			"summary": "Toggle the top border of this cell",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
 		"label": "t__Top",
 		"description": "t__Toggle the border at the top of the selected cells.",
 		"steps": [
@@ -66,6 +81,11 @@
 		]
 	},
 	"cals-set-cell-border-bottom": {
+		"__documentation": {
+			"summary": "Toggle the bottom border of this cell",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
 		"label": "t__Bottom",
 		"description": "t__Toggle the border at the bottom of the selected cells.",
 		"steps": [
@@ -84,6 +104,11 @@
 		]
 	},
 	"cals-set-cell-border-left": {
+		"__documentation": {
+			"summary": "Toggle the top border of this cell",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
 		"label": "t__Left",
 		"description": "t__Toggle the border on the left of the selected cells.",
 		"steps": [
@@ -102,6 +127,11 @@
 		]
 	},
 	"cals-set-cell-border-right": {
+		"__documentation": {
+			"summary": "Toggle the right border of this cell",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
 		"label": "t__Right",
 		"description": "t__Toggle the border on the right of the selected cells.",
 		"steps": [

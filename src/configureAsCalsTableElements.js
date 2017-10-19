@@ -26,6 +26,12 @@ define([
 	'use strict';
 
 	/**
+	 * Configure the cals table implementation
+	 *
+	 * @fontosdk
+	 *
+	 * @category add-on/fontoxml-table-flow-cals
+	 *
 	 * @param  {Object}   sxModule
 	 * @param  {Object}   options
 	 * @param  {number}   [options.priority]                    Selector priority for all elements configured by this function
