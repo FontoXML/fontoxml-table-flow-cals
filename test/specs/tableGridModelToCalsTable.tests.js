@@ -3,6 +3,9 @@ import core from 'fontoxml-core';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
 import tableFlow from 'fontoxml-table-flow';
 import * as slimdom from 'slimdom';
+import { evaluateXPathToBoolean } from 'fontoxpath';
+
+import namespaceManager from 'fontoxml-dom-namespaces/namespaceManager';
 
 import createDefaultColSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultColSpec';
 import createDefaultRowSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultRowSpec';
@@ -24,7 +27,9 @@ const stubFormat = {
 		}
 	};
 
-const createTable = createNewTableCreater('entry', createDefaultRowSpec, createDefaultColSpec, createDefaultCellSpec);
+function createTable (rows, cols, hasHeader, document, entryName = 'entry') {
+	return createNewTableCreater(entryName, createDefaultRowSpec, createDefaultColSpec, createDefaultCellSpec)(rows, cols, hasHeader, document);
+}
 
 describe('tableGridModelToCalsTable', () => {
 	let documentNode,
@@ -66,7 +71,7 @@ describe('tableGridModelToCalsTable', () => {
 		const tableGridModel = createTable(1, 1, true, documentNode);
 
 		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
-		chai.assert.isTrue(success);
+		chai.assert.isTrue(success, 'success');
 
 		blueprint.realize();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
@@ -84,12 +89,57 @@ describe('tableGridModelToCalsTable', () => {
 			]);
 	});
 
+	it('can serialize a calsTable in a basic one by one GridModel to an actual cals table containing namespaces and non-default names', () => {
+		namespaceManager.addNamespace('ns1', 'http://example.com/ns1');
+		namespaceManager.addNamespace('ns2', 'http://example.com/ns2');
+
+		// Create a new one-by-one table
+		const tableGridModel = createTable(1, 1, true, documentNode, 'ns2:entry');
+		const calsTableStructureWithNamespaces = new CalsTableStructure({
+			table: {
+				localName: 'matrix',
+				namespaceUri: 'http://example.com/ns1'
+			},
+			tgroup: {
+				namespaceUri: 'http://example.com/ns2'
+			}
+		});
+
+		const tableNodeWithNamespace = documentNode.createElementNS('http://example.com/ns1', 'ns1:matrix');
+		const tgroupNodeWithNamespace = documentNode.createElementNS('http://example.com/ns2', 'ns2:tgroup');
+		tableNodeWithNamespace.appendChild(tgroupNodeWithNamespace);
+
+		const success = tableGridModelToCalsTable(calsTableStructureWithNamespaces, tableGridModel, tgroupNodeWithNamespace, blueprint, stubFormat);
+		chai.assert.isTrue(success, 'success');
+
+		blueprint.realize();
+		chai.assert.isTrue(
+			evaluateXPathToBoolean(
+				'deep-equal($a, $b)',
+				null,
+				null,
+				{
+					a: tableNodeWithNamespace,
+					b: new DOMParser().parseFromString([
+						'<matrix frame="all" xmlns="http://example.com/ns1">',
+						'<tgroup cols="1" xmlns="http://example.com/ns2">',
+						'<colspec colname="column-0" colnum="1" colwidth="1*" colsep="1" rowsep="1"/>',
+						'<tbody><row><entry colname="column-0" colsep="1" rowsep="1"></entry></row></tbody>',
+						'</tgroup>',
+						'</matrix>'
+					].join(''), 'text/xml').documentElement
+				}
+			),
+			'deep equal'
+		);
+	});
+
 	it('can serialize a calsTable in a basic n by n GridModel to an actual cals table', () => {
 		// Create a new four-by-four table
 		const tableGridModel = createTable(3, 4, true, documentNode);
 
 		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
-		chai.assert.isTrue(success);
+		chai.assert.isTrue(success, 'success');
 
 		blueprint.realize();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
@@ -141,7 +191,7 @@ describe('tableGridModelToCalsTable', () => {
 		tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
 
 		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
-		chai.assert.isTrue(success);
+		chai.assert.isTrue(success, 'success');
 
 		blueprint.realize();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
