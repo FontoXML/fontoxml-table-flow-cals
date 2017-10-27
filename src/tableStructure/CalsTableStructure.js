@@ -47,16 +47,16 @@ define([
 		this.yesValue = (options.yesOrNo && options.yesOrNo.yesValue) ? options.yesOrNo.yesValue : '1';
 		this.noValue = (options.yesOrNo && options.yesOrNo.noValue) ? options.yesOrNo.noValue : '0';
 
-		var defaultNamespaceSelector = 'Q{' + this.namespaceUri + '}';
+		var namespaceSelector = 'Q{' + this.namespaceUri + '}';
 		this.selectorParts = {
 			table: 'Q{' + this.tableNamespaceUri + '}' + this.tableFigureLocalName,
-			tgroup: defaultNamespaceSelector + 'tgroup',
-			thead: defaultNamespaceSelector + this.headLocalName,
-			tbody: defaultNamespaceSelector + 'tbody',
-			tfoot: defaultNamespaceSelector + this.footLocalName,
-			row: defaultNamespaceSelector + 'row',
-			entry: defaultNamespaceSelector + 'entry',
-			colspec: defaultNamespaceSelector + 'colspec'
+			tgroup: namespaceSelector + 'tgroup',
+			thead: namespaceSelector + this.headLocalName,
+			tbody: namespaceSelector + 'tbody',
+			tfoot: namespaceSelector + this.footLocalName,
+			row: namespaceSelector + 'row',
+			entry: namespaceSelector + 'entry',
+			colspec: namespaceSelector + 'colspec'
 		};
 
 		this._tablePartsSelector = Object.keys(this.selectorParts).map(function (key) {
@@ -121,7 +121,7 @@ define([
 		if (!actualTableNode) {
 			actualTableNode = blueprint.appendChild(
 				tableNode,
-				namespaceManager.createElementNS(tableNode.ownerDocument, this.defaultNamespaceUri, 'tgroup'));
+				namespaceManager.createElementNS(tableNode.ownerDocument, this.namespaceUri, 'tgroup'));
 		}
 		return tableGridModelToCalsTable(this, tableGridModel, actualTableNode, blueprint, format);
 	};

@@ -40,7 +40,7 @@ define([
 
 			var colName = columnSpecification.columnName;
 
-			var newColspec = namespaceManager.createElementNS(tgroupNode.ownerDocument, calsTableStructure.defaultNamespaceUri, 'colspec');
+			var newColspec = namespaceManager.createElementNS(tgroupNode.ownerDocument, calsTableStructure.namespaceUri, 'colspec');
 			blueprint.insertBefore(tgroupNode, newColspec, originalFirstChild);
 
 			// These options are optional, but we will always fill them for completeness sake.
@@ -90,7 +90,7 @@ define([
 		var tableHeaderNode = evaluateXPathToFirstNode('./child::' + calsTableStructure.selectorParts.thead, tgroupNode, blueprint),
 			tableBodyNode =
 				evaluateXPathToFirstNode('./child::' + calsTableStructure.selectorParts.tbody, tgroupNode, blueprint) ||
-				blueprint.appendChild(tgroupNode, namespaceManager.createElementNS(document, calsTableStructure.defaultNamespaceUri, 'tbody')),
+				blueprint.appendChild(tgroupNode, namespaceManager.createElementNS(document, calsTableStructure.namespaceUri, 'tbody')),
 			headerRows = [],
 			bodyRows = evaluateXPathToNodes('./descendant::' + calsTableStructure.selectorParts.row, tableBodyNode, blueprint);
 
@@ -130,7 +130,7 @@ define([
 
 		if (tableGridModel.headerRowCount && !tableHeaderNode) {
 			// We do not yet have a header, create one.
-			tableHeaderNode = namespaceManager.createElementNS(document, calsTableStructure.defaultNamespaceUri, calsTableStructure.headLocalName);
+			tableHeaderNode = namespaceManager.createElementNS(document, calsTableStructure.namespaceUri, calsTableStructure.headLocalName);
 			blueprint.insertBefore(tgroupNode, tableHeaderNode, tableBodyNode);
 		}
 
@@ -145,7 +145,7 @@ define([
 				// If we are handling a header row
 				row = headerRows[headerRowIndex];
 				if (!row) {
-					row = createNewRow(calsTableStructure.defaultNamespaceUri, tableHeaderNode, blueprint);
+					row = createNewRow(calsTableStructure.namespaceUri, tableHeaderNode, blueprint);
 					headerRows[headerRowIndex] = row;
 				}
 
@@ -154,7 +154,7 @@ define([
 			else {
 				row = bodyRows[bodyRowIndex];
 				if (!row) {
-					row = createNewRow(calsTableStructure.defaultNamespaceUri, tableBodyNode, blueprint);
+					row = createNewRow(calsTableStructure.namespaceUri, tableBodyNode, blueprint);
 					bodyRows[bodyRowIndex] = row;
 				}
 
