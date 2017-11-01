@@ -1,6 +1,8 @@
+---
 category: add-on/fontoxml-table-flow-cals
+---
 
-# Cals table support (fontoxml-table-flow-cals)
+# CALS table support
 
 Privode support for CALS compatible tables.
 
