@@ -50,10 +50,10 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		calsTableStructure = new CalsTableStructure({
 			table: {
 				localName: 'table',
-				namespaceUri: 'somenamespace-uri'
+				namespaceURI: 'somenamespace-uri'
 			},
 			tgroup: {
-				namespaceUri: 'somenamespace-uri'
+				namespaceURI: 'somenamespace-uri'
 			}
 		});
 		tableStructureManager.addTableStructure(calsTableStructure);

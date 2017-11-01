@@ -83,10 +83,10 @@ describe('toggleCellBorderCommand', () => {
 		calsTableStructure = new CalsTableStructure({
 			table: {
 				localName: 'table',
-				namespaceUri: ''
+				namespaceURI: ''
 			},
 			tgroup: {
-				namespaceUri: ''
+				namespaceURI: ''
 			}
 		});
 		tableStructureManager.addTableStructure(calsTableStructure);
@@ -205,10 +205,10 @@ describe('toggleCellBorderCommand', () => {
 			},
 			table: {
 				localName: 'table-figure',
-				namespaceUri: ''
+				namespaceURI: ''
 			},
 			tgroup: {
-				namespaceUri: ''
+				namespaceURI: ''
 			}
 		});
 		tableStructureManager.addTableStructure(otherCalsTableStructure);

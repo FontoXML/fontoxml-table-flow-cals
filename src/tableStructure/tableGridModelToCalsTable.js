@@ -17,8 +17,8 @@ define([
 
 	var unsafeMoveNodes = blueprints.blueprintMutations.unsafeMoveNodes;
 
-	function createNewRow (namespaceUri, parentElement, blueprint) {
-		var row = namespaceManager.createElementNS(parentElement.ownerDocument, namespaceUri, 'row');
+	function createNewRow (namespaceURI, parentElement, blueprint) {
+		var row = namespaceManager.createElementNS(parentElement.ownerDocument, namespaceURI, 'row');
 		blueprint.appendChild(parentElement, row);
 		return row;
 	}
@@ -40,7 +40,7 @@ define([
 
 			var colName = columnSpecification.columnName;
 
-			var newColspec = namespaceManager.createElementNS(tgroupNode.ownerDocument, calsTableStructure.namespaceUri, 'colspec');
+			var newColspec = namespaceManager.createElementNS(tgroupNode.ownerDocument, calsTableStructure.namespaceURI, 'colspec');
 			blueprint.insertBefore(tgroupNode, newColspec, originalFirstChild);
 
 			// These options are optional, but we will always fill them for completeness sake.
@@ -90,7 +90,7 @@ define([
 		var tableHeaderNode = evaluateXPathToFirstNode('./child::' + calsTableStructure.selectorParts.thead, tgroupNode, blueprint),
 			tableBodyNode =
 				evaluateXPathToFirstNode('./child::' + calsTableStructure.selectorParts.tbody, tgroupNode, blueprint) ||
-				blueprint.appendChild(tgroupNode, namespaceManager.createElementNS(document, calsTableStructure.namespaceUri, 'tbody')),
+				blueprint.appendChild(tgroupNode, namespaceManager.createElementNS(document, calsTableStructure.namespaceURI, 'tbody')),
 			headerRows = [],
 			bodyRows = evaluateXPathToNodes('./descendant::' + calsTableStructure.selectorParts.row, tableBodyNode, blueprint);
 
@@ -130,7 +130,7 @@ define([
 
 		if (tableGridModel.headerRowCount && !tableHeaderNode) {
 			// We do not yet have a header, create one.
-			tableHeaderNode = namespaceManager.createElementNS(document, calsTableStructure.namespaceUri, calsTableStructure.headLocalName);
+			tableHeaderNode = namespaceManager.createElementNS(document, calsTableStructure.namespaceURI, calsTableStructure.headLocalName);
 			blueprint.insertBefore(tgroupNode, tableHeaderNode, tableBodyNode);
 		}
 
@@ -145,7 +145,7 @@ define([
 				// If we are handling a header row
 				row = headerRows[headerRowIndex];
 				if (!row) {
-					row = createNewRow(calsTableStructure.namespaceUri, tableHeaderNode, blueprint);
+					row = createNewRow(calsTableStructure.namespaceURI, tableHeaderNode, blueprint);
 					headerRows[headerRowIndex] = row;
 				}
 
@@ -154,7 +154,7 @@ define([
 			else {
 				row = bodyRows[bodyRowIndex];
 				if (!row) {
-					row = createNewRow(calsTableStructure.namespaceUri, tableBodyNode, blueprint);
+					row = createNewRow(calsTableStructure.namespaceURI, tableBodyNode, blueprint);
 					bodyRows[bodyRowIndex] = row;
 				}
 

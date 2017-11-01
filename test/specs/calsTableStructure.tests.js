@@ -10,10 +10,10 @@ describe('CalsTableStructure', () => {
 		calsTableStructure = new CalsTableStructure({
 			table: {
 				localName: 'table',
-				namespaceUri: ''
+				namespaceURI: ''
 			},
 			tgroup: {
-				namespaceUri: ''
+				namespaceURI: ''
 			}
 		});
 	});

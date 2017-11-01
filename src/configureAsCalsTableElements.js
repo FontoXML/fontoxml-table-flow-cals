@@ -40,11 +40,9 @@ define([
 	 * @param  {string}   [options.yesOrNo.noValue='0']         The false value
 	 * @param  {Object}   options.table                         Configuration options for the table element
 	 * @param  {string}   options.table.localName               The local name of the table element
-	 * @param  {string}   [options.table.namespaceUri]          The namespace URI unique to the table element
-	 * @param  {Object}   [options.table.visualization]         Visualization options for the table element
+	 * @param  {string}   [options.table.namespaceURI]          The namespace URI unique to the table element
 	 * @param  {Object}   [options.tgroup]                      Configuration options for the tgroup element
-	 * @param  {string}   [options.tgroup.namespaceUri]         The namespace URI for the tgroup element and its child elements
-	 * @param  {Object}   [options.tgroup.visualization]        Visualization options for the tgroup element
+	 * @param  {string}   [options.tgroup.namespaceURI]         The namespace URI for the tgroup element and its child elements
 	 * @param  {Object}   [options.entry]                       Configuration options for the entry element
 	 * @param  {string}   [options.entry.defaultTextContainer]  The default text container for the entry element
 	 * @param  {Object}   [options.thead]                       Configuration options for the thead element
@@ -53,6 +51,7 @@ define([
 	 * @param  {string}   [options.tfoot.localName='tfoot']     The local name for the tfoor element
 	 */
 	return function configureAsCalsTableElements (sxModule, options) {
+		options = options || {};
 		var tableStructure = new CalsTableStructure(options);
 		tableStructureManager.addTableStructure(tableStructure);
 
@@ -65,22 +64,19 @@ define([
 		var tableSelector = 'self::' + tableStructure.selectorParts.table;
 		configureAsFrame(sxModule, tableSelector, undefined, {
 			priority: priority,
-			tabNavigationSelector: 'self::' + tableStructure.selectorParts.cell,
-			visualization: options.table.visualization || {}
+			tabNavigationSelector: 'self::' + tableStructure.selectorParts.cell
 		});
 
 		// Table (tgroup)
 		var tgroupSelector = 'self::' + tableStructure.selectorParts.tgroup;
-		var tgroupVisualization = options.tgroup && options.tgroup.visualization ? options.tgroup.visualization : {};
 		configureAsTable(sxModule, tgroupSelector, undefined, {
 			isRemovableIfEmpty: false,
-			priority: priority,
-			visualization: tgroupVisualization
+			priority: priority
 		});
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')
 			.renderNodesMatching(tgroupSelector, priority)
-				.withTemplate(new TgroupTemplate(tgroupVisualization));
+				.withTemplate(new TgroupTemplate());
 
 		// Column (colspec)
 		var colspecSelector = 'self::' + tableStructure.selectorParts.colspec;
@@ -109,7 +105,7 @@ define([
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')
 			.renderNodesMatching(entrySelector, priority)
-				.withTemplate(new EntryTemplate(options.visualization));
+				.withTemplate(new EntryTemplate());
 
 		// Header (thead)
 		var theadSelector = 'self::' + tableStructure.selectorParts.thead;

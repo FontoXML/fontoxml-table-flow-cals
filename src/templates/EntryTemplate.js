@@ -2,12 +2,14 @@ define([
 	'fontoxml-blueprints/readOnlyBlueprint',
 	'fontoxml-dom-identification/getNodeId',
 	'fontoxml-selectors/evaluateXPathToNodes',
+	'fontoxml-families/mapCommonVisualizationOptionsToCvAttributes',
 	'fontoxml-table-flow',
 	'fontoxml-templated-views'
 ], function (
 	readOnlyBlueprint,
 	getNodeId,
 	evaluateXpathToNodes,
+	mapCommonVisualizationOptionsToCvAttributes,
 	tableFlow,
 	templatedViews
 ) {
@@ -58,11 +60,6 @@ define([
 		cellViewNode.setAttribute('colspan', tableCell.size.columns);
 	}
 
-	function applyVisualizationToViewNodeAttributes (cellViewNode, visualization) {
-		cellViewNode.setAttribute('cv-frame-background', visualization.backgroundColor);
-		cellViewNode.setAttribute('cv-show-when', visualization.showWhen);
-	}
-
 	EntryTemplate.prototype.render = function (nodeRenderer) {
 		var tableGridModel = tableGridModelLookupSingleton.getGridModel(nodeRenderer.sourceNode),
 			tableStructure = tableGridModel.tableStructure,
@@ -83,6 +80,13 @@ define([
 		sourceNode.getAttribute('align');
 		sourceNode.getAttribute('valign');
 
+		var finalVisualization = Object.assign(
+			{},
+			mapCommonVisualizationOptionsToCvAttributes(sourceNode, this._visualization),
+			{
+				'node-id': sourceNode.nodeId
+			});
+
 		// The table cell template also implicitly depends on the amount of logical columns, for computing widths
 		var tGroupNode = sourceNode.findRelatedNodes(function (sourceNode) {
 				return evaluateXpathToNodes('./ancestor::' + tableStructure.selectorParts.table, sourceNode, readOnlyBlueprint);
@@ -91,9 +95,9 @@ define([
 
 		applyGridModelToViewNodeAttributes(cellViewNode, tableCell, tableGridModel);
 
-		applyVisualizationToViewNodeAttributes(cellViewNode, this._visualization);
-
-		cellViewNode.setAttribute('node-id', sourceNode.nodeId);
+		Object.keys(finalVisualization).forEach(function (key) {
+			cellViewNode.setAttribute(key, finalVisualization[key]);
+		});
 
 		nodeRenderer.appendViewNode(cellViewNode);
 		nodeRenderer.traverse(cellViewNode);

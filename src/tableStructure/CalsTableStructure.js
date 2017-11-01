@@ -29,8 +29,8 @@ define([
 		createNewTableCreator = tableFlow.primitives.createNewTableCreater;
 
 	/**
-	 * The Cals table structure defines the translation between cals tables and the generic table model.
-	 *   The translation is done in buildGridModel().
+	 * The Cals table structure defines the translation between cals tables and the generic table
+	 * model. The translation is done in buildGridModel().
 	 *
 	 * @param  {Object}  options
 	 */
@@ -41,15 +41,15 @@ define([
 		this.footLocalName = options.tfoot && options.tfoot.localName ? options.tfoot.localName : 'tfoot';
 
 		// Configurable namespace URIs
-		this.tableNamespaceUri = options.table && options.table.namespaceUri ? options.table.namespaceUri : '';
-		this.namespaceUri = options.tgroup && options.tgroup.namespaceUri ? options.tgroup.namespaceUri : '';
+		this.tableNamespaceURI = options.table && options.table.namespaceURI ? options.table.namespaceURI : '';
+		this.namespaceURI = options.tgroup && options.tgroup.namespaceURI ? options.tgroup.namespaceURI : '';
 
 		this.yesValue = (options.yesOrNo && options.yesOrNo.yesValue) ? options.yesOrNo.yesValue : '1';
 		this.noValue = (options.yesOrNo && options.yesOrNo.noValue) ? options.yesOrNo.noValue : '0';
 
-		var namespaceSelector = 'Q{' + this.namespaceUri + '}';
+		var namespaceSelector = 'Q{' + this.namespaceURI + '}';
 		this.selectorParts = {
-			table: 'Q{' + this.tableNamespaceUri + '}' + this.tableFigureLocalName,
+			table: 'Q{' + this.tableNamespaceURI + '}' + this.tableFigureLocalName,
 			tgroup: namespaceSelector + 'tgroup',
 			thead: namespaceSelector + this.headLocalName,
 			tbody: namespaceSelector + 'tbody',
@@ -121,7 +121,7 @@ define([
 		if (!actualTableNode) {
 			actualTableNode = blueprint.appendChild(
 				tableNode,
-				namespaceManager.createElementNS(tableNode.ownerDocument, this.namespaceUri, 'tgroup'));
+				namespaceManager.createElementNS(tableNode.ownerDocument, this.namespaceURI, 'tgroup'));
 		}
 		return tableGridModelToCalsTable(this, tableGridModel, actualTableNode, blueprint, format);
 	};
@@ -136,9 +136,9 @@ define([
 	};
 
 	CalsTableStructure.prototype.createTableBase = function (ownerDocument) {
-		var tableNode = namespaceManager.createElementNS(ownerDocument, this.tableNamespaceUri, this.tableFigureLocalName),
-			tgroupNode = namespaceManager.createElementNS(ownerDocument, this.namespaceUri, 'tgroup'),
-			tbodyNode = namespaceManager.createElementNS(ownerDocument, this.namespaceUri, 'tbody');
+		var tableNode = namespaceManager.createElementNS(ownerDocument, this.tableNamespaceURI, this.tableFigureLocalName),
+			tgroupNode = namespaceManager.createElementNS(ownerDocument, this.namespaceURI, 'tgroup'),
+			tbodyNode = namespaceManager.createElementNS(ownerDocument, this.namespaceURI, 'tbody');
 
 		tgroupNode.appendChild(tbodyNode);
 		tableNode.appendChild(tgroupNode);

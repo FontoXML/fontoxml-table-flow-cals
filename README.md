@@ -26,15 +26,11 @@ configureAsCalsTableElements(sxModule, {
 		localName: 'table',
 		// The uri for the table element (optional)
 		namespaceUri: 'http://some-uri.com/'
-		// Family visualization options (optional)
-		visualization: {}
 	},
 
 	tgroup: {
 		// The namespace uri for the tgoup element and its descendant elements (optional)
 		namespaceUri: 'http://some-other-uri.com/'
-		// Family visualization options (optional)
-		visualization: {}
 	},
 
 	entry: {

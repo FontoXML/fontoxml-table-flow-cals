@@ -25,10 +25,10 @@ describe('buildGridModel()', () => {
 		calsTableStructure = new CalsTableStructure({
 			table: {
 				localName: 'table',
-				namespaceUri: ''
+				namespaceURI: ''
 			},
 			tgroup: {
-				namespaceUri: ''
+				namespaceURI: ''
 			}
 		});
 		tableStructureManager.addTableStructure(calsTableStructure);

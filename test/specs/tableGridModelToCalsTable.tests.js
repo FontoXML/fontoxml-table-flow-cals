@@ -51,10 +51,10 @@ describe('tableGridModelToCalsTable', () => {
 		calsTableStructure = new CalsTableStructure({
 			table: {
 				localName: 'table',
-				namespaceUri: null
+				namespaceURI: null
 			},
 			tgroup: {
-				namespaceUri: null
+				namespaceURI: null
 			}
 		});
 		tableStructureManager.addTableStructure(calsTableStructure);
@@ -98,10 +98,10 @@ describe('tableGridModelToCalsTable', () => {
 		const calsTableStructureWithNamespaces = new CalsTableStructure({
 			table: {
 				localName: 'matrix',
-				namespaceUri: 'http://example.com/ns1'
+				namespaceURI: 'http://example.com/ns1'
 			},
 			tgroup: {
-				namespaceUri: 'http://example.com/ns2'
+				namespaceURI: 'http://example.com/ns2'
 			}
 		});
 
