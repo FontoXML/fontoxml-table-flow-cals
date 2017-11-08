@@ -2,6 +2,7 @@ define([
 	'fontoxml-blueprints/readOnlyBlueprint',
 	'fontoxml-dom-identification/getNodeId',
 	'fontoxml-selectors/evaluateXPathToNodes',
+	'fontoxml-families/determineCommonVisualizationOptions',
 	'fontoxml-families/mapCommonVisualizationOptionsToCvAttributes',
 	'fontoxml-table-flow',
 	'fontoxml-templated-views'
@@ -9,6 +10,7 @@ define([
 	readOnlyBlueprint,
 	getNodeId,
 	evaluateXpathToNodes,
+	determineCommonVisualizationOptions,
 	mapCommonVisualizationOptionsToCvAttributes,
 	tableFlow,
 	templatedViews
@@ -23,16 +25,14 @@ define([
 	var tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton,
 		Template = templatedViews.base.Template;
 
-	function EntryTemplate (visualization) {
+	function EntryTemplate () {
 		Template.call(this);
-
-		this._visualization = Object.assign({}, DEFAULT_VISUALIZATION, visualization);
 	}
 
 	EntryTemplate.prototype = Object.create(Template.prototype);
 	EntryTemplate.prototype.constructor = EntryTemplate;
 
-	function applyGridModelToViewNodeAttributes (cellViewNode, tableCell, tableGridModel) {
+	function applyGridModelToViewNodeAttributes (cellViewNode, tableCell, tableGridModel, visualization) {
 		var rowSep = '0',
 			colSep = '0';
 
@@ -40,6 +40,13 @@ define([
 		if (tableGridModel.cellsHaveBorders) {
 			rowSep = tableCell.data.rowSeparator || '1';
 			colSep = tableCell.data.columnSeparator || '1';
+		}
+
+		if (visualization.backgroundColor) {
+			cellViewNode.setAttribute('cv-frame-background', visualization.backgroundColor);
+		}
+		if (visualization.showWhen) {
+			cellViewNode.setAttribute('cv-show-when', visualization.showWhen);
 		}
 
 		cellViewNode.setAttribute('cv-table-row-separator', rowSep);
@@ -80,9 +87,15 @@ define([
 		sourceNode.getAttribute('align');
 		sourceNode.getAttribute('valign');
 
+		var visualization = Object.assign(
+			{},
+			DEFAULT_VISUALIZATION,
+			determineCommonVisualizationOptions(sourceNode, nodeRenderer)
+		);
+
 		var finalVisualization = Object.assign(
 			{},
-			mapCommonVisualizationOptionsToCvAttributes(sourceNode, this._visualization),
+			mapCommonVisualizationOptionsToCvAttributes(sourceNode, visualization),
 			{
 				'node-id': sourceNode.nodeId
 			});
@@ -93,7 +106,7 @@ define([
 			})[0];
 		tGroupNode.getAttribute('cols');
 
-		applyGridModelToViewNodeAttributes(cellViewNode, tableCell, tableGridModel);
+		applyGridModelToViewNodeAttributes(cellViewNode, tableCell, tableGridModel, visualization);
 
 		Object.keys(finalVisualization).forEach(function (key) {
 			cellViewNode.setAttribute(key, finalVisualization[key]);
