@@ -135,16 +135,5 @@ define([
 			this);
 	};
 
-	CalsTableStructure.prototype.createTableBase = function (ownerDocument) {
-		var tableNode = namespaceManager.createElementNS(ownerDocument, this.tableNamespaceURI, this.tableFigureLocalName),
-			tgroupNode = namespaceManager.createElementNS(ownerDocument, this.namespaceURI, 'tgroup'),
-			tbodyNode = namespaceManager.createElementNS(ownerDocument, this.namespaceURI, 'tbody');
-
-		tgroupNode.appendChild(tbodyNode);
-		tableNode.appendChild(tgroupNode);
-
-		return tableNode;
-	};
-
 	return CalsTableStructure;
 });
