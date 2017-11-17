@@ -4,7 +4,7 @@ category: add-on/fontoxml-table-flow-cals
 
 # CALS table support
 
-Privode support for CALS compatible tables.
+Provide support for CALS compatible tables.
 
 This packages exposes a single configureAsCalsTableElements function for configuring CALS table elements.
 
