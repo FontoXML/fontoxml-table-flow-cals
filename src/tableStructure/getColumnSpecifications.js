@@ -82,7 +82,7 @@ define([
 			oldColnamesToNewColnames = {},
 			previousColnum = 0;
 
-		// We used to generate non-standard colspecs, starting a 0. This is not right, according to spec.
+		// We used to generate non-standard colspecs, starting at 0. This is not right, according to spec.
 		var colnumsStartWith0 = colspecs[0] && evaluateXPathToBoolean('./@colnum = "0"', colspecs[0], blueprint);
 
 		for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
