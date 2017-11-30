@@ -141,5 +141,294 @@ describe('CALS tables: XML to XML', () => {
 			transformTable(jsonIn, jsonOut, options);
 		});
 	});
+
+	describe('merge cell', () => {
+		it('can correctly merge two cells, center cell with cell above', () => {
+			const jsonIn = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellAbove(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
+
+			const jsonOut = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0', 'morerows': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const options = {
+				table: {
+					localname: 'table'
+				}
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can correctly merge two cells, center cell with cell to the right', () => {
+			const jsonIn = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellToTheRight(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
+
+			const jsonOut = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colsep': '0', 'rowsep': '0', 'namest': 'column-1', 'nameend': 'column-2' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const options = {
+				table: {
+					localname: 'table'
+				}
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can correctly merge two cells, center cell with cell below', () => {
+			const jsonIn = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellBelow(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
+
+			const jsonOut = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0', 'morerows': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const options = {
+				table: {
+					localname: 'table'
+				}
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can correctly merge two cells, center cell with cell to the left', () => {
+			const jsonIn = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellToTheLeft(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
+
+			const jsonOut = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colsep': '0', 'rowsep': '0', 'namest': 'column-0', 'nameend': 'column-1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const options = {
+				table: {
+					localname: 'table'
+				}
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can correctly merge a merged cell ((1,0) and (1,1)) with the cells above', () => {
+			const jsonIn = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colsep': '0', 'rowsep': '0', 'namest': 'column-0', 'nameend': 'column-1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellAbove(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
+
+			const jsonOut = ['tgroup', { 'cols': '3' },
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['tbody',
+						['row',
+							['entry', { 'colsep': '0', 'rowsep': '0', 'namest': 'column-0', 'nameend': 'column-1', 'morerows': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						],
+						['row',
+							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+						]
+					]
+				];
+
+			const options = {
+				table: {
+					localname: 'table'
+				}
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+	});
 });
 

@@ -197,12 +197,12 @@ define([
 					// Minus one to accommodate for the starting cell
 					var endColumnSpecifications = tableGridModel.columnSpecifications[tableCell.origin.column + tableCell.size.columns - 1];
 					blueprint.setAttribute(tableCellElement, 'nameend', endColumnSpecifications.columnName);
-					blueprint.setAttribute(tableCellElement, 'colname', null);
+					blueprint.removeAttribute(tableCellElement, 'colname');
 				}
 				else {
 					blueprint.setAttribute(tableCellElement, 'colname', startColumn.columnName);
-					blueprint.setAttribute(tableCellElement, 'nameend', null);
-					blueprint.setAttribute(tableCellElement, 'namest', null);
+					blueprint.removeAttribute(tableCellElement, 'nameend');
+					blueprint.removeAttribute(tableCellElement, 'namest');
 				}
 
 				if (tableCell.size.rows !== 1) {
