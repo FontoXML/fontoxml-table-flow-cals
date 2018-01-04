@@ -1,16 +1,15 @@
 define([
 	'fontoxml-blueprints',
 	'fontoxml-dom-identification/getNodeId',
-	'fontoxml-table-flow'
+	'fontoxml-table-flow/tableGridModelLookupSingleton'
 ], function (
 	blueprints,
 	getNodeId,
-	tableFlow
+	tableGridModelLookupSingleton
 ) {
 	'use strict';
 
-	var blueprintQuery = blueprints.blueprintQuery,
-		tableGridModelLookupSingleton = tableFlow.tableGridModelLookupSingleton;
+	var blueprintQuery = blueprints.blueprintQuery;
 
 	var tableGridModelCache = null,
 		tableGridModelIndexForCellNodeId = null;
@@ -23,7 +22,9 @@ define([
 			tableGridModel.tableDefiningNode = blueprintQuery.findClosestAncestor(
 				blueprint,
 				blueprint.lookup(cellNodeId),
-				tableGridModel.tableStructure.isTable.bind(tableGridModel.tableStructure));
+				function (node) {
+					return tableGridModel.tableDefinition.isTable(node, blueprint);
+				});
 
 			if (tableGridModelCache.indexOf(tableGridModel) === -1) {
 				tableGridModelCache.push(tableGridModel);
@@ -129,7 +130,7 @@ define([
 				tableCellToEdit = tableGridModel.getCellByNodeId(cellNodeId);
 
 			return Object.keys(cellData).every(function (attributeName) {
-				return tableCellToEdit.data[attributeName] === (cellData[attributeName] ? '1' : '0');
+				return tableCellToEdit.data[attributeName] === (cellData[attributeName]);
 			});
 		});
 
@@ -147,13 +148,13 @@ define([
 			// If already active we should set the data to the inverse value of the original intent
 			Object.keys(cellData).forEach(function (attributeName) {
 				var attributeValue = isActive ? !cellData[attributeName] : cellData[attributeName];
-				tableCellToEdit.data[attributeName] = attributeValue ? '1' : '0';
+				tableCellToEdit.data[attributeName] = attributeValue;
 			});
 		});
 
 		// Loop over every unique table that needs to be changed, applyToDom and return the success state based on that
 		return tableGridModelCache.every(function (tableGridModel) {
-			return tableGridModel.tableStructure.applyToDom(
+			return tableGridModel.tableDefinition.applyToDom(
 				tableGridModel,
 				tableGridModel.tableDefiningNode,
 				blueprint,

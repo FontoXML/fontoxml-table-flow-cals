@@ -1,21 +1,14 @@
 import blueprints from 'fontoxml-blueprints';
 import core from 'fontoxml-core';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import tableFlow from 'fontoxml-table-flow';
 import * as slimdom from 'slimdom';
 
-import createDefaultColSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultColSpec';
-import createDefaultRowSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultRowSpec';
-import createDefaultCellSpec from 'fontoxml-table-flow-cals/tableStructure/specs/createDefaultCellSpec';
-import tableGridModelToCalsTable from 'fontoxml-table-flow-cals/tableStructure/tableGridModelToCalsTable';
-import CalsTableStructure from 'fontoxml-table-flow-cals/tableStructure/CalsTableStructure';
-import tableStructureManager from 'fontoxml-table-flow/tableStructureManager';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
 
 import namespaceManager from 'fontoxml-dom-namespaces/namespaceManager';
 
 const Blueprint = blueprints.Blueprint;
 const CoreDocument = core.Document;
-const createNewTableCreater = tableFlow.primitives.createNewTableCreater;
 
 namespaceManager.addNamespace('somenamespace', 'somenamespace-uri');
 
@@ -25,17 +18,19 @@ const stubFormat = {
 		},
 		metadata: {
 			get: (_option, _node) => false
+		},
+		validator: {
+			canContain: () => true
 		}
 	};
-
-const createTable = createNewTableCreater('somenamespace:entry', createDefaultRowSpec, createDefaultColSpec, createDefaultCellSpec);
 
 describe('tableGridModelToCalsTable with namespaces', () => {
 	let documentNode,
 		coreDocument,
 		blueprint,
 		tgroupNode,
-		calsTableStructure;
+		calsTableStructure,
+		createTable;
 
 	beforeEach(() => {
 		documentNode = new slimdom.Document();
@@ -47,7 +42,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		const tbodyNode = namespaceManager.createElementNS(documentNode, 'somenamespace-uri', 'tbody');
 		const tableNode = namespaceManager.createElementNS(documentNode, 'somenamespace-uri', 'table');
 
-		calsTableStructure = new CalsTableStructure({
+		calsTableStructure = new CalsTableDefinition({
 			table: {
 				localName: 'table',
 				namespaceURI: 'somenamespace-uri'
@@ -56,7 +51,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 				namespaceURI: 'somenamespace-uri'
 			}
 		});
-		tableStructureManager.addTableStructure(calsTableStructure);
+		createTable = calsTableStructure.getTableGridModelBuilder();
 
 		coreDocument.dom.mutate(() => {
 			tgroupNode.appendChild(tbodyNode);
@@ -69,7 +64,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		// Create a new one-by-one table
 		const tableGridModel = createTable(1, 1, true, documentNode);
 
-		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
+		const success = calsTableStructure.applyToDom(tableGridModel, tgroupNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
@@ -78,10 +73,10 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 				{ frame: 'all' },
 				['somenamespace:tgroup',
 					{ cols: '1' },
-					['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }],
 					['somenamespace:tbody',
 						['somenamespace:row',
-							['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }]
+							['somenamespace:entry', { colname: 'column-0', colsep: '0', rowsep: '0' }]
 						]
 					]
 				]
@@ -92,7 +87,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		// Create a new four-by-four table
 		const tableGridModel = createTable(3, 4, true, documentNode);
 
-		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
+		const success = calsTableStructure.applyToDom(tableGridModel, tgroupNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
@@ -101,30 +96,30 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 				{ frame: 'all' },
 				['somenamespace:tgroup',
 					{ cols: '4' },
-					['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }],
-					['somenamespace:colspec', { colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '1', rowsep: '1' }],
-					['somenamespace:colspec', { colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '1', rowsep: '1' }],
-					['somenamespace:colspec', { colname: 'column-3', colnum: '4', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }],
+					['somenamespace:colspec', { colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }],
+					['somenamespace:colspec', { colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }],
+					['somenamespace:colspec', { colname: 'column-3', colnum: '4', colwidth: '1*', colsep: '0', rowsep: '0' }],
 					['somenamespace:thead',
 						['somenamespace:row',
-							['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+							['somenamespace:entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-2', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-3', colsep: '0', rowsep: '0' }]
 						]
 					],
 					['somenamespace:tbody',
 						['somenamespace:row',
-							['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+							['somenamespace:entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-2', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-3', colsep: '0', rowsep: '0' }]
 						],
 						['somenamespace:row',
-							['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+							['somenamespace:entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-2', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-3', colsep: '0', rowsep: '0' }]
 						]
 					]
 				]
@@ -144,7 +139,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
 		tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
 
-		const success = tableGridModelToCalsTable(calsTableStructure, tableGridModel, tgroupNode, blueprint, stubFormat);
+		const success = calsTableStructure.applyToDom(tableGridModel, tgroupNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
@@ -153,27 +148,27 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 				{ frame: 'all' },
 				['somenamespace:tgroup',
 					{ cols: '4' },
-					['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }],
-					['somenamespace:colspec', { colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '1', rowsep: '1' }],
-					['somenamespace:colspec', { colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '1', rowsep: '1' }],
-					['somenamespace:colspec', { colname: 'column-3', colnum: '4', colwidth: '1*', colsep: '1', rowsep: '1' }],
+					['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }],
+					['somenamespace:colspec', { colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }],
+					['somenamespace:colspec', { colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }],
+					['somenamespace:colspec', { colname: 'column-3', colnum: '4', colwidth: '1*', colsep: '0', rowsep: '0' }],
 					['somenamespace:thead',
 						['somenamespace:row',
-							['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+							['somenamespace:entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-2', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-3', colsep: '0', rowsep: '0' }]
 						]
 					],
 					['somenamespace:tbody',
 						['somenamespace:row',
-							['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { namest: 'column-1', colsep: '1', rowsep: '1', nameend: 'column-2', morerows: '1' }],
-							['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+							['somenamespace:entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { namest: 'column-1', colsep: '0', rowsep: '0', nameend: 'column-2', morerows: '1' }],
+							['somenamespace:entry', { colname: 'column-3', colsep: '0', rowsep: '0' }]
 						],
 						['somenamespace:row',
-							['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-							['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+							['somenamespace:entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['somenamespace:entry', { colname: 'column-3', colsep: '0', rowsep: '0' }]
 						]
 					]
 				]
