@@ -25,12 +25,12 @@ configureAsCalsTableElements(sxModule, {
 		// The name of the containing element
 		localName: 'table',
 		// The uri for the table element (optional)
-		namespaceUri: 'http://some-uri.com/'
+		namespaceURI: 'http://some-uri.com/'
 	},
 
 	tgroup: {
 		// The namespace uri for the tgoup element and its descendant elements (optional)
-		namespaceUri: 'http://some-other-uri.com/'
+		namespaceURI: 'http://some-other-uri.com/'
 	},
 
 	entry: {
