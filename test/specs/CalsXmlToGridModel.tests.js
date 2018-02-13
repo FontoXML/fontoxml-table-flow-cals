@@ -574,7 +574,7 @@ describe('CALS tables: XML to GridModel', () => {
 	});
 
 	describe('Units of width', () => {
-		it.skip('can create a table with proportional widths', () => {
+		it('can create a table with proportional widths', () => {
 			coreDocument.dom.mutate(() => jsonMLMapper.parse(
 				['table',
 					['tgroup',
@@ -601,18 +601,58 @@ describe('CALS tables: XML to GridModel', () => {
 
 			const leftColumn = gridModel.getCellByNodeId(getNodeId(tgroupElement.lastChild.lastChild.firstChild));
 			const rightColumn = gridModel.getCellByNodeId(getNodeId(tgroupElement.lastChild.lastChild.lastChild));
-			chai.assert.equal(leftColumn.data.width.stringValue(), '1*');
-			chai.assert.equal(rightColumn.data.width.stringValue(), '2*');
+			chai.assert.equal(leftColumn.data.width, '1*');
+			chai.assert.equal(rightColumn.data.width, '2*');
 		});
 
-		it.skip('can create a table with fixed widths', () => {
+		it('can create a table with proportional widths and translate those widths to the right percentages', () => {
 			coreDocument.dom.mutate(() => jsonMLMapper.parse(
 				['table',
 					['tgroup',
 						{ cols: 3 },
-						['colspec', { colwidth: '10pt' }],
-						['colspec', { colwidth: '10pt' }],
-						['colspec', { colwidth: '20pt' }],
+						['colspec', { colwidth: '1*' }],
+						['colspec', { colwidth: '1*' }],
+						['colspec', { colwidth: '3*' }],
+						['tbody',
+							['row', ['entry'], ['entry'], ['entry']],
+							['row', ['entry'], ['entry'], ['entry']],
+							['row', ['entry'], ['entry'], ['entry']]
+						]
+					]
+				], documentNode));
+
+			const tableElement = documentNode.firstChild;
+			const tgroupElement = tableElement.firstChild;
+
+			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			chai.assert.isOk(gridModel);
+
+			const columnWidths = gridModel.columnSpecifications.map(function (spec) {
+				return spec.columnWidth;
+			});
+
+			const leftColumnSpecification = gridModel.columnSpecifications[0];
+			const leftPercentage = tableDefinition.widthToHtmlWidth(leftColumnSpecification.columnWidth, columnWidths);
+
+			const centerColumnSpecification = gridModel.columnSpecifications[1];
+			const centerPercentage = tableDefinition.widthToHtmlWidth(centerColumnSpecification.columnWidth, columnWidths);
+
+			const rightColumnSpecification = gridModel.columnSpecifications[2];
+			const rightPercentage = tableDefinition.widthToHtmlWidth(rightColumnSpecification.columnWidth, columnWidths);
+
+			chai.assert.equal('20%', leftPercentage);
+			chai.assert.equal('20%', centerPercentage);
+			chai.assert.equal('60%', rightPercentage);
+		});
+
+		it('can create a table with fixed widths', () => {
+			coreDocument.dom.mutate(() => jsonMLMapper.parse(
+				['table',
+					['tgroup',
+						{ cols: 3 },
+						['colspec', { colwidth: '10px' }],
+						['colspec', { colwidth: '10px' }],
+						['colspec', { colwidth: '20px' }],
 						['tbody',
 							['row', ['entry'], ['entry'], ['entry']],
 							['row', ['entry'], ['entry'], ['entry']],
@@ -633,8 +673,8 @@ describe('CALS tables: XML to GridModel', () => {
 			const leftColumn = gridModel.getCellByNodeId(getNodeId(tgroupElement.lastChild.lastChild.firstChild));
 			const rightColumn = gridModel.getCellByNodeId(getNodeId(tgroupElement.lastChild.lastChild.lastChild));
 
-			chai.assert.equal(leftColumn.data.width.stringValue(), '10pt');
-			chai.assert.equal(rightColumn.data.width.stringValue(), '20pt');
+			chai.assert.equal(leftColumn.data.width, '10px');
+			chai.assert.equal(rightColumn.data.width, '20px');
 		});
 	});
 });

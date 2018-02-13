@@ -3,36 +3,29 @@ define([
 	'fontoxml-selectors/evaluateXPathToFirstNode',
 
 	'fontoxml-table-flow/TableDefinition',
-	'fontoxml-table-flow/Width',
-
+	'fontoxml-table-flow/createCreateColumnSpecificationNodeStrategy',
+	'fontoxml-table-flow/createCreateRowStrategy',
+	'fontoxml-table-flow/getAttributeStrategies',
 	'fontoxml-table-flow/normalizeContainerNodeStrategies',
 	'fontoxml-table-flow/normalizeColumnSpecificationStrategies',
-
-	'fontoxml-table-flow/getAttributeStrategies',
-
-	'fontoxml-table-flow/setAttributeStrategies',
-
-	'fontoxml-table-flow/createCreateRowStrategy',
-	'fontoxml-table-flow/createCreateColumnSpecificationNodeStrategy'
+	'fontoxml-table-flow/setAttributeStrategies'
 ], function (
 	namespaceManager,
 	evaluateXPathToFirstNode,
 
 	TableDefinition,
-	Width,
-
+	createCreateColumnSpecificationNodeStrategy,
+	createCreateRowStrategy,
+	getAttributeStrategies,
 	normalizeContainerNodeStrategies,
 	normalizeColumnSpecificationStrategies,
-
-	getAttributeStrategies,
-
-	setAttributeStrategies,
-
-
-	createCreateRowStrategy,
-	createCreateColumnSpecificationNodeStrategy
+	setAttributeStrategies
 ) {
 	'use strict';
+
+	function parseWidth (width) {
+		return /(?:(\d*(?:\.\d*)?)\*)?\+?(?:(\d+(?:\.\d*)?)px)?/i.exec(width);
+	}
 
 	function createTableBorderAttributeStrategy (parentNodeSelector) {
 		return function tableBorderAttributeStrategy (context, _data, blueprint) {
@@ -99,9 +92,39 @@ define([
 				all: 'all'
 			},
 
-			// Boolean values
-			trueValue: trueValue,
-			falseValue: falseValue,
+			// Widths
+			widthToHtmlWidthStrategy: function (width, widths) {
+					var proportion = parseFloat(parseWidth(width)[1]) || 0;
+					var totalProportion = widths.reduce(function (total, proportion) {
+						return total + (parseFloat(parseWidth(proportion)[1]) || 0);
+					}, 0);
+
+					return 100 * proportion / totalProportion + '%';
+				},
+			addWidthsStrategy: function (width1, width2) {
+					var parsedWidth1 = parseWidth(width1);
+					var proportion1 = parseFloat(parsedWidth1[1]) || 0;
+					var fixed1 = parseFloat(parsedWidth1[2]) || 0;
+
+					var parsedWidth2 = parseWidth(width2);
+					var proportion2 = parseFloat(parsedWidth2[1]) || 0;
+					var fixed2 = parseFloat(parsedWidth2[2]) || 0;
+
+					var proportion = proportion1 + proportion2;
+					var fixed = fixed1 + fixed2;
+
+					return proportion !== 0 ? proportion + '*' : '' +
+						fixed !== 0 ? fixed + 'px' : '';
+				},
+			divideByTwoStrategy: function (width) {
+					var parsedWidth = parseWidth(width);
+
+					var proportion = parseFloat(parsedWidth[1]);
+					var fixed = parseFloat(parsedWidth[2]);
+
+					return proportion ? (proportion / 2) + '*' : '' +
+						fixed ? (fixed / 2) + 'px' : '';
+				},
 
 			// Defining node selectors
 			tableDefiningNodeSelector: 'self::' + tableFigure,
@@ -155,7 +178,7 @@ define([
 						columnName: 'column-' + context.columnIndex,
 						oldColumnName: 'column-' + context.columnIndex,
 						columnNumber: context.columnIndex + 1,
-						columnWidth: new Width('1*'),
+						columnWidth: '1*',
 						rowSeparator: false,
 						columnSeparator: false
 					};
@@ -164,7 +187,7 @@ define([
 					return {
 						rows: 1,
 						cols: 1,
-						width: new Width('1*'),
+						width: '1*',
 						columnName: 'column-' + context.columnIndex,
 						rowSeparator: false,
 						columnSeparator: false
@@ -184,7 +207,7 @@ define([
 					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('columnSeparator', 'let $sep := ./@colsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
 					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('rowSeparator', 'let $sep := ./@rowsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('horizontalAlignment', './@align'),
-					getAttributeStrategies.createGetAttributeValueAsWidthStrategy('columnWidth', 'let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"'),
+					getAttributeStrategies.createGetAttributeValueAsStringStrategy('columnWidth', 'let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('oldColumnName', './@colname'),
 					getAttributeStrategies.createGetAttributeValueAsNumberStrategy('columnNumber', './@colnum'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('columnName', 'let $name := ./@colname return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()')
@@ -222,7 +245,7 @@ define([
 					setAttributeStrategies.createBooleanValueAsAttributeStrategy('colsep', 'columnSeparator', trueValue, trueValue, falseValue),
 					setAttributeStrategies.createBooleanValueAsAttributeStrategy('rowsep', 'rowSeparator', trueValue, trueValue, falseValue),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
-					setAttributeStrategies.createColumnWidthAsAttributeStrategy('colwidth', 'columnWidth', '1*')
+					setAttributeStrategies.createStringValueAsAttributeStrategy('colwidth', 'columnWidth')
 				],
 
 			setCellNodeAttributeStrategies: [
