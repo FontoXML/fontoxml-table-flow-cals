@@ -35,7 +35,7 @@ define([
 	'use strict';
 
 	function createTableBorderAttributeStrategy (parentNodeSelector) {
-		return function tableBorderAttributeStrategy (context, data, blueprint) {
+		return function tableBorderAttributeStrategy (context, _data, blueprint) {
 			var tableFigureNode = evaluateXPathToFirstNode(parentNodeSelector, context.node, blueprint);
 			if (tableFigureNode) {
 				blueprint.setAttribute(tableFigureNode, 'frame', context.specification.borders);
@@ -64,10 +64,10 @@ define([
 
 		var namespaceSelector = 'Q{' + namespaceURI + '}';
 		var selectorParts = {
-			tableFigure: 'Q{' + tableNamespaceURI + '}' + tableFigureLocalName,
-			table: namespaceSelector + 'tgroup' + (options.table && options.table.tableFilterSelector ?
-					'[' + options.table.tableFilterSelector + ']' :
+			tableFigure: 'Q{' + tableNamespaceURI + '}' + tableFigureLocalName + (options.tgroup && options.tgroup.tableFigureFilterSelector ?
+					'[' + options.tgroup.tableFigureFilterSelector + ']' :
 					''),
+			table: namespaceSelector + 'tgroup',
 			headerContainer: namespaceSelector + headLocalName,
 			bodyContainer: namespaceSelector + 'tbody',
 			footerContainer: namespaceSelector + footLocalName,
@@ -95,8 +95,8 @@ define([
 			// Table borders
 			defaultBorderValue: 'all',
 			tableBorderToCvkTableBorder: {
-				'none': 'none',
-				'all': 'all'
+				none: 'none',
+				all: 'all'
 			},
 
 			// Boolean values
@@ -232,7 +232,7 @@ define([
 					setAttributeStrategies.createRowSpanAsAttributeStrategy('morerows', true),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
-				],
+				]
 		};
 
 		TableDefinition.call(this, properties);

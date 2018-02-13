@@ -27,6 +27,7 @@ define([
 	 * @param  {string}   [options.table.namespaceURI]          The namespace URI unique to the table element
 	 * @param  {Object}   [options.tgroup]                      Configuration options for the tgroup element
 	 * @param  {string}   [options.tgroup.namespaceURI]         The namespace URI for the tgroup element and its child elements
+	 * @param  {string}   [options.tgroup.tableFigureFilterSelector]  An optional selector which is used to filter which possible tables should be seen as cals tables for this configuration.
 	 * @param  {Object}   [options.entry]                       Configuration options for the entry element
 	 * @param  {string}   [options.entry.defaultTextContainer]  The default text container for the entry element
 	 * @param  {Object}   [options.thead]                       Configuration options for the thead element
