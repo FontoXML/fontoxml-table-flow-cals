@@ -31,7 +31,7 @@ define([
 		return function tableBorderAttributeStrategy (context, _data, blueprint) {
 			var tableFigureNode = evaluateXPathToFirstNode(parentNodeSelector, context.node, blueprint);
 			if (tableFigureNode) {
-				blueprint.setAttribute(tableFigureNode, 'frame', context.specification.borders || 'all');
+				blueprint.setAttribute(tableFigureNode, 'frame', context.specification.borders ? 'all' : 'none');
 			}
 		};
 	}
@@ -84,13 +84,6 @@ define([
 			selectorParts: selectorParts,
 			namespaceURI: namespaceURI,
 			cellLocalName: 'entry',
-
-			// Table borders
-			defaultBorderValue: 'all',
-			tableBorderToCvkTableBorder: {
-				none: 'none',
-				all: 'all'
-			},
 
 			// Widths
 			widthToHtmlWidthStrategy: function (width, widths) {
@@ -200,7 +193,7 @@ define([
 
 			// Specifications
 			getTableSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('borders', './parent::' + tableFigure + '/@frame')
+					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('borders', './parent::' + tableFigure + '/@frame = "all"')
 				],
 
 			getColumnSpecificationStrategies: [
