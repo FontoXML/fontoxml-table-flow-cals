@@ -31,7 +31,7 @@ define([
 		return function tableBorderAttributeStrategy (context, _data, blueprint) {
 			var tableFigureNode = evaluateXPathToFirstNode(parentNodeSelector, context.node, blueprint);
 			if (tableFigureNode) {
-				blueprint.setAttribute(tableFigureNode, 'frame', context.specification.borders);
+				blueprint.setAttribute(tableFigureNode, 'frame', context.specification.borders || 'all');
 			}
 		};
 	}
@@ -189,8 +189,8 @@ define([
 						cols: 1,
 						width: '1*',
 						columnName: 'column-' + context.columnIndex,
-						rowSeparator: false,
-						columnSeparator: false
+						rowSeparator: true,
+						columnSeparator: true
 					};
 				},
 
@@ -223,11 +223,11 @@ define([
 					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('rowSeparator',
 						'if (./@rowsep) then ./@rowsep = "' + trueValue + '" ' +
 						'else let $columnRowsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = ./@colname or @colname = ./@namest]/@rowsep return if ($columnRowsep) then $columnRowsep = "' + trueValue + '" ' +
-						'else false()'),
+						'else true()'),
 					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('columnSeparator',
 						'if (./@colsep) then ./@colsep = "' + trueValue + '" ' +
 						'else let $columnColsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = ./@colname or @colname = ./@namest]/@colsep return if ($columnColsep) then $columnColsep = "' + trueValue + '" ' +
-						'else false()'),
+						'else true()'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('columnName', './@colname'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('nameEnd', './@nameend'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('nameStart', './@namest'),
