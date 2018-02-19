@@ -214,13 +214,23 @@ define([
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('horizontalAlignment', './@align'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('verticalAlignment', './@valign'),
 					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('rowSeparator',
-						'if (./@rowsep) then ./@rowsep = "' + trueValue + '" ' +
-						'else let $columnRowsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = ./@colname or @colname = ./@namest]/@rowsep return if ($columnRowsep) then $columnRowsep = "' + trueValue + '" ' +
-						'else true()'),
+						'if (./@rowsep) then ' +
+							'./@rowsep = "' + trueValue + '" ' +
+						'else ' +
+							'if (./@colname or ./@namest) then ' +
+								'let $columnName := if (./@colname) then ./@colname else ./@namest, ' +
+									'$columnRowsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $columnName]/@rowsep ' +
+								'return $columnRowsep = "' + trueValue + '" ' +
+							'else true()'),
 					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('columnSeparator',
-						'if (./@colsep) then ./@colsep = "' + trueValue + '" ' +
-						'else let $columnColsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = ./@colname or @colname = ./@namest]/@colsep return if ($columnColsep) then $columnColsep = "' + trueValue + '" ' +
-						'else true()'),
+						'if (./@colsep) then ' +
+							'./@colsep = "' + trueValue + '" ' +
+						'else ' +
+							'if (./@colname or ./@namest) then ' +
+								'let $columnName := if (./@colname) then ./@colname else ./@namest, ' +
+									'$columnColsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $columnName]/@colsep ' +
+								'return $columnColsep = "' + trueValue + '" ' +
+							'else true()'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('columnName', './@colname'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('nameEnd', './@nameend'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('nameStart', './@namest'),

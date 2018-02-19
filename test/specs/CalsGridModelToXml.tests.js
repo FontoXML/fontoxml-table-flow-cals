@@ -62,19 +62,9 @@ describe('CALS tables: Grid model to XML', () => {
 					[
 						'tgroup',
 						{ 'cols': '1' },
-						[
-							'colspec', {
-								'colname': 'column-0',
-								'colnum': '1',
-								'colwidth': '1*',
-								'colsep': '1',
-								'rowsep': '1'
-							}
-						],
-						[
-							'tbody',
-							[
-								'row',
+						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['tbody',
+							['row',
 								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }]
 							]
 						]
