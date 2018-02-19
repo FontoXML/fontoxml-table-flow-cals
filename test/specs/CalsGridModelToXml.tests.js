@@ -54,15 +54,28 @@ describe('CALS tables: Grid model to XML', () => {
 			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
+			chai.assert.deepEqual(
+				jsonMLMapper.serialize(documentNode.firstChild),
+				[
+					'table',
 					{ 'frame': 'all' },
-					['tgroup',
+					[
+						'tgroup',
 						{ 'cols': '1' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['tbody',
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }]
+						[
+							'colspec', {
+								'colname': 'column-0',
+								'colnum': '1',
+								'colwidth': '1*',
+								'colsep': '1',
+								'rowsep': '1'
+							}
+						],
+						[
+							'tbody',
+							[
+								'row',
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }]
 							]
 						]
 					]
@@ -79,34 +92,34 @@ describe('CALS tables: Grid model to XML', () => {
 					{ 'frame': 'all' },
 					['tgroup',
 						{ 'cols': '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
 						['tbody',
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							]
 						]
 					]
@@ -125,36 +138,36 @@ describe('CALS tables: Grid model to XML', () => {
 					{ frame: 'all' },
 					['tgroup',
 						{ cols: '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
 						['thead',
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							]
 						],
 						['tbody',
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							]
 						]
 					]
@@ -179,33 +192,33 @@ describe('CALS tables: Grid model to XML', () => {
 					{ frame: 'all' },
 					['tgroup',
 						{ cols: '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
 						['tbody',
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'namest': 'column-1', 'nameend': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'namest': 'column-1', 'nameend': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							]
 						]
 					]
@@ -228,33 +241,33 @@ describe('CALS tables: Grid model to XML', () => {
 					{ frame: 'all' },
 					['tgroup',
 						{ cols: '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
 						['tbody',
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'morerows': '1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'morerows': '1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							]
 						]
 					]
@@ -280,31 +293,31 @@ describe('CALS tables: Grid model to XML', () => {
 					{ 'frame': 'all' },
 					['tgroup',
 						{ 'cols': '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
 						['tbody',
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'namest': 'column-1', 'nameend': 'column-2', 'morerows': '1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'namest': 'column-1', 'nameend': 'column-2', 'morerows': '1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							]
 						]
 					]
@@ -341,36 +354,36 @@ describe('CALS tables: Grid model to XML', () => {
 					{ 'frame': 'all' },
 					['ns2:tgroup',
 						{ 'cols': '4' },
-						['ns2:colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['ns2:colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['ns2:colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-						['ns2:colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+						['ns2:colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['ns2:colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['ns2:colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+						['ns2:colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
 						['ns2:thead',
 							['ns2:row',
-								['ns2:entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['ns2:entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							]
 						],
 						['ns2:tbody',
 							['ns2:row',
-								['ns2:entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['ns2:entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['ns2:row',
-								['ns2:entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['ns2:entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							],
 							['ns2:row',
-								['ns2:entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }],
-								['ns2:entry', { 'colname': 'column-3', 'colsep': '0', 'rowsep': '0' }]
+								['ns2:entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
+								['ns2:entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
 							]
 						]
 					]
@@ -386,12 +399,12 @@ describe('CALS tables: Grid model to XML', () => {
 						b: new DOMParser().parseFromString([
 							'<matrix frame="all" xmlns="http://example.com/ns1">',
 							'<tgroup cols="4" xmlns="http://example.com/ns2">',
-							'<colspec colname="column-0" colnum="1" colwidth="1*" colsep="0" rowsep="0" /><colspec colname="column-1" colnum="2" colwidth="1*" colsep="0" rowsep="0" /><colspec colname="column-2" colnum="3" colwidth="1*" colsep="0" rowsep="0" /><colspec colname="column-3" colnum="4" colwidth="1*" colsep="0" rowsep="0" />',
-							'<thead><row><entry colname="column-0" colsep="0" rowsep="0" /><entry colname="column-1" colsep="0" rowsep="0" /><entry colname="column-2" colsep="0" rowsep="0" /><entry colname="column-3" colsep="0" rowsep="0" /></row></thead>',
+							'<colspec colname="column-0" colnum="1" colwidth="1*" colsep="1" rowsep="1" /><colspec colname="column-1" colnum="2" colwidth="1*" colsep="1" rowsep="1" /><colspec colname="column-2" colnum="3" colwidth="1*" colsep="1" rowsep="1" /><colspec colname="column-3" colnum="4" colwidth="1*" colsep="1" rowsep="1" />',
+							'<thead><row><entry colname="column-0" colsep="1" rowsep="1" /><entry colname="column-1" colsep="1" rowsep="1" /><entry colname="column-2" colsep="1" rowsep="1" /><entry colname="column-3" colsep="1" rowsep="1" /></row></thead>',
 							'<tbody>',
-							'<row><entry colname="column-0" colsep="0" rowsep="0" /><entry colname="column-1" colsep="0" rowsep="0" /><entry colname="column-2" colsep="0" rowsep="0" /><entry colname="column-3" colsep="0" rowsep="0" /></row>',
-							'<row><entry colname="column-0" colsep="0" rowsep="0" /><entry colname="column-1" colsep="0" rowsep="0" /><entry colname="column-2" colsep="0" rowsep="0" /><entry colname="column-3" colsep="0" rowsep="0" /></row>',
-							'<row><entry colname="column-0" colsep="0" rowsep="0" /><entry colname="column-1" colsep="0" rowsep="0" /><entry colname="column-2" colsep="0" rowsep="0" /><entry colname="column-3" colsep="0" rowsep="0" /></row>',
+							'<row><entry colname="column-0" colsep="1" rowsep="1" /><entry colname="column-1" colsep="1" rowsep="1" /><entry colname="column-2" colsep="1" rowsep="1" /><entry colname="column-3" colsep="1" rowsep="1" /></row>',
+							'<row><entry colname="column-0" colsep="1" rowsep="1" /><entry colname="column-1" colsep="1" rowsep="1" /><entry colname="column-2" colsep="1" rowsep="1" /><entry colname="column-3" colsep="1" rowsep="1" /></row>',
+							'<row><entry colname="column-0" colsep="1" rowsep="1" /><entry colname="column-1" colsep="1" rowsep="1" /><entry colname="column-2" colsep="1" rowsep="1" /><entry colname="column-3" colsep="1" rowsep="1" /></row>',
 							'</tbody>',
 							'</tgroup>',
 							'</matrix>'

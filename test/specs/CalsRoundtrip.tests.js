@@ -3032,24 +3032,24 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const jsonOut = ['tgroup',
 					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
 					['tbody',
 						['row',
-							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+							['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }]
 						],
 						['row',
-							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+							['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }]
 						],
 						['row',
-							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+							['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }]
 						]
 					]
 				];
@@ -3066,7 +3066,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 		it('can transform a table having only 1 colspec', () => {
 			const jsonIn = ['tgroup',
 					{ 'cols': '3' },
-					['colspec', { 'colname': 'some-non-standard-colname', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'some-non-standard-colname', 'colsep': '1', 'rowsep': '1' }],
 					['tbody',
 						['row', ['entry', { colname: 'column-0' }], ['entry'], ['entry']],
 						['row', ['entry'], ['entry'], ['entry']],
@@ -3075,24 +3075,24 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				];
 
 			const jsonOut = ['tgroup', { 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0' }],
+					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
+					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
 					['tbody',
 						['row',
-							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+							['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }]
 						],
 						['row',
-							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+							['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }]
 						],
 						['row',
-							['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
-							['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+							['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
+							['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }]
 						]
 					]
 				];

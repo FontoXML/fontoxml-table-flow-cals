@@ -179,8 +179,8 @@ define([
 						oldColumnName: 'column-' + context.columnIndex,
 						columnNumber: context.columnIndex + 1,
 						columnWidth: '1*',
-						rowSeparator: false,
-						columnSeparator: false
+						rowSeparator: true,
+						columnSeparator: true
 					};
 				},
 			getDefaultCellSpecificationStrategy: function (context) {
