@@ -3066,7 +3066,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 		it('can transform a table having only 1 colspec', () => {
 			const jsonIn = ['tgroup',
 					{ 'cols': '3' },
-					['colspec', { 'colname': 'some-non-standard-colname', 'colsep': '1', 'rowsep': '1' }],
+					['colspec', { 'colname': 'some-non-standard-colname', 'colsep': '0', 'rowsep': '0' }],
 					['tbody',
 						['row', ['entry', { colname: 'column-0' }], ['entry'], ['entry']],
 						['row', ['entry'], ['entry'], ['entry']],
