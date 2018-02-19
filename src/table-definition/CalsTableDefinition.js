@@ -146,8 +146,8 @@ define([
 				'let $colname := ./@colname, ' +
 				'$namest      := ./@namest, ' +
 				'$nameend     := ./@nameend, ' +
-				'$startindex  := ./ancestor::' + tgroup + '/' + colspec + '[@colname = $namest]/preceding-sibling::' + colspec + ' => count() + 1, ' +
-				'$endindex    := ./ancestor::' + tgroup + '/' + colspec + '[@colname = $nameend]/preceding-sibling::' + colspec + ' => count() + 1 ' +
+				'$startindex  := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $namest]/preceding-sibling::' + colspec + ' => count() + 1, ' +
+				'$endindex    := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $nameend]/preceding-sibling::' + colspec + ' => count() + 1 ' +
 				'return if ($colname and not($namest or $nameend)) then 1 else ($endindex - $startindex) + 1',
 
 			// Normalizations
