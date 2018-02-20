@@ -85,6 +85,8 @@ define([
 			namespaceURI: namespaceURI,
 			cellLocalName: 'entry',
 
+			supportsBorders: true,
+
 			// Widths
 			widthToHtmlWidthStrategy: function (width, widths) {
 					var proportion = parseFloat(parseWidth(width)[1]) || 0;
