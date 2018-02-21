@@ -5,7 +5,7 @@ define([
 	'fontoxml-table-flow/TableDefinition',
 	'fontoxml-table-flow/createCreateColumnSpecificationNodeStrategy',
 	'fontoxml-table-flow/createCreateRowStrategy',
-	'fontoxml-table-flow/getAttributeStrategies',
+	'fontoxml-table-flow/getSpecificationValueStrategies',
 	'fontoxml-table-flow/normalizeContainerNodeStrategies',
 	'fontoxml-table-flow/normalizeColumnSpecificationStrategies',
 	'fontoxml-table-flow/setAttributeStrategies'
@@ -16,7 +16,7 @@ define([
 	TableDefinition,
 	createCreateColumnSpecificationNodeStrategy,
 	createCreateRowStrategy,
-	getAttributeStrategies,
+	getSpecificationValueStrategies,
 	normalizeContainerNodeStrategies,
 	normalizeColumnSpecificationStrategies,
 	setAttributeStrategies
@@ -195,27 +195,27 @@ define([
 
 			// Specifications
 			getTableSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('borders', './parent::' + tableFigure + '/@frame = "all"')
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('borders', './parent::' + tableFigure + '/@frame = "all"')
 				],
 
 			getColumnSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('columnSeparator', 'let $sep := ./@colsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
-					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('rowSeparator', 'let $sep := ./@rowsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('horizontalAlignment', './@align'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('columnWidth', 'let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('oldColumnName', './@colname'),
-					getAttributeStrategies.createGetAttributeValueAsNumberStrategy('columnNumber', './@colnum'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('columnName', 'let $name := ./@colname return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()')
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator', 'let $sep := ./@colsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', 'let $sep := ./@rowsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnWidth', 'let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('oldColumnName', './@colname'),
+					getSpecificationValueStrategies.createGetValueAsNumberStrategy('columnNumber', './@colnum'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnName', 'let $name := ./@colname return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()')
 				],
 
 			getRowSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('verticalAlignment', 'let $valign := ./@valign return if ($valign) then $valign else "bottom"')
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', 'let $valign := ./@valign return if ($valign) then $valign else "bottom"')
 				],
 
 			getCellSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('horizontalAlignment', './@align'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('verticalAlignment', './@valign'),
-					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('rowSeparator',
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign'),
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator',
 						'if (./@rowsep) then ' +
 							'./@rowsep = "' + trueValue + '" ' +
 						'else ' +
@@ -224,7 +224,7 @@ define([
 									'$columnRowsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $columnName]/@rowsep ' +
 								'return $columnRowsep = "' + trueValue + '" ' +
 							'else true()'),
-					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('columnSeparator',
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator',
 						'if (./@colsep) then ' +
 							'./@colsep = "' + trueValue + '" ' +
 						'else ' +
@@ -233,9 +233,9 @@ define([
 									'$columnColsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $columnName]/@colsep ' +
 								'return $columnColsep = "' + trueValue + '" ' +
 							'else true()'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('columnName', './@colname'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('nameEnd', './@nameend'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('nameStart', './@namest'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnName', './@colname'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('nameEnd', './@nameend'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('nameStart', './@namest'),
 				],
 
 			// Set attributes
