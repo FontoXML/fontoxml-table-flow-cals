@@ -171,7 +171,6 @@ define([
 			getDefaultColumnSpecificationStrategy: function (context) {
 					return {
 						columnName: 'column-' + context.columnIndex,
-						oldColumnName: 'column-' + context.columnIndex,
 						columnNumber: context.columnIndex + 1,
 						columnWidth: '1*',
 						rowSeparator: true,
@@ -203,7 +202,6 @@ define([
 					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', 'let $sep := ./@rowsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnWidth', 'let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"'),
-					getSpecificationValueStrategies.createGetValueAsStringStrategy('oldColumnName', './@colname'),
 					getSpecificationValueStrategies.createGetValueAsNumberStrategy('columnNumber', './@colnum'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnName', 'let $name := ./@colname return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()')
 				],
