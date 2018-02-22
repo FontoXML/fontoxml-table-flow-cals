@@ -123,10 +123,6 @@ define([
 
 			// Defining node selectors
 			tableDefiningNodeSelector: 'self::' + tableFigure,
-			cellDefiningNodeSelector: 'self::' + entry,
-			tablePartsNodeSelector: Object.keys(selectorParts).map(function (key) {
-					return 'self::' + selectorParts[key];
-				}.bind(this)).join(' or '),
 
 			// Finds
 			findHeaderRowNodesXPathQuery: './' + thead + '/' + row,
