@@ -3,6 +3,7 @@ define([
 	'fontoxml-selectors/evaluateXPathToFirstNode',
 
 	'fontoxml-table-flow/TableDefinition',
+	'fontoxml-table-flow/createCreateCellNodeStrategy',
 	'fontoxml-table-flow/createCreateColumnSpecificationNodeStrategy',
 	'fontoxml-table-flow/createCreateRowStrategy',
 	'fontoxml-table-flow/getSpecificationValueStrategies',
@@ -14,6 +15,7 @@ define([
 	evaluateXPathToFirstNode,
 
 	TableDefinition,
+	createCreateCellNodeStrategy,
 	createCreateColumnSpecificationNodeStrategy,
 	createCreateRowStrategy,
 	getSpecificationValueStrategies,
@@ -82,8 +84,6 @@ define([
 		// Properties object
 		var properties = {
 			selectorParts: selectorParts,
-			namespaceURI: namespaceURI,
-			cellLocalName: 'entry',
 
 			supportsBorders: true,
 
@@ -189,6 +189,7 @@ define([
 				},
 
 			// Create elements
+			createCellNodeStrategy: createCreateCellNodeStrategy(namespaceURI, 'entry'),
 			createColumnSpecificationNodeStrategy: createCreateColumnSpecificationNodeStrategy(namespaceURI, 'colspec', './*[self::' + thead + ' or self::' + tbody + ']'),
 			createRowStrategy: createCreateRowStrategy(namespaceURI, 'row'),
 
