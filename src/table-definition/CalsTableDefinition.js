@@ -158,7 +158,7 @@ define([
 					normalizeColumnSpecificationStrategies.createRecreateColumnName('column')
 				],
 			findNextColumnSpecification: function (columnIndex, columnSpecification, columnSpecificationIndex, columnSpecifications) {
-					var startIndexAtZero = columnSpecifications[0] && columnSpecifications[0] === 0;
+					var startIndexAtZero = columnSpecifications[0] && columnSpecifications[0].columnNumber === 0;
 					return (columnSpecification.columnNumber === (startIndexAtZero ? columnIndex : columnIndex + 1)) ||
 							(columnSpecification.columnNumber !== undefined && columnSpecificationIndex >= columnIndex);
 				},
