@@ -1,0 +1,28 @@
+{
+	"cals-open-table-column-sizing-popover": {
+		"__documentation": {
+			"summary": "Opens the colum sizing modal for a CALS table.",
+			"fontosdk": true,
+			"params": [
+				{
+					"name": "contextNodeId",
+					"type": "NodeId",
+					"description": "The Node ID of the table defining node."
+				}
+			]
+		},
+		"label": "t__Edit column sizes",
+		"description": "t__Set the column sizing for this table.",
+		"steps": [
+			{
+				"type": "transform/setWidthsToColumnWidthsForTable"
+			},
+			{
+				"type": "operation/open-table-column-sizing-popover",
+				"data": {
+					"popoverAnchorNodeId": "x__$data('contextNode')/child::tgroup"
+				}
+			}
+		]
+	}
+}

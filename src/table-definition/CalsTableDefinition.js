@@ -89,9 +89,9 @@ define([
 
 			// Widths
 			widthToHtmlWidthStrategy: function (width, widths) {
-					var proportion = parseFloat(parseWidth(width)[1]) || 0;
+					var proportion = parseFloat(parseWidth(width)[1]) || 1;
 					var totalProportion = widths.reduce(function (total, proportion) {
-						return total + (parseFloat(parseWidth(proportion)[1]) || 0);
+						return total + (parseFloat(parseWidth(proportion)[1]) || 1);
 					}, 0);
 
 					return 100 * proportion / totalProportion + '%';
@@ -119,6 +119,38 @@ define([
 
 					return proportion ? (proportion / 2) + '*' : '' +
 						fixed ? (fixed / 2) + 'px' : '';
+				},
+
+			widthsToFractionsStrategy: function (widths) {
+					var parsedWidths = widths.map(function (width) {
+						var match = /^([0-9]+(?:\.[0-9]+)?)\*$/.exec(width);
+
+						if (!match) {
+							return null;
+						}
+
+						var value = parseFloat(match[1]);
+						return Number.isNaN(value) ? null : value;
+					});
+
+					if (parsedWidths.indexOf(null) !== -1) {
+						return parsedWidths.map(function () {
+							return 1 / parsedWidths.length;
+						});
+					}
+
+					var totalWidth = parsedWidths.reduce(function (total, width) {
+						return total + width;
+					}, 0);
+
+					return parsedWidths.map(function (width) {
+						return width / totalWidth;
+					});
+				},
+			fractionsToWidthsStrategy: function (fractions) {
+					return fractions.map(function (fraction) {
+						return (fraction * 100) + '*';
+					});
 				},
 
 			// Defining node selectors
