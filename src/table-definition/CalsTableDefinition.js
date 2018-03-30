@@ -54,8 +54,8 @@ define([
 		var namespaceURI = options.tgroup && options.tgroup.namespaceURI ? options.tgroup.namespaceURI : '';
 
 		// Configurable true/false values
-		var trueValue = (options.yesOrNo && options.yesOrNo.yesValue) ? options.yesOrNo.yesValue : '1';
-		var falseValue = (options.yesOrNo && options.yesOrNo.noValue) ? options.yesOrNo.noValue : '0';
+		this.trueValue = (options.yesOrNo && options.yesOrNo.yesValue) ? options.yesOrNo.yesValue : '1';
+		this.falseValue = (options.yesOrNo && options.yesOrNo.noValue) ? options.yesOrNo.noValue : '0';
 
 		var namespaceSelector = 'Q{' + namespaceURI + '}';
 		var selectorParts = {
@@ -225,8 +225,8 @@ define([
 				],
 
 			getColumnSpecificationStrategies: [
-					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator', 'let $sep := ./@colsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
-					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', 'let $sep := ./@rowsep return if ($sep) then $sep = "' + trueValue + '" else true()'),
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator', 'let $sep := ./@colsep return if ($sep) then $sep = "' + this.trueValue + '" else true()'),
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', 'let $sep := ./@rowsep return if ($sep) then $sep = "' + this.trueValue + '" else true()'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnWidth', 'let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"'),
 					getSpecificationValueStrategies.createGetValueAsNumberStrategy('columnNumber', './@colnum'),
@@ -242,21 +242,21 @@ define([
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign'),
 					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator',
 						'if (./@rowsep) then ' +
-							'./@rowsep = "' + trueValue + '" ' +
+							'./@rowsep = "' + this.trueValue + '" ' +
 						'else ' +
 							'if (./@colname or ./@namest) then ' +
 								'let $columnName := if (./@colname) then ./@colname else ./@namest, ' +
 									'$columnRowsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $columnName]/@rowsep ' +
-								'return $columnRowsep = "' + trueValue + '" ' +
+								'return $columnRowsep = "' + this.trueValue + '" ' +
 							'else true()'),
 					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator',
 						'if (./@colsep) then ' +
-							'./@colsep = "' + trueValue + '" ' +
+							'./@colsep = "' + this.trueValue + '" ' +
 						'else ' +
 							'if (./@colname or ./@namest) then ' +
 								'let $columnName := if (./@colname) then ./@colname else ./@namest, ' +
 									'$columnColsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $columnName]/@colsep ' +
-								'return $columnColsep = "' + trueValue + '" ' +
+								'return $columnColsep = "' + this.trueValue + '" ' +
 							'else true()'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnName', './@colname'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('nameEnd', './@nameend'),
@@ -272,15 +272,15 @@ define([
 			setColumnSpecificationNodeAttributeStrategies: [
 					setAttributeStrategies.createStringValueAsAttributeStrategy('colname', 'columnName'),
 					setAttributeStrategies.createColumnNumberAsAttributeStrategy('colnum', 1),
-					setAttributeStrategies.createBooleanValueAsAttributeStrategy('colsep', 'columnSeparator', trueValue, trueValue, falseValue),
-					setAttributeStrategies.createBooleanValueAsAttributeStrategy('rowsep', 'rowSeparator', trueValue, trueValue, falseValue),
+					setAttributeStrategies.createBooleanValueAsAttributeStrategy('colsep', 'columnSeparator', this.trueValue, this.trueValue, this.falseValue),
+					setAttributeStrategies.createBooleanValueAsAttributeStrategy('rowsep', 'rowSeparator', this.trueValue, this.trueValue, this.falseValue),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('colwidth', 'columnWidth')
 				],
 
 			setCellNodeAttributeStrategies: [
-					setAttributeStrategies.createBooleanValueAsAttributeStrategy('rowsep', 'rowSeparator', trueValue, trueValue, falseValue),
-					setAttributeStrategies.createBooleanValueAsAttributeStrategy('colsep', 'columnSeparator', trueValue, trueValue, falseValue),
+					setAttributeStrategies.createBooleanValueAsAttributeStrategy('rowsep', 'rowSeparator', this.trueValue, this.trueValue, this.falseValue),
+					setAttributeStrategies.createBooleanValueAsAttributeStrategy('colsep', 'columnSeparator', this.trueValue, this.trueValue, this.falseValue),
 					setAttributeStrategies.createColumnNameAsAttributeStrategy('colname', 'namest', 'nameend'),
 					setAttributeStrategies.createRowSpanAsAttributeStrategy('morerows', true),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),

@@ -1,10 +1,4 @@
 {
-	"cals-toggle-cell-border": {
-		"steps":
-		{
-			"type": "command/toggle-cell-border"
-		}
-	},
 	"cals-set-cell-border-all": {
 		"__documentation": {
 			"summary": "Set all borders of this cell",
@@ -21,7 +15,7 @@
 				}
 			},
 			{
-				"type": "operation/cals-toggle-cell-border",
+				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
 					"top": true,
 					"right": true,
@@ -47,7 +41,7 @@
 				}
 			},
 			{
-				"type": "operation/cals-toggle-cell-border",
+				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
 					"top": false,
 					"right": false,
@@ -73,7 +67,7 @@
 				}
 			},
 			{
-				"type": "operation/cals-toggle-cell-border",
+				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
 					"top": true
 				}
@@ -96,7 +90,7 @@
 				}
 			},
 			{
-				"type": "operation/cals-toggle-cell-border",
+				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
 					"bottom": true
 				}
@@ -119,7 +113,7 @@
 				}
 			},
 			{
-				"type": "operation/cals-toggle-cell-border",
+				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
 					"left": true
 				}
@@ -142,7 +136,7 @@
 				}
 			},
 			{
-				"type": "operation/cals-toggle-cell-border",
+				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
 					"right": true
 				}
