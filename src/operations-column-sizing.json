@@ -15,9 +15,6 @@
 		"description": "t__Set the column sizing for this table.",
 		"steps": [
 			{
-				"type": "transform/setWidthsToColumnWidthsForTable"
-			},
-			{
 				"type": "operation/open-table-column-sizing-popover",
 				"data": {
 					"popoverAnchorNodeId": "x__$data('contextNode')/child::tgroup"
