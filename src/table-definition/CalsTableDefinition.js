@@ -149,7 +149,7 @@ define([
 				},
 			fractionsToWidthsStrategy: function (fractions) {
 					return fractions.map(function (fraction) {
-						return (fraction * 100) + '*';
+						return Math.round(fraction * 100) + '*';
 					});
 				},
 
