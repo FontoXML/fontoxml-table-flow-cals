@@ -26,6 +26,14 @@ define([
 	'use strict';
 
 	function parseWidth (width) {
+		if (width === '*') {
+			// '*' is actually '1*'
+			return [
+				width,
+				'1',
+				undefined
+			];
+		}
 		return /(?:(\d*(?:\.\d*)?)\*)?\+?(?:(\d+(?:\.\d*)?)px)?/i.exec(width);
 	}
 

@@ -2775,6 +2775,84 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
+		it('can handle a 1x3 table, merging a cell with the cell to the right, with "*" column widths', () => {
+			const jsonIn = ['tgroup',
+				{ 'cols': '3' },
+				['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '*', 'colsep': '0', 'rowsep': '0' }],
+				['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1.3*', 'colsep': '0', 'rowsep': '0' }],
+				['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '*', 'colsep': '0', 'rowsep': '0' }],
+				['tbody',
+					['row',
+						['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+						['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+						['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+					]
+				]
+			];
+
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellToTheRight(gridModel, gridModel.getCellAtCoordinates(0, 1), blueprint);
+
+			const jsonOut = ['tgroup',
+				{ 'cols': '2' },
+				['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '*', 'colsep': '0', 'rowsep': '0' }],
+				['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '2.3*', 'colsep': '0', 'rowsep': '0' }],
+				['tbody',
+					['row',
+						['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+						['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }]
+					]
+				]
+			];
+
+			const options = {
+				table: {
+					localName: 'table'
+				}
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can handle a 1x3 table, merging a cell with the cell to the right, with absolute column widths', () => {
+			const jsonIn = ['tgroup',
+				{ 'cols': '3' },
+				['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '10px', 'colsep': '0', 'rowsep': '0' }],
+				['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '20px*', 'colsep': '0', 'rowsep': '0' }],
+				['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '30px', 'colsep': '0', 'rowsep': '0' }],
+				['tbody',
+					['row',
+						['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+						['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }],
+						['entry', { 'colname': 'column-2', 'colsep': '0', 'rowsep': '0' }]
+					]
+				]
+			];
+
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellToTheRight(gridModel, gridModel.getCellAtCoordinates(0, 1), blueprint);
+
+			const jsonOut = ['tgroup',
+				{ 'cols': '2' },
+				['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '10px', 'colsep': '0', 'rowsep': '0' }],
+				['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '50px', 'colsep': '0', 'rowsep': '0' }],
+				['tbody',
+					['row',
+						['entry', { 'colname': 'column-0', 'colsep': '0', 'rowsep': '0' }],
+						['entry', { 'colname': 'column-1', 'colsep': '0', 'rowsep': '0' }]
+					]
+				]
+			];
+
+			const options = {
+				table: {
+					localName: 'table'
+				}
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
 		it('can handle a 3x3 table, merging a cell with the cell below', () => {
 			const jsonIn = ['tgroup',
 				{ 'cols': '3' },
