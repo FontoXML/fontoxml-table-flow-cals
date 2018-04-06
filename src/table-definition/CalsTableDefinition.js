@@ -131,6 +131,13 @@ define([
 
 			widthsToFractionsStrategy: function (widths) {
 					var parsedWidths = widths.map(function (width) {
+						if (width === '*') {
+							return 1;
+						}
+
+						// Parsing withs for the column width popover does not use the parseWidth
+						// function bacause widths containing fixed widths are considered invalid
+						// values for the popover.
 						var match = /^([0-9]+(?:\.[0-9]+)?)\*$/.exec(width);
 
 						if (!match) {
