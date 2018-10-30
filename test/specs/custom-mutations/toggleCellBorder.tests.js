@@ -329,8 +329,6 @@ describe('toggleCellBorder custom mutation', () => {
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			console.log(jsonMLMapper.serialize(documentNode.firstChild));
-
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
 				['tgroup',
 					{ 'cols': '3' },
