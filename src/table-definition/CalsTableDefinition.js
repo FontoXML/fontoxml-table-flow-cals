@@ -81,7 +81,6 @@ define([
 
 		// Alias selector parts
 		var tableFigure = selectorParts.tableFigure;
-		var tgroup = selectorParts.table;
 		var thead = selectorParts.headerContainer;
 		var tbody = selectorParts.bodyContainer;
 		var tfoot = selectorParts.footerContainer;
@@ -168,6 +167,13 @@ define([
 					});
 				},
 
+			// Environment
+			environmentQuery: 'map { ' +
+				'"indexByColname": map:merge(child::' + colspec + '/map { string(@colname): count(preceding-sibling::' + colspec + ') }), ' +
+				'"colsepByColname": map:merge(child::' + colspec + '[@colsep]/map { string(@colname): number(@colsep) }), ' +
+				'"rowsepByColname": map:merge(child::' + colspec + '[@rowsep]/map { string(@colname): number(@rowsep) }) ' +
+			'}',
+
 			// Defining node selectors
 			tableDefiningNodeSelector: 'self::' + tableFigure,
 
@@ -188,12 +194,10 @@ define([
 			getNumberOfColumnsXPathQuery: './@cols => number()',
 			getRowSpanForCellNodeXPathQuery: 'let $rowspan := ./@morerows => number() return if ($rowspan) then $rowspan + 1 else 1',
 			getColumnSpanForCellNodeXPathQuery:
-				'let $colname := ./@colname, ' +
-				'$namest      := ./@namest, ' +
-				'$nameend     := ./@nameend, ' +
-				'$startindex  := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $namest]/preceding-sibling::' + colspec + ' => count() + 1, ' +
-				'$endindex    := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $nameend]/preceding-sibling::' + colspec + ' => count() + 1 ' +
-				'return if ($colname and not($namest or $nameend)) then 1 else ($endindex - $startindex) + 1',
+				'let $colname := ./@colname, $namest := ./@namest, $nameend := ./@nameend ' +
+				'return if ($colname and not($namest or $nameend)) ' +
+				'then 1 ' +
+				'else (($indexByColname(string($nameend)), 0)[1] - ($indexByColname(string($namest)), 0)[1] + 1)',
 
 			// Normalizations
 			normalizeContainerNodeStrategies: [
@@ -261,7 +265,7 @@ define([
 						'else ' +
 							'if (./@colname or ./@namest) then ' +
 								'let $columnName := if (./@colname) then ./@colname else ./@namest, ' +
-									'$columnRowsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $columnName]/@rowsep ' +
+									'$columnRowsep := $rowsepByColname($columnName) ' +
 								'return $columnRowsep = "' + this.trueValue + '" ' +
 							'else true()'),
 					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator',
@@ -270,7 +274,7 @@ define([
 						'else ' +
 							'if (./@colname or ./@namest) then ' +
 								'let $columnName := if (./@colname) then ./@colname else ./@namest, ' +
-									'$columnColsep := ./ancestor::' + tgroup + '[1]/' + colspec + '[@colname = $columnName]/@colsep ' +
+									'$columnColsep := $colsepByColname($columnName) ' +
 								'return $columnColsep = "' + this.trueValue + '" ' +
 							'else true()'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnName', './@colname'),
