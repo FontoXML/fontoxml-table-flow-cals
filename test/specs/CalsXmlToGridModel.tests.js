@@ -462,7 +462,8 @@ describe('CALS tables: XML to GridModel', () => {
 				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
 				chai.assert.isOk(gridModel);
 
-				chai.assert.equal(gridModel.getHeight(), 4);
+				// Normalization happens AFTER the first change to the table
+				chai.assert.equal(gridModel.getHeight(), 5);
 				chai.assert.equal(gridModel.getWidth(), 4);
 				chai.assert.equal(gridModel.headerRowCount, 0);
 			});
