@@ -1,15 +1,6 @@
-define([
-	'fontoxml-base-flow/addCustomMutation',
+import addCustomMutation from 'fontoxml-base-flow/src/addCustomMutation.js';
+import toggleCellBorder from './custom-mutations/toggleCellBorder.js';
 
-	'./custom-mutations/toggleCellBorder'
-], function (
-	addCustomMutation,
-
-	toggleCellBorder
-) {
-	'use strict';
-
-	return function install () {
-		addCustomMutation('calsToggleCellBorder', toggleCellBorder);
-	};
-});
+export default function install() {
+	addCustomMutation('calsToggleCellBorder', toggleCellBorder);
+}
