@@ -60,9 +60,6 @@ function CalsTableDefinition(options) {
 			tableNamespaceURI +
 			'}' +
 			tableFigureLocalName +
-			'[child::' +
-			namespaceSelector +
-			'tgroup]' +
 			(options.tgroup && options.tgroup.tableFigureFilterSelector
 				? '[' + options.tgroup.tableFigureFilterSelector + ']'
 				: ''),

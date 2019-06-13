@@ -20,35 +20,17 @@ describe('CalsTableDefinition', () => {
 	});
 
 	describe('isTable()', () => {
-		it('cant recognize a table without a tgroup element', () => {
-			chai.assert.isFalse(
-				tableDefinition.isTable(documentNode.createElement('table'), readOnlyBlueprint)
-			);
-		});
-
-		it('can recognize a table with a tgroup element', () => {
-			chai.assert.isTrue(
-				tableDefinition.isTable(
-					documentNode
-						.createElement('table')
-						.appendChild(documentNode.createElement('tgroup')).parentElement,
-					readOnlyBlueprint
-				)
-			);
-		});
+		it('can recognize a table element',
+			() => chai.assert.isTrue(tableDefinition.isTable(documentNode.createElement('table'), readOnlyBlueprint)));
 	});
 
 	describe('isTableCell()', () => {
-		it('can recognize a cell element', () =>
-			chai.assert.isTrue(
-				tableDefinition.isTableCell(documentNode.createElement('entry'), readOnlyBlueprint)
-			));
+		it('can recognize a cell element',
+			() => chai.assert.isTrue(tableDefinition.isTableCell(documentNode.createElement('entry'), readOnlyBlueprint)));
 	});
 
 	describe('isTablePart()', () => {
-		it('can recognize a table part', () =>
-			chai.assert.isTrue(
-				tableDefinition.isTablePart(documentNode.createElement('row'), readOnlyBlueprint)
-			));
+		it('can recognize a table part',
+			() => chai.assert.isTrue(tableDefinition.isTablePart(documentNode.createElement('row'), readOnlyBlueprint)));
 	});
 });
