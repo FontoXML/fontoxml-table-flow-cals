@@ -1,19 +1,63 @@
 {
-	"cals-set-cell-border-all": {
+	"contextual-cals-set-all-cell-borders-all": {
 		"__documentation": {
-			"summary": "Set all borders of this cell",
+			"summary": "Set all borders of all cells of the given table",
 			"category": "add-on/fontoxml-table-flow-cals",
-			"fontosdk": true
+			"fontosdk": true,
+			"params": [
+				{
+					"name": "contextNodeId",
+					"type": "NodeId",
+					"description": "The NodeId of the table (or any of its parts) for which to change the border"
+				}
+			]
 		},
 		"label": "t__All borders",
-		"description": "t__Draw borders on all sides of every selected cell.",
+		"description": "t__Draw borders on all sides of all table cells.",
+		"icon": "table-border",
 		"steps": [
-			{
-				"type": "transform/setCellNodeIdsToSelectionAncestors",
-				"data": {
-					"nodeName": "entry"
+			{ "type": "transform/setCellNodeIdsToAllCellsInTable" },
+			{ "type": "operation/contextual-cals-set-cell-border-all" }
+		]
+	},
+	"contextual-cals-set-all-cell-borders-none": {
+		"__documentation": {
+			"summary": "Remove all borders of all cells of the given table",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true,
+			"params": [
+				{
+					"name": "contextNodeId",
+					"type": "NodeId",
+					"description": "The NodeId of the table (or any of its parts) for which to change the border"
 				}
-			},
+			]
+		},
+		"label": "t__No borders",
+		"description": "t__Don't draw any borders on any of the cells of this table.",
+		"icon": "delete-table-border",
+		"steps": [
+			{ "type": "transform/setCellNodeIdsToAllCellsInTable" },
+			{ "type": "operation/contextual-cals-set-cell-border-none" }
+		]
+	},
+	"contextual-cals-set-cell-border-all": {
+		"__documentation": {
+			"summary": "Set all borders of the given cells",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true,
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the border"
+				}
+			]
+		},
+		"label": "t__All borders",
+		"description": "t__Add borders to the current cell",
+		"icon": "cell-border",
+		"steps": [
 			{
 				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
@@ -21,6 +65,53 @@
 					"right": true,
 					"bottom": true,
 					"left": true
+				}
+			}
+		]
+	},
+	"cals-set-cell-border-all": {
+		"__documentation": {
+			"summary": "Set all borders of the cell containing the selection",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
+		"label": "t__All borders",
+		"description": "t__Draw borders on all sides of every selected cell.",
+		"icon": "cell-border",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": "entry"
+				}
+			},
+			{ "type": "operation/contextual-cals-set-cell-border-all" }
+		]
+	},
+	"contextual-cals-set-cell-border-none": {
+		"__documentation": {
+			"summary": "Remove all borders of the given cells",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true,
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the border"
+				}
+			]
+		},
+		"label": "t__No borders",
+		"description": "Remove borders from the current cell",
+		"icon": "delete-cell-border",
+		"steps": [
+			{
+				"type": "custom-mutation/calsToggleCellBorder",
+				"data": {
+					"top": false,
+					"right": false,
+					"bottom": false,
+					"left": false
 				}
 			}
 		]
@@ -33,6 +124,7 @@
 		},
 		"label": "t__No borders",
 		"description": "t__Don't draw any borders on the selected cells.",
+		"icon": "delete-cell-border",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
@@ -40,15 +132,7 @@
 					"nodeName": "entry"
 				}
 			},
-			{
-				"type": "custom-mutation/calsToggleCellBorder",
-				"data": {
-					"top": false,
-					"right": false,
-					"bottom": false,
-					"left": false
-				}
-			}
+			{ "type": "operation/contextual-cals-set-cell-border-none" }
 		]
 	},
 	"cals-set-cell-border-top": {

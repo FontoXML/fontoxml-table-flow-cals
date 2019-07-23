@@ -25,6 +25,9 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 
 	const cellNode = documentsManager.getNodeById(cellNodeIds[0]);
 	const tableGridModel = getGridModel(cellNode, blueprint);
+	if (!tableGridModel || tableGridModel.error) {
+		return CustomMutationResult.notAllowed();
+	}
 
 	// Note: The trueValue and falseValue properties on the table definition are CALS-specific.
 	const trueValue = tableGridModel.tableDefinition.trueValue;

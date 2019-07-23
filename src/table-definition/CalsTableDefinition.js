@@ -412,6 +412,26 @@ function CalsTableDefinition(options) {
 				'valign',
 				'verticalAlignment'
 			)
+		],
+
+		horizontalAlignmentOperationNames: [
+			'contextual-cals-set-cell-horizontal-alignment-left',
+			'contextual-cals-set-cell-horizontal-alignment-center',
+			'contextual-cals-set-cell-horizontal-alignment-right',
+			'contextual-cals-set-cell-horizontal-alignment-justify'
+		],
+		verticalAlignmentOperationNames: [
+			'contextual-cals-set-cell-vertical-alignment-top',
+			'contextual-cals-set-cell-vertical-alignment-center',
+			'contextual-cals-set-cell-vertical-alignment-bottom'
+		],
+		columnBorderOperationNames: [
+			'contextual-cals-set-cell-border-all',
+			'contextual-cals-set-cell-border-none'
+		],
+		rowBorderOperationNames: [
+			'contextual-cals-set-cell-border-all',
+			'contextual-cals-set-cell-border-none'
 		]
 	};
 
