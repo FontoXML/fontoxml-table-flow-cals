@@ -4,7 +4,8 @@ import documentsManager from 'fontoxml-documents/documentsManager';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/evaluateXPathToFirstNode';
 import getNodeId from 'fontoxml-dom-identification/getNodeId';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import tableGridModelLookupSingleton from 'fontoxml-table-flow/tableGridModelLookupSingleton';
+import indicesManager from 'fontoxml-indices/indicesManager';
+import { getGridModelKey } from 'fontoxml-table-flow/src/indexedTableGridModels.js';
 import * as slimdom from 'slimdom';
 
 import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
@@ -40,70 +41,131 @@ describe('toggleCellBorder custom mutation', () => {
 		tableDefinitionManager.addTableDefinition(tableDefinition);
 	});
 
-	const threeByThreeTable = ['table',
-			['tgroup',
-				{ 'cols': '3' },
-				['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-				['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-				['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-				['tbody',
-					['row',
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
-					],
-					['row',
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1', 'id': 'center' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
-					],
-					['row',
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
-					]
+	afterEach(() => {
+		// The CacheInvalidationHook is not registered so we need to commit merge after each test.
+		indicesManager.getIndex('callback-index').commitMerge();
+	});
+
+	const threeByThreeTable = [
+		'table',
+		[
+			'tgroup',
+			{ cols: '3' },
+			[
+				'colspec',
+				{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
+			],
+			[
+				'colspec',
+				{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
+			],
+			[
+				'colspec',
+				{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
+			],
+			[
+				'tbody',
+				[
+					'row',
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
+				],
+				[
+					'row',
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-1', id: 'center' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
+				],
+				[
+					'row',
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 				]
 			]
-		];
+		]
+	];
 
 	describe('setting borders', () => {
 		it('can set the top border on the middle cell in a 3x3 table', () => {
 			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTable, documentNode));
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
-					top: true,
-				}, blueprint);
+					top: true
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '1', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '1', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '0', rowsep: '0', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -114,39 +176,80 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTable, documentNode));
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
-					right: true,
-				}, blueprint);
+					right: true
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '1', 'rowsep': '0', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '1', rowsep: '0', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -157,39 +260,80 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTable, documentNode));
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
-					bottom: true,
-				}, blueprint);
+					bottom: true
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '1', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '0', rowsep: '1', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -200,39 +344,80 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTable, documentNode));
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
-					left: true,
-				}, blueprint);
+					left: true
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '1', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '1', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '0', rowsep: '0', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -243,42 +428,83 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTable, documentNode));
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
 					bottom: true,
 					left: true,
 					right: true,
 					top: true
-				}, blueprint);
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '1', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '1', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '1', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '1', 'rowsep': '1', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '1', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '1', rowsep: '1', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -286,70 +512,128 @@ describe('toggleCellBorder custom mutation', () => {
 		});
 	});
 
-	const threeByThreeTableWithBorders = ['table',
-			['tgroup',
-				{ 'cols': '3' },
-				['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-				['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-				['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-				['tbody',
-					['row',
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-						['entry', { 'colsep': '0', 'rowsep': '1', 'colname': 'column-1' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
-					],
-					['row',
-						['entry', { 'colsep': '1', 'rowsep': '0', 'colname': 'column-0' }],
-						['entry', { 'colsep': '1', 'rowsep': '1', 'colname': 'column-1', 'id': 'center' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
-					],
-					['row',
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-						['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
-					]
+	const threeByThreeTableWithBorders = [
+		'table',
+		[
+			'tgroup',
+			{ cols: '3' },
+			[
+				'colspec',
+				{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
+			],
+			[
+				'colspec',
+				{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
+			],
+			[
+				'colspec',
+				{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
+			],
+			[
+				'tbody',
+				[
+					'row',
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+					['entry', { colsep: '0', rowsep: '1', colname: 'column-1' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
+				],
+				[
+					'row',
+					['entry', { colsep: '1', rowsep: '0', colname: 'column-0' }],
+					['entry', { colsep: '1', rowsep: '1', colname: 'column-1', id: 'center' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
+				],
+				[
+					'row',
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+					['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 				]
 			]
-		];
+		]
+	];
 
 	describe('unsetting borders', () => {
 		it('can unset the top border on the middle cell in a 3x3 table', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
+			);
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
-					top: true,
-				}, blueprint);
+					top: true
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '1', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '1', 'rowsep': '1', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '1', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '1', rowsep: '1', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -357,42 +641,85 @@ describe('toggleCellBorder custom mutation', () => {
 		});
 
 		it('can unset the right border on the middle cell in a 3x3 table', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
+			);
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
-					right: true,
-				}, blueprint);
+					right: true
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '1', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '1', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '1', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '1', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '1', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '0', rowsep: '1', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -400,42 +727,85 @@ describe('toggleCellBorder custom mutation', () => {
 		});
 
 		it('can unset the bottom border on the middle cell in a 3x3 table', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
+			);
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
-					bottom: true,
-				}, blueprint);
+					bottom: true
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '1', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '1', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '1', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '1', 'rowsep': '0', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '1', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '1', rowsep: '0', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -443,42 +813,85 @@ describe('toggleCellBorder custom mutation', () => {
 		});
 
 		it('can unset the left border on the middle cell in a 3x3 table', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
+			);
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
-					left: true,
-				}, blueprint);
+					left: true
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '1', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '1', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '1', 'rowsep': '1', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '1', rowsep: '1', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]
@@ -486,45 +899,88 @@ describe('toggleCellBorder custom mutation', () => {
 		});
 
 		it('can unset all border on the middle cell in a 3x3 table', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
+			);
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			tableGridModelLookupSingleton.addToLookup(tableNode, tableDefinition.buildTableGridModel(tableNode, blueprint));
+			getGridModelKey(tableDefinition, tableNode);
 
-			const cellNodeId = getNodeId(evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint));
+			const cellNodeId = getNodeId(
+				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
+			);
 
 			blueprint.beginOverlay();
-			toggleCellBorder({
+			toggleCellBorder(
+				{
 					cellNodeIds: [cellNodeId],
 					bottom: false,
 					left: false,
 					right: false,
 					top: false
-				}, blueprint);
+				},
+				blueprint
+			);
 			blueprint.applyOverlay();
 			blueprint.realize();
 
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), ['table',
-				['tgroup',
-					{ 'cols': '3' },
-					['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '0', 'rowsep': '0'}],
-					['tbody',
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				[
+					'tgroup',
+					{ cols: '3' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1', 'id': 'center' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							[
+								'entry',
+								{ colsep: '0', rowsep: '0', colname: 'column-1', id: 'center' }
+							],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						],
-						['row',
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-0' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-1' }],
-							['entry', { 'colsep': '0', 'rowsep': '0', 'colname': 'column-2' }]
+						[
+							'row',
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-0' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-1' }],
+							['entry', { colsep: '0', rowsep: '0', colname: 'column-2' }]
 						]
 					]
 				]

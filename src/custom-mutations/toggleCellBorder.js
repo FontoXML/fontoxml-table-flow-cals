@@ -1,7 +1,7 @@
 import CustomMutationResult from 'fontoxml-base-flow/src/CustomMutationResult.js';
 import documentsManager from 'fontoxml-documents/src/documentsManager.js';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
-import tableGridModelLookupSingleton from 'fontoxml-table-flow/src/tableGridModelLookupSingleton.js';
+import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels.js';
 
 export default function toggleCellBorder(argument, blueprint, _format, _selection) {
 	var cellNodeIds = argument.cellNodeIds;
@@ -24,7 +24,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 	var isActive = true;
 
 	var cellNode = documentsManager.getNodeById(cellNodeIds[0]);
-	var tableGridModel = tableGridModelLookupSingleton.getGridModel(cellNode);
+	var tableGridModel = getGridModel(cellNode, blueprint);
 
 	// Note: The trueValue and falseValue properties on the table definition are CALS-specific.
 	var trueValue = tableGridModel.tableDefinition.trueValue;
