@@ -429,6 +429,15 @@ CalsTableDefinition.prototype.buildTableGridModel = function(node, blueprint) {
 	return TableDefinition.prototype.buildTableGridModel.call(this, tableElement, blueprint);
 };
 
+CalsTableDefinition.prototype.buildTableGridModelKey = function(node, blueprint) {
+	var tableElement = evaluateXPathToFirstNode(
+		'descendant-or-self::' + this.selectorParts.table,
+		node,
+		blueprint
+	);
+	return TableDefinition.prototype.buildTableGridModelKey.call(this, tableElement, blueprint);
+};
+
 CalsTableDefinition.prototype.applyToDom = function(tableGridModel, tableNode, blueprint, format) {
 	var actualTableNode = evaluateXPathToFirstNode(
 		'descendant-or-self::' + this.selectorParts.table,
