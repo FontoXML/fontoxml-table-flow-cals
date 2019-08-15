@@ -86,6 +86,7 @@ function CalsTableDefinition(options) {
 		selectorParts: selectorParts,
 
 		supportsBorders: true,
+		supportsCellAlignment: true,
 
 		// Widths
 		widthToHtmlWidthStrategy: function(width, widths) {
