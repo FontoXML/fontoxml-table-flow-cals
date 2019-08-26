@@ -4,6 +4,30 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
 /**
  * Configure the cals table implementation
  *
+ * Example usage for the table widgets:
+ *
+ *```
+ * 	configureAsCalsTableElements(sxModule, {
+ * 		table: {
+ *			localName: 'table'
+ *		},
+ *		entry: {
+ *			defaultTextContainer: 'p'
+ *		},
+ *		columnBefore: [createIconWidget('clock-o', {
+ *			clickOperation: 'lcTime-value-edit',
+ *			tooltipContent: 'Click here to edit the duration'
+ *		})],
+ *		rowBefore: [
+ *				createIconWidget('dot-circle-o', {
+ *					clickOperation: 'do-nothing'
+ *				})
+ *			],
+ *		showInsertionWidget: true,
+ *		showHighlightingWidget: true
+ *	});
+ *```
+ *
  * @fontosdk
  *
  * @category add-on/fontoxml-table-flow-cals
@@ -11,10 +35,10 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  * @param  {Object}          sxModule
  * @param  {Object}          options
  * @param  {number}          [options.priority]                          Selector priority for all elements configured by this function
- * @param  {boolean}         [options.showInsertionWidget]               To add insertion buttons which are add column and row, default false.
+ * @param  {boolean}         [options.showInsertionWidget]               To add insertion buttons which insert a column or a row to a specific place, default false.
  * @param  {boolean}         [options.showHighlightingWidget]            To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
- * @param  {Widget[] |null}  [options.columnBefore]                      To add custom column widgets by using {@link createIconWidget}
- * @param  {Widget[] |null}  [options.rowBefore]                         To add custom row widgets by using {@link createIconWidget}
+ * @param  {Widget[]|null}   [options.columnBefore]                      To add column icon widgets by using {@link createIconWidget}. Any widget can be added but only icon widget is supported.
+ * @param  {Widget[]|null}   [options.rowBefore]                         To add row icon widgets by using {@link createIconWidget}. Any widget can be added but only icon widget is supported.
  * @param  {Object}          [options.yesOrNo]                           Defines the true and false values for attributes like colsep
  * @param  {string}          [options.yesOrNo.yesValue='1']              The true value
  * @param  {string}          [options.yesOrNo.noValue='0']               The false value
