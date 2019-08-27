@@ -13,7 +13,7 @@
 			]
 		},
 		"label": "t__All borders",
-		"description": "t__Draw borders on all sides of all table cells.",
+		"description": "t__Add borders to the entire table",
 		"icon": "table-border",
 		"steps": [
 			{ "type": "transform/setCellNodeIdsToAllCellsInTable" },
@@ -34,7 +34,7 @@
 			]
 		},
 		"label": "t__No borders",
-		"description": "t__Don't draw any borders on any of the cells of this table.",
+		"description": "t__Remove borders from the entire table",
 		"icon": "delete-table-border",
 		"steps": [
 			{ "type": "transform/setCellNodeIdsToAllCellsInTable" },
@@ -55,7 +55,7 @@
 			]
 		},
 		"label": "t__All borders",
-		"description": "t__Add borders to the current cell",
+		"description": "t__Add borders to the current cells",
 		"icon": "cell-border",
 		"steps": [
 			{
@@ -76,7 +76,7 @@
 			"fontosdk": true
 		},
 		"label": "t__All borders",
-		"description": "t__Draw borders on all sides of every selected cell.",
+		"description": "t__Add borders to the current cells",
 		"icon": "cell-border",
 		"steps": [
 			{
@@ -102,7 +102,7 @@
 			]
 		},
 		"label": "t__No borders",
-		"description": "Remove borders from the current cell",
+		"description": "Remove borders from the current cells",
 		"icon": "delete-cell-border",
 		"steps": [
 			{
@@ -123,7 +123,7 @@
 			"fontosdk": true
 		},
 		"label": "t__No borders",
-		"description": "t__Don't draw any borders on the selected cells.",
+		"description": "t__Remove borders from the current cells",
 		"icon": "delete-cell-border",
 		"steps": [
 			{
@@ -142,7 +142,7 @@
 			"fontosdk": true
 		},
 		"label": "t__Top",
-		"description": "t__Toggle the border at the top of the selected cells.",
+		"description": "t__Toggle the border at the top of the selected cells",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
@@ -165,7 +165,7 @@
 			"fontosdk": true
 		},
 		"label": "t__Bottom",
-		"description": "t__Toggle the border at the bottom of the selected cells.",
+		"description": "t__Toggle the border at the bottom of the selected cells",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
@@ -188,7 +188,7 @@
 			"fontosdk": true
 		},
 		"label": "t__Left",
-		"description": "t__Toggle the border on the left of the selected cells.",
+		"description": "t__Toggle the border on the left of the selected cells",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
@@ -211,7 +211,7 @@
 			"fontosdk": true
 		},
 		"label": "t__Right",
-		"description": "t__Toggle the border on the right of the selected cells.",
+		"description": "t__Toggle the border on the right of the selected cells",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
