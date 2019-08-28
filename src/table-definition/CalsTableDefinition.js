@@ -425,14 +425,8 @@ function CalsTableDefinition(options) {
 			'contextual-cals-set-cell-vertical-alignment-center',
 			'contextual-cals-set-cell-vertical-alignment-bottom'
 		],
-		columnBorderOperationNames: [
-			'contextual-cals-set-cell-border-all',
-			'contextual-cals-set-cell-border-none'
-		],
-		rowBorderOperationNames: [
-			'contextual-cals-set-cell-border-all',
-			'contextual-cals-set-cell-border-none'
-		]
+		columnBorderOperationNames: ['contextual-cals-toggle-cell-border-all'],
+		rowBorderOperationNames: ['contextual-cals-toggle-cell-border-all']
 	};
 
 	TableDefinition.call(this, properties);

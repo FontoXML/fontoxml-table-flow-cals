@@ -135,6 +135,54 @@
 			{ "type": "operation/contextual-cals-set-cell-border-none" }
 		]
 	},
+	"contextual-cals-toggle-cell-border-all": {
+		"__documentation": {
+			"summary": "Set all borders of the given cells",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true,
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the border"
+				}
+			]
+		},
+		"label": "t__All borders",
+		"description": "t__Add borders to the current cells",
+		"icon": "cell-border",
+		"steps": [
+			{
+				"type": "custom-mutation/calsToggleCellBorder",
+				"data": {
+					"top": true,
+					"right": true,
+					"bottom": true,
+					"left": true,
+					"isToggle": true
+				}
+			}
+		]
+	},
+	"cals-toggle-cell-border-all": {
+		"__documentation": {
+			"summary": "Set all borders of the cell containing the selection",
+			"category": "add-on/fontoxml-table-flow-cals",
+			"fontosdk": true
+		},
+		"label": "t__All borders",
+		"description": "t__Add borders to the current cells",
+		"icon": "cell-border",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": "entry"
+				}
+			},
+			{ "type": "operation/contextual-cals-toggle-cell-border-all" }
+		]
+	},
 	"cals-set-cell-border-top": {
 		"__documentation": {
 			"summary": "Toggle the top border of this cell",
@@ -153,7 +201,8 @@
 			{
 				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
-					"top": true
+					"top": true,
+					"isToggle": true
 				}
 			}
 		]
@@ -176,7 +225,8 @@
 			{
 				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
-					"bottom": true
+					"bottom": true,
+					"isToggle": true
 				}
 			}
 		]
@@ -199,7 +249,8 @@
 			{
 				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
-					"left": true
+					"left": true,
+					"isToggle": true
 				}
 			}
 		]
@@ -222,7 +273,8 @@
 			{
 				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
-					"right": true
+					"right": true,
+					"isToggle": true
 				}
 			}
 		]
