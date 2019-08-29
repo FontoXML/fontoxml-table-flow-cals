@@ -13,6 +13,7 @@
 		},
 		"label": "t__Edit column sizes",
 		"description": "t__Set the column sizing for this table.",
+		"icon": "column-resizer",
 		"steps": [
 			{
 				"type": "operation/open-table-column-sizing-popover",
