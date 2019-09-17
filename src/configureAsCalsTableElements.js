@@ -7,22 +7,24 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  * Example usage for the table widgets:
  *
  *```
- * 	configureAsCalsTableElements(sxModule, {
- * 		table: {
+ *	configureAsCalsTableElements(sxModule, {
+ *		table: {
  *			localName: 'table'
  *		},
  *		entry: {
  *			defaultTextContainer: 'p'
  *		},
- *		columnBefore: [createIconWidget('clock-o', {
- *			clickOperation: 'lcTime-value-edit',
- *			tooltipContent: 'Click here to edit the duration'
- *		})],
+ *		columnBefore: [
+ *			createIconWidget('clock-o', {
+ *				clickOperation: 'lcTime-value-edit',
+ *				tooltipContent: 'Click here to edit the duration'
+ *			})
+ *		],
  *		rowBefore: [
- *				createIconWidget('dot-circle-o', {
- *					clickOperation: 'do-nothing'
- *				})
- *			],
+ *			createIconWidget('dot-circle-o', {
+ *				clickOperation: 'do-nothing'
+ *			})
+ *		],
  *		showInsertionWidget: true,
  *		showHighlightingWidget: true
  *	});

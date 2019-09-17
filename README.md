@@ -46,7 +46,27 @@ configureAsCalsTableElements(sxModule, {
 	tfoot: {
 		// Custom local name for tfoot (optional)
 		localName: 'customFoot'
-	}
+	},
+
+	// Use createIconWidget to add column icons before rows or columns. Any widget can be added but only icon widget is supported.
+	columnBefore: [
+		createIconWidget('clock-o', {
+			clickOperation: 'lcTime-value-edit',
+			tooltipContent: 'Click here to edit the duration'
+		})
+	],
+
+	rowBefore: [
+		createIconWidget('dot-circle-o', {
+			clickOperation: 'do-nothing'
+		})
+	],
+
+	// To add insertion buttons which insert a column or a row at a specific place, default false.
+	showInsertionWidget: true,
+
+	// To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
+	showHighlightingWidget: true
 });
 ```
 
