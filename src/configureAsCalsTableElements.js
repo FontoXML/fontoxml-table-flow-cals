@@ -39,8 +39,8 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  * @param  {number}          [options.priority]                          Selector priority for all elements configured by this function
  * @param  {boolean}         [options.showInsertionWidget]               To add insertion buttons which insert a column or a row to a specific place, default false.
  * @param  {boolean}         [options.showHighlightingWidget]            To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
- * @param  {Widget[]|null}   [options.columnBefore]                      To add column icon widgets by using {@link createIconWidget}. Any widget can be added but only icon widget is supported.
- * @param  {Widget[]|null}   [options.rowBefore]                         To add row icon widgets by using {@link createIconWidget}. Any widget can be added but only icon widget is supported.
+ * @param  {Widget[]|null}   [options.columnBefore]                      To add column icon widgets by using {@link createIconWidget}. Column widgets are linked to the colspec elements. Any widget can be added but only icon widget is supported.
+ * @param  {Widget[]|null}   [options.rowBefore]                         To add row icon widgets by using {@link createIconWidget}. Row widgets are linked to the row elements of the table. Any widget can be added but only icon widget is supported.
  * @param  {Object}          [options.yesOrNo]                           Defines the true and false values for attributes like colsep
  * @param  {string}          [options.yesOrNo.yesValue='1']              The true value
  * @param  {string}          [options.yesOrNo.noValue='0']               The false value
