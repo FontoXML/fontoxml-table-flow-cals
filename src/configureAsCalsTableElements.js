@@ -56,6 +56,7 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  * @param  {string}          [options.thead.localName='thead']           The local name for the thead element
  * @param  {Object}          [options.tfoot]                             Configuration options for the tfoot element
  * @param  {string}          [options.tfoot.localName='tfoot']           The local name for the tfoot element
+ * @param  {string}          [options.useDefaultContextMenu=true]        Whether or not to use a preconfigured context menu for elements within the table
  */
 export default function configureAsCalsTableElements(sxModule, options) {
 	options = options || {};
