@@ -1,5 +1,5 @@
 import Blueprint from 'fontoxml-blueprints/Blueprint';
-import core from 'fontoxml-core';
+import CoreDocument from 'fontoxml-core/Document';
 import evaluateXPathToBoolean from 'fontoxml-selectors/evaluateXPathToBoolean';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
 import namespaceManager from 'fontoxml-dom-namespaces/namespaceManager';
@@ -7,19 +7,17 @@ import * as slimdom from 'slimdom';
 
 import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
 
-const CoreDocument = core.Document;
-
 const stubFormat = {
-		synthesizer: {
-			completeStructure: () => true
-		},
-		metadata: {
-			get: (_option, _node) => false
-		},
-		validator: {
-			canContain: () => true
-		}
-	};
+	synthesizer: {
+		completeStructure: () => true
+	},
+	metadata: {
+		get: (_option, _node) => false
+	},
+	validator: {
+		canContain: () => true
+	}
+};
 
 describe('CALS tables: Grid model to XML', () => {
 	let blueprint;
@@ -51,117 +49,211 @@ describe('CALS tables: Grid model to XML', () => {
 	describe('Basics', () => {
 		it('can serialize a 1x1 table', () => {
 			const tableGridModel = createTable(1, 1, false, documentNode);
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ frame: 'all' },
 				[
-					'table',
-					{ 'frame': 'all' },
+					'tgroup',
+					{ cols: '1' },
 					[
-						'tgroup',
-						{ 'cols': '1' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['tbody',
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }]
-							]
-						]
-					]
-				]);
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					['tbody', ['row', ['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }]]]
+				]
+			]);
 		});
 
 		it('can serialize a 4x4 table', () => {
 			const tableGridModel = createTable(4, 4, false, documentNode);
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'frame': 'all' },
-					['tgroup',
-						{ 'cols': '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['tbody',
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ frame: 'all' },
+				[
+					'tgroup',
+					{ cols: '4' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-3',
+							colnum: '4',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
 					]
-				]);
+				]
+			]);
 		});
 	});
 
 	describe('Headers', () => {
 		it('can serialize a 4x4 table with 1 header row', () => {
 			const tableGridModel = createTable(4, 4, true, documentNode);
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ frame: 'all' },
-					['tgroup',
-						{ cols: '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['thead',
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ frame: 'all' },
+				[
+					'tgroup',
+					{ cols: '4' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-3',
+							colnum: '4',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'thead',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						]
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						],
-						['tbody',
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							]
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
 					]
-				]);
+				]
+			]);
 		});
 	});
 
@@ -174,45 +266,97 @@ describe('CALS tables: Grid model to XML', () => {
 			tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
 			tableGridModel.setCellAtCoordinates(spanningCell, 1, 2);
 
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ frame: 'all' },
-					['tgroup',
-						{ cols: '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['tbody',
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ frame: 'all' },
+				[
+					'tgroup',
+					{ cols: '4' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-3',
+							colnum: '4',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							[
+								'entry',
+								{
+									namest: 'column-1',
+									nameend: 'column-2',
+									colsep: '1',
+									rowsep: '1'
+								}
 							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'namest': 'column-1', 'nameend': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							]
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
 					]
-				]);
+				]
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 row spanning cell', () => {
@@ -223,45 +367,92 @@ describe('CALS tables: Grid model to XML', () => {
 			tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
 			tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
 
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ frame: 'all' },
-					['tgroup',
-						{ cols: '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['tbody',
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ frame: 'all' },
+				[
+					'tgroup',
+					{ cols: '4' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-3',
+							colnum: '4',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							[
+								'entry',
+								{ colname: 'column-1', morerows: '1', colsep: '1', rowsep: '1' }
 							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'morerows': '1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							]
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
 					]
-				]);
+				]
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 column and row spanning cell', () => {
@@ -275,43 +466,96 @@ describe('CALS tables: Grid model to XML', () => {
 			tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
 			tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
 
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'frame': 'all' },
-					['tgroup',
-						{ 'cols': '4' },
-						['colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['tbody',
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ frame: 'all' },
+				[
+					'tgroup',
+					{ cols: '4' },
+					[
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-3',
+							colnum: '4',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							[
+								'entry',
+								{
+									namest: 'column-1',
+									nameend: 'column-2',
+									morerows: '1',
+									colsep: '1',
+									rowsep: '1'
+								}
 							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'namest': 'column-1', 'nameend': 'column-2', 'morerows': '1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['row',
-								['entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							]
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
 					]
-				]);
+				]
+			]);
 		});
 	});
 
@@ -332,61 +576,114 @@ describe('CALS tables: Grid model to XML', () => {
 			const createTable = tableDefinition.getTableGridModelBuilder();
 			const tableGridModel = createTable(4, 4, true, documentNode, 'ns2:entry');
 
-			const tableNodeWithNamespace = documentNode.createElementNS('http://example.com/ns1', 'ns1:matrix');
-			const tgroupNodeWithNamespace = documentNode.createElementNS('http://example.com/ns2', 'ns2:tgroup');
+			const tableNodeWithNamespace = documentNode.createElementNS(
+				'http://example.com/ns1',
+				'ns1:matrix'
+			);
+			const tgroupNodeWithNamespace = documentNode.createElementNS(
+				'http://example.com/ns2',
+				'ns2:tgroup'
+			);
 			tableNodeWithNamespace.appendChild(tgroupNodeWithNamespace);
 
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tgroupNodeWithNamespace, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(
+					tableGridModel,
+					tgroupNodeWithNamespace,
+					blueprint,
+					stubFormat
+				)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(tableNodeWithNamespace),
-				['ns1:matrix',
-					{ 'frame': 'all' },
-					['ns2:tgroup',
-						{ 'cols': '4' },
-						['ns2:colspec', { 'colname': 'column-0', 'colnum': '1', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['ns2:colspec', { 'colname': 'column-1', 'colnum': '2', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['ns2:colspec', { 'colname': 'column-2', 'colnum': '3', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['ns2:colspec', { 'colname': 'column-3', 'colnum': '4', 'colwidth': '1*', 'colsep': '1', 'rowsep': '1' }],
-						['ns2:thead',
-							['ns2:row',
-								['ns2:entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							]
+			chai.assert.deepEqual(jsonMLMapper.serialize(tableNodeWithNamespace), [
+				'ns1:matrix',
+				{ frame: 'all' },
+				[
+					'ns2:tgroup',
+					{ cols: '4' },
+					[
+						'ns2:colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'ns2:colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'ns2:colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'ns2:colspec',
+						{
+							colname: 'column-3',
+							colnum: '4',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'ns2:thead',
+						[
+							'ns2:row',
+							['ns2:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						]
+					],
+					[
+						'ns2:tbody',
+						[
+							'ns2:row',
+							['ns2:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						],
-						['ns2:tbody',
-							['ns2:row',
-								['ns2:entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['ns2:row',
-								['ns2:entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							],
-							['ns2:row',
-								['ns2:entry', { 'colname': 'column-0', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-1', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-2', 'colsep': '1', 'rowsep': '1' }],
-								['ns2:entry', { 'colname': 'column-3', 'colsep': '1', 'rowsep': '1' }]
-							]
+						[
+							'ns2:row',
+							['ns2:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'ns2:row',
+							['ns2:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
+							['ns2:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
 						]
 					]
-				]);
+				]
+			]);
 
 			chai.assert.isTrue(
-				evaluateXPathToBoolean(
-					'deep-equal($a, $b)',
-					null,
-					blueprint,
-					{
-						a: tableNodeWithNamespace,
-						b: new DOMParser().parseFromString([
+				evaluateXPathToBoolean('deep-equal($a, $b)', null, blueprint, {
+					a: tableNodeWithNamespace,
+					b: new DOMParser().parseFromString(
+						[
 							'<matrix frame="all" xmlns="http://example.com/ns1">',
 							'<tgroup cols="4" xmlns="http://example.com/ns2">',
 							'<colspec colname="column-0" colnum="1" colwidth="1*" colsep="1" rowsep="1" /><colspec colname="column-1" colnum="2" colwidth="1*" colsep="1" rowsep="1" /><colspec colname="column-2" colnum="3" colwidth="1*" colsep="1" rowsep="1" /><colspec colname="column-3" colnum="4" colwidth="1*" colsep="1" rowsep="1" />',
@@ -398,9 +695,10 @@ describe('CALS tables: Grid model to XML', () => {
 							'</tbody>',
 							'</tgroup>',
 							'</matrix>'
-						].join(''), 'text/xml').documentElement
-					}
-				),
+						].join(''),
+						'text/xml'
+					).documentElement
+				}),
 				'deep equal'
 			);
 		});

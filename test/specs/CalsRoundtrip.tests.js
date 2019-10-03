@@ -1,5 +1,5 @@
-import blueprints from 'fontoxml-blueprints';
-import core from 'fontoxml-core';
+import Blueprint from 'fontoxml-blueprints/Blueprint';
+import CoreDocument from 'fontoxml-core/Document';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
 import indicesManager from 'fontoxml-indices/indicesManager';
 import * as slimdom from 'slimdom';
@@ -16,9 +16,6 @@ const mergeCellWithCellAbove = mergeCells.mergeCellWithCellAbove;
 
 const splitCellIntoRows = splitSpanningCell.splitCellIntoRows;
 const splitCellIntoColumns = splitSpanningCell.splitCellIntoColumns;
-
-const Blueprint = blueprints.Blueprint;
-const CoreDocument = core.Document;
 
 const stubFormat = {
 	synthesizer: {

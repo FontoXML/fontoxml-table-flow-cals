@@ -1,5 +1,6 @@
 import Blueprint from 'fontoxml-blueprints/Blueprint';
-import core from 'fontoxml-core';
+import CoreDocument from 'fontoxml-core/Document';
+import DocumentController from 'fontoxml-core/DocumentController';
 import documentsManager from 'fontoxml-documents/documentsManager';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/evaluateXPathToFirstNode';
 import getNodeId from 'fontoxml-dom-identification/getNodeId';
@@ -11,9 +12,6 @@ import * as slimdom from 'slimdom';
 import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
 import tableDefinitionManager from 'fontoxml-table-flow/tableDefinitionManager';
 import toggleCellBorder from 'fontoxml-table-flow-cals/custom-mutations/toggleCellBorder';
-
-const CoreDocument = core.Document;
-const DocumentController = core.DocumentController;
 
 describe('toggleCellBorder custom mutation', () => {
 	let documentNode;
