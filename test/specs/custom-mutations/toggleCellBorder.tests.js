@@ -542,12 +542,9 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
 			);
-<<<<<<< Updated upstream
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			getGridModelKey(tableDefinition, tableNode);
-=======
->>>>>>> Stashed changes
+			getGridModelKey(tableDefinition, tableNode, blueprint);
 
 			const cellNodeId = getNodeId(
 				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
@@ -557,7 +554,7 @@ describe('toggleCellBorder custom mutation', () => {
 			toggleCellBorder(
 				{
 					cellNodeIds: [cellNodeId],
-					top: true
+					top: false
 				},
 				blueprint
 			);
@@ -631,12 +628,9 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
 			);
-<<<<<<< Updated upstream
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			getGridModelKey(tableDefinition, tableNode);
-=======
->>>>>>> Stashed changes
+			getGridModelKey(tableDefinition, tableNode, blueprint);
 
 			const cellNodeId = getNodeId(
 				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
@@ -646,7 +640,7 @@ describe('toggleCellBorder custom mutation', () => {
 			toggleCellBorder(
 				{
 					cellNodeIds: [cellNodeId],
-					right: true
+					right: false
 				},
 				blueprint
 			);
@@ -720,12 +714,9 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
 			);
-<<<<<<< Updated upstream
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			getGridModelKey(tableDefinition, tableNode);
-=======
->>>>>>> Stashed changes
+			getGridModelKey(tableDefinition, tableNode, blueprint);
 
 			const cellNodeId = getNodeId(
 				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
@@ -735,7 +726,7 @@ describe('toggleCellBorder custom mutation', () => {
 			toggleCellBorder(
 				{
 					cellNodeIds: [cellNodeId],
-					bottom: true
+					bottom: false
 				},
 				blueprint
 			);
@@ -818,7 +809,7 @@ describe('toggleCellBorder custom mutation', () => {
 			toggleCellBorder(
 				{
 					cellNodeIds: [cellNodeId],
-					left: true
+					left: false
 				},
 				blueprint
 			);
@@ -892,12 +883,9 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
 			);
-<<<<<<< Updated upstream
 
 			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			getGridModelKey(tableDefinition, tableNode);
-=======
->>>>>>> Stashed changes
+			getGridModelKey(tableDefinition, tableNode, blueprint);
 
 			const cellNodeId = getNodeId(
 				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
