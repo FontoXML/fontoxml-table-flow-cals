@@ -97,7 +97,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		blueprint.realize();
 		// The changes will be set to merge with the base index, this needs to be commited.
-		indicesManager.getIndex('callback-index').commitMerge();
+		indicesManager.getIndexSet().commitMerge();
 		deepEqual(jsonMLMapper.serialize(documentNode.firstChild), jsonOut, new Map());
 	}
 

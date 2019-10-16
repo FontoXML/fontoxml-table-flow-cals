@@ -40,7 +40,7 @@ describe('toggleCellBorder custom mutation', () => {
 
 	afterEach(() => {
 		// The CacheInvalidationHook is not registered so we need to commit merge after each test.
-		indicesManager.getIndex('callback-index').commitMerge();
+		indicesManager.getIndexSet().commitMerge();
 	});
 
 	const threeByThreeTable = [
