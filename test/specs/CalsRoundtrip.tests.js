@@ -82,7 +82,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 		blueprint = new Blueprint(coreDocument.dom);
 	});
 
-	function transformTable(jsonIn, jsonOut, options = {}, mutateGridModel = () => { }) {
+	function transformTable(jsonIn, jsonOut, options = {}, mutateGridModel = () => {}) {
 		coreDocument.dom.mutate(() => jsonMLMapper.parse(jsonIn, documentNode));
 
 		const tableDefinition = new CalsTableDefinition(options);

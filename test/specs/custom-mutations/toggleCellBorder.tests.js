@@ -102,6 +102,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -183,6 +184,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -264,6 +266,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -345,6 +348,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -429,6 +433,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -558,6 +563,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -644,6 +650,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -730,6 +737,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -813,6 +821,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
@@ -902,6 +911,7 @@ describe('toggleCellBorder custom mutation', () => {
 			);
 			blueprint.applyOverlay();
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',

@@ -1,5 +1,6 @@
 import Blueprint from 'fontoxml-blueprints/Blueprint';
 import CoreDocument from 'fontoxml-core/Document';
+import indicesManager from 'fontoxml-indices/indicesManager';
 import evaluateXPathToBoolean from 'fontoxml-selectors/evaluateXPathToBoolean';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
 import namespaceManager from 'fontoxml-dom-namespaces/namespaceManager';
@@ -54,6 +55,7 @@ describe('CALS tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ frame: 'all' },
@@ -82,6 +84,7 @@ describe('CALS tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ frame: 'all' },
@@ -172,6 +175,7 @@ describe('CALS tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ frame: 'all' },
@@ -271,6 +275,7 @@ describe('CALS tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ frame: 'all' },
@@ -372,6 +377,7 @@ describe('CALS tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ frame: 'all' },
@@ -471,6 +477,7 @@ describe('CALS tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ frame: 'all' },
@@ -596,6 +603,7 @@ describe('CALS tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(tableNodeWithNamespace), [
 				'ns1:matrix',
 				{ frame: 'all' },

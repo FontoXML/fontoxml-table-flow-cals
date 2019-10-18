@@ -1,6 +1,7 @@
 import Blueprint from 'fontoxml-blueprints/Blueprint';
 import CoreDocument from 'fontoxml-core/Document';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
+import indicesManager from 'fontoxml-indices/indicesManager';
 import * as slimdom from 'slimdom';
 
 import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
@@ -73,6 +74,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
+		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
 			{ frame: 'all' },
@@ -107,6 +109,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
+		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
 			{ frame: 'all' },
@@ -182,6 +185,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
+		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
 			{ frame: 'all' },
