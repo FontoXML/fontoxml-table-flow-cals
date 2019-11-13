@@ -7,7 +7,10 @@ import * as slimdom from 'slimdom';
 import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
 
 import mergeCells from 'fontoxml-table-flow/TableGridModel/mutations/merging/mergeCells';
+import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
 import splitSpanningCell from 'fontoxml-table-flow/TableGridModel/mutations/splitting/splitSpanningCell';
+
+import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions.js';
 
 const mergeCellWithCellToTheRight = mergeCells.mergeCellWithCellToTheRight;
 const mergeCellWithCellToTheLeft = mergeCells.mergeCellWithCellToTheLeft;
@@ -28,6 +31,8 @@ const stubFormat = {
 		canContain: () => true
 	}
 };
+
+registerCustomXPathFunctions();
 
 function deepEqual(actual, expected, colNamesMapping) {
 	if (typeof actual === 'string') {
@@ -86,6 +91,8 @@ describe('CALS tables: XML to XML roundtrip', () => {
 		coreDocument.dom.mutate(() => jsonMLMapper.parse(jsonIn, documentNode));
 
 		const tableDefinition = new CalsTableDefinition(options);
+		tableDefinitionManager.addTableDefinition(tableDefinition);
+
 		const tableNode = documentNode.firstChild;
 		const gridModel = tableDefinition.buildTableGridModel(tableNode, blueprint);
 		chai.assert.isOk(gridModel);
@@ -5233,39 +5240,61 @@ describe('CALS tables: XML to XML roundtrip', () => {
 	describe('Merging cells', () => {
 		it('can handle a 3x3 table, merging a cell with the cell above', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5274,38 +5303,63 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				mergeCellWithCellAbove(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0', morerows: '1' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							[
+								'entry',
+								{ colname: 'column-1', colsep: '0', rowsep: '0', morerows: '1' }
+							],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5321,39 +5375,61 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		it('can handle a 3x3 table, merging a cell with the cell to the right', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5366,41 +5442,68 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				);
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
 						[
-							'entry',
-							{ colsep: '0', rowsep: '0', namest: 'column-1', nameend: 'column-2' }
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							[
+								'entry',
+								{
+									colsep: '0',
+									rowsep: '0',
+									namest: 'column-1',
+									nameend: 'column-2'
+								}
+							]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
 						]
-					],
-					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
 					]
 				]
 			];
@@ -5416,27 +5519,49 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		it('can handle a 1x3 table, merging a cell with the cell to the right, with "*" column widths', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1.3*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1.3*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5449,22 +5574,38 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				);
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '2' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '2.3*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '2' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '2.3*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5480,33 +5621,49 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		it('can handle a 1x3 table, merging a cell with the cell to the right, with absolute column widths', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '10px', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{
-						colname: 'column-1',
-						colnum: '2',
-						colwidth: '20px*',
-						colsep: '0',
-						rowsep: '0'
-					}
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '30px', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '10px',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '20px*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '30px',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5519,22 +5676,38 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				);
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '2' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '10px', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '50px', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '2' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '10px',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '50px',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5550,39 +5723,61 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		it('can handle a 3x3 table, merging a cell with the cell below', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5591,38 +5786,63 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				mergeCellWithCellBelow(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0', morerows: '1' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							[
+								'entry',
+								{ colname: 'column-1', colsep: '0', rowsep: '0', morerows: '1' }
+							],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5638,39 +5858,61 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		it('can handle a 3x3 table, merging a cell with a cell to the left', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5683,41 +5925,68 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				);
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
 						[
-							'entry',
-							{ colsep: '0', rowsep: '0', namest: 'column-0', nameend: 'column-1' }
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
 						],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
-					],
-					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						[
+							'row',
+							[
+								'entry',
+								{
+									colsep: '0',
+									rowsep: '0',
+									namest: 'column-0',
+									nameend: 'column-1'
+								}
+							],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5735,38 +6004,63 @@ describe('CALS tables: XML to XML roundtrip', () => {
 	describe('Splitting cells', () => {
 		it('can handle a 3x3 table, splitting a cell spanning over rows', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0', morerows: '1' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							[
+								'entry',
+								{ colname: 'column-1', colsep: '0', rowsep: '0', morerows: '1' }
+							],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5775,39 +6069,61 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				splitCellIntoRows(gridModel, gridModel.getCellAtCoordinates(1, 1));
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5823,41 +6139,68 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		it('can handle a 3x3 table, splitting a cell spanning over columns', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
 						[
-							'entry',
-							{ namest: 'column-1', nameend: 'column-2', colsep: '0', rowsep: '0' }
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							[
+								'entry',
+								{
+									namest: 'column-1',
+									nameend: 'column-2',
+									colsep: '0',
+									rowsep: '0'
+								}
+							]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
 						]
-					],
-					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
 					]
 				]
 			];
@@ -5866,39 +6209,61 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				splitCellIntoColumns(gridModel, gridModel.getCellAtCoordinates(1, 1));
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -5916,50 +6281,76 @@ describe('CALS tables: XML to XML roundtrip', () => {
 	describe('Tables not having all the colspecs', () => {
 		it('can transform a table having no colspec at all', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'tbody',
-					['row', ['entry'], ['entry'], ['entry']],
-					['row', ['entry'], ['entry'], ['entry']],
-					['row', ['entry'], ['entry'], ['entry']]
+					'tgroup',
+					{ cols: '3' },
+					[
+						'tbody',
+						['row', ['entry'], ['entry'], ['entry']],
+						['row', ['entry'], ['entry'], ['entry']],
+						['row', ['entry'], ['entry'], ['entry']]
+					]
 				]
 			];
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						]
 					]
 				]
 			];
@@ -5975,51 +6366,77 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		it('can transform a table having only 1 colspec', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
-				['colspec', { colname: 'some-non-standard-colname', colsep: '0', rowsep: '0' }],
+				'table',
+				{ frame: 'all' },
 				[
-					'tbody',
-					['row', ['entry', { colname: 'column-0' }], ['entry'], ['entry']],
-					['row', ['entry'], ['entry'], ['entry']],
-					['row', ['entry'], ['entry'], ['entry']]
+					'tgroup',
+					{ cols: '3' },
+					['colspec', { colname: 'some-non-standard-colname', colsep: '0', rowsep: '0' }],
+					[
+						'tbody',
+						['row', ['entry', { colname: 'column-0' }], ['entry'], ['entry']],
+						['row', ['entry'], ['entry'], ['entry']],
+						['row', ['entry'], ['entry'], ['entry']]
+					]
 				]
 			];
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '1',
+							rowsep: '1'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
+							['entry', { colname: 'column-2', colsep: '1', rowsep: '1' }]
+						]
 					]
 				]
 			];
@@ -6037,39 +6454,61 @@ describe('CALS tables: XML to XML roundtrip', () => {
 	describe('CALS specifics', () => {
 		it('can handle a 3x3 table, merging a cell with the cell below', () => {
 			const jsonIn = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];
@@ -6081,33 +6520,55 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			};
 
 			const jsonOut = [
-				'tgroup',
-				{ cols: '3' },
+				'table',
+				{ frame: 'all' },
 				[
-					'colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '0', rowsep: '0' }
-				],
-				[
-					'tbody',
+					'tgroup',
+					{ cols: '3' },
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-0',
+							colnum: '1',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
 					],
 					[
-						'row',
-						['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
-						['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						'colspec',
+						{
+							colname: 'column-1',
+							colnum: '2',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'colspec',
+						{
+							colname: 'column-2',
+							colnum: '3',
+							colwidth: '1*',
+							colsep: '0',
+							rowsep: '0'
+						}
+					],
+					[
+						'tbody',
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						],
+						[
+							'row',
+							['entry', { colname: 'column-0', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-1', colsep: '0', rowsep: '0' }],
+							['entry', { colname: 'column-2', colsep: '0', rowsep: '0' }]
+						]
 					]
 				]
 			];

@@ -159,22 +159,6 @@ function CalsTableDefinition(options) {
 			});
 		},
 
-		// Environment
-		environmentQuery:
-			'map { ' +
-			'"indexByColname": map:merge(child::' +
-			colspec +
-			'/map { string(@colname): count(preceding-sibling::' +
-			colspec +
-			') }), ' +
-			'"colsepByColname": map:merge(child::' +
-			colspec +
-			'[@colsep]/map { string(@colname): number(@colsep) }), ' +
-			'"rowsepByColname": map:merge(child::' +
-			colspec +
-			'[@rowsep]/map { string(@colname): number(@rowsep) }) ' +
-			'}',
-
 		// Defining node selectors
 		tableDefiningNodeSelector: 'self::' + tableFigure,
 
@@ -194,15 +178,45 @@ function CalsTableDefinition(options) {
 
 		findCellNodesXPathQuery: './' + entry,
 
+		getColumnIdentifiersQuery:
+			'map {"columnName": string(./@colname), "namest": string(./@namest), "nameend": string(./@nameend)}',
+
+		getColumnDataForCellQuery: `
+			if($columnIdentifiers("namest") and $columnIdentifiers("nameend")) then
+				let $colSpecifications := [
+					fonto:column-spec(., $columnIdentifiers("namest")),
+					fonto:column-spec(., $columnIdentifiers("nameend"))
+				]
+				return
+					if($colSpecifications(1) instance of map(*) and $colSpecifications(2) instance of map(*)) then
+						map {
+							"colsep": $colSpecifications(1)("columnSeparator"),
+							"rowsep": $colSpecifications(1)("rowSeparator"),
+							"colspan": number($colSpecifications(2)("index")) -
+								number($colSpecifications(1)("index")) + 1
+						}
+					else
+						map {"colsep": false(), "rowsep": false(), "colspan": 1}
+			else if ($columnIdentifiers("columnName")) then
+				let $colSpecification := fonto:column-spec(., $columnIdentifiers("columnName"))
+				return
+					if($colSpecification instance of map(*)) then
+						map {
+							"colsep": $colSpecification("columnSeparator"),
+							"rowsep": $colSpecification("rowSeparator"),
+							"colspan": 1
+						}
+					else
+						map {"colsep": false(), "rowsep": false(), "colspan": 1}
+
+			else
+				map {"colsep": true(), "rowsep": true(), "colspan": 1}`,
+
 		// Data
 		getNumberOfColumnsXPathQuery: './@cols => number()',
 		getRowSpanForCellNodeXPathQuery:
 			'let $rowspan := ./@morerows => number() return if ($rowspan) then $rowspan + 1 else 1',
-		getColumnSpanForCellNodeXPathQuery:
-			'let $colname := ./@colname, $namest := ./@namest, $nameend := ./@nameend ' +
-			'return if ($colname and not($namest or $nameend)) ' +
-			'then 1 ' +
-			'else (($indexByColname(string($nameend)), 0)[1] - ($indexByColname(string($namest)), 0)[1] + 1)',
+		getColumnSpanForCellNodeXPathQuery: '$columnDataForCell("colspan")',
 
 		// Normalizations
 		normalizeContainerNodeStrategies: [
@@ -294,7 +308,13 @@ function CalsTableDefinition(options) {
 			),
 			getSpecificationValueStrategies.createGetValueAsNumberStrategy(
 				'columnNumber',
-				'./@colnum'
+				'number(./@colnum)'
+			),
+			getSpecificationValueStrategies.createGetValueAsNumberStrategy(
+				'index',
+				'if(./@colnum) then number(./@colnum) else preceding-sibling::' +
+					colspec +
+					' => count()'
 			),
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'columnName',
@@ -325,13 +345,7 @@ function CalsTableDefinition(options) {
 					this.trueValue +
 					'" ' +
 					'else ' +
-					'if (./@colname or ./@namest) then ' +
-					'let $columnName := if (./@colname) then ./@colname else ./@namest, ' +
-					'$columnRowsep := $rowsepByColname($columnName) ' +
-					'return $columnRowsep = "' +
-					this.trueValue +
-					'" ' +
-					'else true()'
+					'$columnDataForCell("rowsep")'
 			),
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 				'columnSeparator',
@@ -340,13 +354,7 @@ function CalsTableDefinition(options) {
 					this.trueValue +
 					'" ' +
 					'else ' +
-					'if (./@colname or ./@namest) then ' +
-					'let $columnName := if (./@colname) then ./@colname else ./@namest, ' +
-					'$columnColsep := $colsepByColname($columnName) ' +
-					'return $columnColsep = "' +
-					this.trueValue +
-					'" ' +
-					'else true()'
+					'$columnDataForCell("colsep")'
 			),
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'columnName',
@@ -454,6 +462,15 @@ CalsTableDefinition.prototype.buildTableGridModelKey = function(node, blueprint)
 		blueprint
 	);
 	return TableDefinition.prototype.buildTableGridModelKey.call(this, tableElement, blueprint);
+};
+
+CalsTableDefinition.prototype.buildColumnSpecificationsKey = function(tableNode, blueprint) {
+	var tableElement = evaluateXPathToFirstNode(
+		'descendant-or-self::' + this.selectorParts.table,
+		tableNode,
+		blueprint
+	);
+	return TableDefinition.prototype.buildColumnSpecificationsKey.call(this, tableElement);
 };
 
 CalsTableDefinition.prototype.applyToDom = function(tableGridModel, tableNode, blueprint, format) {

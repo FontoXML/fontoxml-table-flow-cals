@@ -2,9 +2,13 @@ import Blueprint from 'fontoxml-blueprints/Blueprint';
 import CoreDocument from 'fontoxml-core/Document';
 import getNodeId from 'fontoxml-dom-identification/getNodeId';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
+import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
+import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions.js';
 import * as slimdom from 'slimdom';
 
 import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
+
+registerCustomXPathFunctions();
 
 describe('CALS tables: XML to GridModel', () => {
 	let documentNode;
@@ -22,6 +26,7 @@ describe('CALS tables: XML to GridModel', () => {
 				localName: 'table'
 			}
 		});
+		tableDefinitionManager.addTableDefinition(tableDefinition);
 	});
 
 	describe('Basics', () => {
