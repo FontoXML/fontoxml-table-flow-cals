@@ -178,6 +178,9 @@ function CalsTableDefinition(options) {
 		// Defining node selectors
 		tableDefiningNodeSelector: 'self::' + tableFigure,
 
+		// Header row node selector
+		headerRowNodeSelector: `self::${row}[parent::${thead}]`,
+
 		// Finds
 		findHeaderRowNodesXPathQuery: './' + thead + '/' + row,
 		findBodyRowNodesXPathQuery: './' + tbody + '/' + row,
