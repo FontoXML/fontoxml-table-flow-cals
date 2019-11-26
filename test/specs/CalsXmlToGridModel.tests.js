@@ -808,11 +808,11 @@ describe('CALS tables: XML to GridModel', () => {
 			chai.assert.equal(gridModel.getHeight(), 3);
 			chai.assert.equal(gridModel.getWidth(), 3);
 
-			const leftColumn = gridModel.getCellByNodeId(
-				getNodeId(tgroupElement.lastChild.lastChild.firstChild)
+			const leftColumn = gridModel.getCellByNode(
+				tgroupElement.lastChild.lastChild.firstChild
 			);
-			const rightColumn = gridModel.getCellByNodeId(
-				getNodeId(tgroupElement.lastChild.lastChild.lastChild)
+			const rightColumn = gridModel.getCellByNode(
+				tgroupElement.lastChild.lastChild.lastChild
 			);
 			chai.assert.equal(leftColumn.data.width, '1*');
 			chai.assert.equal(rightColumn.data.width, '2*');
@@ -906,11 +906,11 @@ describe('CALS tables: XML to GridModel', () => {
 			chai.assert.equal(gridModel.getHeight(), 3);
 			chai.assert.equal(gridModel.getWidth(), 3);
 
-			const leftColumn = gridModel.getCellByNodeId(
-				getNodeId(tgroupElement.lastChild.lastChild.firstChild)
+			const leftColumn = gridModel.getCellByNode(
+				tgroupElement.lastChild.lastChild.firstChild
 			);
-			const rightColumn = gridModel.getCellByNodeId(
-				getNodeId(tgroupElement.lastChild.lastChild.lastChild)
+			const rightColumn = gridModel.getCellByNode(
+				tgroupElement.lastChild.lastChild.lastChild
 			);
 
 			chai.assert.equal(leftColumn.data.width, '10px');

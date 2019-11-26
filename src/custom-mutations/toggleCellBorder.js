@@ -24,7 +24,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 	};
 	const isToggle = argument.isToggle;
 
-	const cellNode = documentsManager.getNodeById(cellNodeIds[0]);
+	const cellNode = blueprint.lookup(cellNodeIds[0]);
 	const tableGridModel = getGridModel(cellNode, blueprint);
 	if (!tableGridModel || tableGridModel.error) {
 		return CustomMutationResult.notAllowed();
@@ -35,7 +35,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 	const falseValue = tableGridModel.tableDefinition.falseValue;
 
 	cellNodeIds.forEach(function(cellNodeId) {
-		const cellInfo = tableGridModel.getCellByNodeId(cellNodeId);
+		const cellInfo = tableGridModel.getCellByNode(blueprint.lookup(cellNodeId));
 
 		currentBorders.bottom =
 			borders.bottom &&
@@ -95,7 +95,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 	);
 
 	cellNodeIds.forEach(function(cellNodeId) {
-		const cellInfo = tableGridModel.getCellByNodeId(cellNodeId);
+		const cellInfo = tableGridModel.getCellByNode(blueprint.lookup(cellNodeId));
 
 		if (borders.bottom !== undefined) {
 			// Find all cells that should get a border-bottom, which is easy
