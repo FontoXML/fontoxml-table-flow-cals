@@ -178,10 +178,10 @@ function CalsTableDefinition(options) {
 
 		findCellNodesXPathQuery: './' + entry,
 
-		getColumnIdentifiersQuery:
+		getColumnIdentifiersXPathQuery:
 			'map {"columnName": string(./@colname), "namest": string(./@namest), "nameend": string(./@nameend)}',
 
-		getColumnDataForCellQuery: `
+		getColumnDataForCellXPathQuery: `
 			if($columnIdentifiers("namest") and $columnIdentifiers("nameend")) then
 				let $colSpecifications := [
 					fonto:column-spec(., $columnIdentifiers("namest")),
