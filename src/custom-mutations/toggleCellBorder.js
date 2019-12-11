@@ -1,5 +1,4 @@
 import CustomMutationResult from 'fontoxml-base-flow/src/CustomMutationResult.js';
-import documentsManager from 'fontoxml-documents/src/documentsManager.js';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
 import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels.js';
 
@@ -34,8 +33,11 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 	const trueValue = tableGridModel.tableDefinition.trueValue;
 	const falseValue = tableGridModel.tableDefinition.falseValue;
 
-	cellNodeIds.forEach(function(cellNodeId) {
+	for (const cellNodeId of cellNodeIds) {
 		const cellInfo = tableGridModel.getCellByNode(blueprint.lookup(cellNodeId));
+		if (!cellInfo) {
+			return CustomMutationResult.notAllowed();
+		}
 
 		currentBorders.bottom =
 			borders.bottom &&
@@ -88,20 +90,23 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 					);
 			}
 		}
-	});
+	}
 
 	const isActive = Object.keys(borders).every(
 		direction => borders[direction] === undefined || currentBorders[direction]
 	);
 
-	cellNodeIds.forEach(function(cellNodeId) {
+	for (const cellNodeId of cellNodeIds) {
 		const cellInfo = tableGridModel.getCellByNode(blueprint.lookup(cellNodeId));
+		if (!cellInfo) {
+			return CustomMutationResult.notAllowed();
+		}
 
 		if (borders.bottom !== undefined) {
 			// Find all cells that should get a border-bottom, which is easy
 
 			if (cellInfo.row === tableGridModel.getHeight() - 1) {
-				return;
+				continue;
 			}
 
 			blueprint.setAttribute(
@@ -115,7 +120,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 			// Find all cells that should get a border-right, which is easy
 
 			if (cellInfo.column === tableGridModel.getWidth() - 1) {
-				return;
+				continue;
 			}
 
 			blueprint.setAttribute(
@@ -158,7 +163,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 				);
 			}
 		}
-	});
+	}
 
 	const result = CustomMutationResult.ok();
 	result.setActive(isActive);
