@@ -4,11 +4,11 @@ category: add-on/fontoxml-table-flow-cals
 
 # CALS table support
 
-Provide support for CALS compatible tables.
+This add-on adds support for CALS tables to a Fonto editor.
 
-This packages exposes a single configureAsCalsTableElements function for configuring CALS table elements.
+This add-on exposes one function called {@link configureAsCalsTableElements}. This function configures all CALS table elements. This eliminates the need for configuring any of the CALS table elements separately.
 
-Use the configureAsCalsTableElements like this:
+The `configureAsCalsTableElements` function should be used in a configureSxModule file, like this:
 
 ```
 configureAsCalsTableElements(sxModule, {
@@ -29,7 +29,7 @@ configureAsCalsTableElements(sxModule, {
 	},
 
 	tgroup: {
-		// The namespace uri for the tgoup element and its descendant elements (optional)
+		// The namespace uri for the tgoup element and all other CALS elements (optional)
 		namespaceURI: 'http://some-other-uri.com/'
 	},
 
@@ -48,7 +48,7 @@ configureAsCalsTableElements(sxModule, {
 		localName: 'customFoot'
 	},
 
-	// Use createIconWidget to add column icons before rows or columns. Any widget can be added but only icon widget is supported.
+	// Widget area before columns. Any widget can be used, but only the {@link iconWidget} is supported here. Optional, defaults to an empty array.
 	columnBefore: [
 		createIconWidget('clock-o', {
 			clickOperation: 'lcTime-value-edit',
@@ -56,18 +56,21 @@ configureAsCalsTableElements(sxModule, {
 		})
 	],
 
+	// Widget are before rows. Any widget can be used, but only the {@link iconWidget} is supported here. Optional, defaults to an empty array.
 	rowBefore: [
 		createIconWidget('dot-circle-o', {
 			clickOperation: 'do-nothing'
 		})
 	],
 
-	// To add insertion buttons which insert a column or a row at a specific place, default false.
+	// This will show buttons that insert a new column or row. Optional, defaults to false.
 	showInsertionWidget: true,
 
-	// To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
+	// This will show areas that can be hovered over to hightlight a column or row and that can be clicked to show a operations popover. Optional, defaults to false.
 	showHighlightingWidget: true
 });
 ```
+
+**Note** that this add-on supports existing tables that contain `tfoot` elements. However, it _does not_ support inserting these elements in new tables.
 
 To configure the markup labels and contextual operations, use the {@link configureProperties} function.
