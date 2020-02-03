@@ -30,6 +30,25 @@ function createTableBorderAttributeStrategy(parentNodeSelector) {
 	};
 }
 
+function gcd(x, y) {
+	while (y) {
+		const t = y;
+		y = x % y;
+		x = t;
+	}
+	return x;
+}
+
+function findGreatestCommonDivisor(input) {
+	let a = input[0];
+	let b;
+	for (var i = 1; i < input.length; i++) {
+		b = input[i];
+		a = gcd(a, b);
+	}
+	return a;
+}
+
 /**
  * Configures the table definition for CALS tables.
  *
@@ -154,8 +173,13 @@ function CalsTableDefinition(options) {
 			});
 		},
 		fractionsToWidthsStrategy: function(fractions) {
-			return fractions.map(function(fraction) {
-				return Math.round(fraction * 100) + '*';
+			fractions = fractions.map(function(fraction) {
+				return Math.round(fraction * 100);
+			});
+
+			const gcd = findGreatestCommonDivisor(fractions);
+			return fractions.map(fraction => {
+				return fraction / gcd + '*';
 			});
 		},
 
