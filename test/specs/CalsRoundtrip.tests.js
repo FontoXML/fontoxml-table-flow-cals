@@ -1,14 +1,14 @@
-import Blueprint from 'fontoxml-blueprints/Blueprint';
-import CoreDocument from 'fontoxml-core/Document';
-import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import indicesManager from 'fontoxml-indices/indicesManager';
+import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
+import CoreDocument from 'fontoxml-core/src/Document.js';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
+import indicesManager from 'fontoxml-indices/src/indicesManager.js';
 import * as slimdom from 'slimdom';
 
-import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
 
-import mergeCells from 'fontoxml-table-flow/TableGridModel/mutations/merging/mergeCells';
+import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells.js';
 import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
-import splitSpanningCell from 'fontoxml-table-flow/TableGridModel/mutations/splitting/splitSpanningCell';
+import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell.js';
 
 import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions.js';
 

@@ -1,12 +1,12 @@
-import Blueprint from 'fontoxml-blueprints/Blueprint';
-import CoreDocument from 'fontoxml-core/Document';
-import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import indicesManager from 'fontoxml-indices/indicesManager';
+import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
+import CoreDocument from 'fontoxml-core/src/Document.js';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
+import indicesManager from 'fontoxml-indices/src/indicesManager.js';
 import * as slimdom from 'slimdom';
 
-import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
 
-import namespaceManager from 'fontoxml-dom-namespaces/namespaceManager';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
 
 namespaceManager.addNamespace('somenamespace', 'somenamespace-uri');
 

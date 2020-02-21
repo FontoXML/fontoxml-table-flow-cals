@@ -1,17 +1,17 @@
-import Blueprint from 'fontoxml-blueprints/Blueprint';
-import CoreDocument from 'fontoxml-core/Document';
-import DocumentController from 'fontoxml-core/DocumentController';
-import documentsManager from 'fontoxml-documents/documentsManager';
-import evaluateXPathToFirstNode from 'fontoxml-selectors/evaluateXPathToFirstNode';
-import getNodeId from 'fontoxml-dom-identification/getNodeId';
-import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import indicesManager from 'fontoxml-indices/indicesManager';
+import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
+import CoreDocument from 'fontoxml-core/src/Document.js';
+import DocumentController from 'fontoxml-core/src/DocumentController.js';
+import documentsManager from 'fontoxml-documents/src/documentsManager.js';
+import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode.js';
+import getNodeId from 'fontoxml-dom-identification/src/getNodeId.js';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
+import indicesManager from 'fontoxml-indices/src/indicesManager.js';
 import { getGridModelKey } from 'fontoxml-table-flow/src/indexedTableGridModels.js';
 import * as slimdom from 'slimdom';
 
-import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
-import tableDefinitionManager from 'fontoxml-table-flow/tableDefinitionManager';
-import toggleCellBorder from 'fontoxml-table-flow-cals/custom-mutations/toggleCellBorder';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
+import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
+import toggleCellBorder from 'fontoxml-table-flow-cals/src/custom-mutations/toggleCellBorder.js';
 
 describe('toggleCellBorder custom mutation', () => {
 	let documentNode;

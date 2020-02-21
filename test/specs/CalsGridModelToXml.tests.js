@@ -1,12 +1,12 @@
-import Blueprint from 'fontoxml-blueprints/Blueprint';
-import CoreDocument from 'fontoxml-core/Document';
-import indicesManager from 'fontoxml-indices/indicesManager';
-import evaluateXPathToBoolean from 'fontoxml-selectors/evaluateXPathToBoolean';
-import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import namespaceManager from 'fontoxml-dom-namespaces/namespaceManager';
+import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
+import CoreDocument from 'fontoxml-core/src/Document.js';
+import indicesManager from 'fontoxml-indices/src/indicesManager.js';
+import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
 import * as slimdom from 'slimdom';
 
-import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
 
 const stubFormat = {
 	synthesizer: {

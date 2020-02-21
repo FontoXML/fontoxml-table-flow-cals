@@ -1,6 +1,6 @@
-import readOnlyBlueprint from 'fontoxml-blueprints/readOnlyBlueprint';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint.js';
 import * as slimdom from 'slimdom';
-import CalsTableDefinition from 'fontoxml-table-flow-cals/table-definition/CalsTableDefinition';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
 
 describe('CalsTableDefinition', () => {
 	let documentNode;
