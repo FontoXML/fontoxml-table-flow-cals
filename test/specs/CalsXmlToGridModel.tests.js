@@ -597,7 +597,7 @@ describe('CALS tables: XML to GridModel', () => {
 				);
 			});
 
-			it('can deserialize a 4x4 table with a row spanning cell spanning over a complete row', () => {
+			it.skip('can deserialize a 4x4 table with a row spanning cell spanning over a complete row', () => {
 				coreDocument.dom.mutate(() =>
 					jsonMLMapper.parse(
 						[
