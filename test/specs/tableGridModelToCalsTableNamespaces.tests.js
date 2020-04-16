@@ -81,16 +81,10 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 			[
 				'somenamespace:tgroup',
 				{ cols: '1' },
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
+				['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*' }],
 				[
 					'somenamespace:tbody',
-					[
-						'somenamespace:row',
-						['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }]
-					]
+					['somenamespace:row', ['somenamespace:entry', { colname: 'column-0' }]]
 				]
 			]
 		]);
@@ -116,47 +110,35 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 			[
 				'somenamespace:tgroup',
 				{ cols: '4' },
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-3', colnum: '4', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
+				['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*' }],
+				['somenamespace:colspec', { colname: 'column-1', colnum: '2', colwidth: '1*' }],
+				['somenamespace:colspec', { colname: 'column-2', colnum: '3', colwidth: '1*' }],
+				['somenamespace:colspec', { colname: 'column-3', colnum: '4', colwidth: '1*' }],
 				[
 					'somenamespace:thead',
 					[
 						'somenamespace:row',
-						['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						['somenamespace:entry', { colname: 'column-0' }],
+						['somenamespace:entry', { colname: 'column-1' }],
+						['somenamespace:entry', { colname: 'column-2' }],
+						['somenamespace:entry', { colname: 'column-3' }]
 					]
 				],
 				[
 					'somenamespace:tbody',
 					[
 						'somenamespace:row',
-						['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						['somenamespace:entry', { colname: 'column-0' }],
+						['somenamespace:entry', { colname: 'column-1' }],
+						['somenamespace:entry', { colname: 'column-2' }],
+						['somenamespace:entry', { colname: 'column-3' }]
 					],
 					[
 						'somenamespace:row',
-						['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						['somenamespace:entry', { colname: 'column-0' }],
+						['somenamespace:entry', { colname: 'column-1' }],
+						['somenamespace:entry', { colname: 'column-2' }],
+						['somenamespace:entry', { colname: 'column-3' }]
 					]
 				]
 			]
@@ -192,53 +174,39 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 			[
 				'somenamespace:tgroup',
 				{ cols: '4' },
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-0', colnum: '1', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-1', colnum: '2', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-2', colnum: '3', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
-				[
-					'somenamespace:colspec',
-					{ colname: 'column-3', colnum: '4', colwidth: '1*', colsep: '1', rowsep: '1' }
-				],
+				['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*' }],
+				['somenamespace:colspec', { colname: 'column-1', colnum: '2', colwidth: '1*' }],
+				['somenamespace:colspec', { colname: 'column-2', colnum: '3', colwidth: '1*' }],
+				['somenamespace:colspec', { colname: 'column-3', colnum: '4', colwidth: '1*' }],
 				[
 					'somenamespace:thead',
 					[
 						'somenamespace:row',
-						['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-1', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-2', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						['somenamespace:entry', { colname: 'column-0' }],
+						['somenamespace:entry', { colname: 'column-1' }],
+						['somenamespace:entry', { colname: 'column-2' }],
+						['somenamespace:entry', { colname: 'column-3' }]
 					]
 				],
 				[
 					'somenamespace:tbody',
 					[
 						'somenamespace:row',
-						['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
+						['somenamespace:entry', { colname: 'column-0' }],
 						[
 							'somenamespace:entry',
 							{
 								namest: 'column-1',
-								colsep: '1',
-								rowsep: '1',
 								nameend: 'column-2',
 								morerows: '1'
 							}
 						],
-						['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						['somenamespace:entry', { colname: 'column-3' }]
 					],
 					[
 						'somenamespace:row',
-						['somenamespace:entry', { colname: 'column-0', colsep: '1', rowsep: '1' }],
-						['somenamespace:entry', { colname: 'column-3', colsep: '1', rowsep: '1' }]
+						['somenamespace:entry', { colname: 'column-0' }],
+						['somenamespace:entry', { colname: 'column-3' }]
 					]
 				]
 			]
