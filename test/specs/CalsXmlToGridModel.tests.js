@@ -4,7 +4,6 @@ import getNodeId from 'fontoxml-dom-identification/src/getNodeId.js';
 import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
 import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
 import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions.js';
-import indicesManager from 'fontoxml-indices/src/indicesManager.js';
 import * as slimdom from 'slimdom';
 
 import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
@@ -853,9 +852,7 @@ describe('CALS tables: XML to GridModel', () => {
 			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
 			chai.assert.isUndefined(gridModel.error);
 
-			const columnWidths = gridModel.columnSpecifications.map(function(spec) {
-				return spec.columnWidth;
-			});
+			const columnWidths = gridModel.columnSpecifications.map(spec => spec.columnWidth);
 
 			const leftColumnSpecification = gridModel.columnSpecifications[0];
 			const leftPercentage = tableDefinition.widthToHtmlWidth(
@@ -921,41 +918,6 @@ describe('CALS tables: XML to GridModel', () => {
 
 			chai.assert.equal(leftColumn.data.width, '10px');
 			chai.assert.equal(rightColumn.data.width, '20px');
-		});
-
-		it('can return error object when tgroup moves to non-table element', () => {
-			coreDocument.dom.mutate(() =>
-				jsonMLMapper.parse(
-					[
-						'xml',
-						[
-							'table',
-							['tgroup', { cols: '1' }, ['colspec'], ['tbody', ['row', ['entry']]]]
-						]
-					],
-					documentNode
-				)
-			);
-
-			const xmlElement = documentNode.firstChild;
-			const tableElement = xmlElement.firstChild;
-			const tgroupElement = tableElement.firstChild;
-
-			const gridModel1 = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
-			chai.assert.isUndefined(gridModel1.error);
-
-			const fn = documentNode.createElement('fn');
-			blueprint.appendChild(xmlElement, fn);
-			blueprint.appendChild(fn, tgroupElement);
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-
-			const gridModel2 = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
-			chai.assert.isOk(gridModel2.error);
-			chai.assert.include(
-				gridModel2.error.message,
-				'Cell specifications could not be created.'
-			);
 		});
 	});
 });

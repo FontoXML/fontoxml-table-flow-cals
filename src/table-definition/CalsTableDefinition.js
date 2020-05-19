@@ -19,7 +19,11 @@ function parseWidth(width) {
 
 function createTableBorderAttributeStrategy(parentNodeSelector) {
 	return function tableBorderAttributeStrategy(context, _data, blueprint) {
-		var tableFigureNode = evaluateXPathToFirstNode(parentNodeSelector, context.node, blueprint);
+		const tableFigureNode = evaluateXPathToFirstNode(
+			parentNodeSelector,
+			context.node,
+			blueprint
+		);
 		if (tableFigureNode) {
 			blueprint.setAttribute(
 				tableFigureNode,
@@ -42,7 +46,7 @@ function gcd(x, y) {
 function findGreatestCommonDivisor(input) {
 	let a = input[0];
 	let b;
-	for (var i = 1; i < input.length; i++) {
+	for (let i = 1; i < input.length; i++) {
 		b = input[i];
 		a = gcd(a, b);
 	}
@@ -56,33 +60,32 @@ function findGreatestCommonDivisor(input) {
  */
 function CalsTableDefinition(options) {
 	// Configurable element names
-	var tableFigureLocalName = options.table.localName;
-	var headLocalName =
+	const tableFigureLocalName = options.table.localName;
+	const headLocalName =
 		options.thead && options.thead.localName ? options.thead.localName : 'thead';
-	var footLocalName =
+	const footLocalName =
 		options.tfoot && options.tfoot.localName ? options.tfoot.localName : 'tfoot';
 
 	// Configurable namespace URIs
-	var tableNamespaceURI =
+	const tableFigureNamespaceURI =
 		options.table && options.table.namespaceURI ? options.table.namespaceURI : '';
-	var namespaceURI =
+	const namespaceURI =
 		options.tgroup && options.tgroup.namespaceURI ? options.tgroup.namespaceURI : '';
 
 	// Configurable true/false values
 	this.trueValue = options.yesOrNo && options.yesOrNo.yesValue ? options.yesOrNo.yesValue : '1';
 	this.falseValue = options.yesOrNo && options.yesOrNo.noValue ? options.yesOrNo.noValue : '0';
 
-	var namespaceSelector = 'Q{' + namespaceURI + '}';
-	var selectorParts = {
-		tableFigure:
-			'Q{' +
-			tableNamespaceURI +
-			'}' +
-			tableFigureLocalName +
-			(options.tgroup && options.tgroup.tableFigureFilterSelector
-				? '[' + options.tgroup.tableFigureFilterSelector + ']'
-				: ''),
-		table: namespaceSelector + 'tgroup',
+	const tableFigureFilter =
+		options.tgroup && options.tgroup.tableFigureFilterSelector
+			? `[${options.tgroup.tableFigureFilterSelector}]`
+			: '';
+	const tableFigureSelectorPart = `Q{${tableFigureNamespaceURI}}${tableFigureLocalName}${tableFigureFilter}`;
+	const tableFigureParentFilter = tableFigureFilter ? `[parent::${tableFigureSelectorPart}]` : '';
+	const namespaceSelector = 'Q{' + namespaceURI + '}';
+	const selectorParts = {
+		tableFigure: tableFigureSelectorPart,
+		table: `${namespaceSelector}tgroup${tableFigureParentFilter}`,
 		headerContainer: namespaceSelector + headLocalName,
 		bodyContainer: namespaceSelector + 'tbody',
 		footerContainer: namespaceSelector + footLocalName,
@@ -92,16 +95,16 @@ function CalsTableDefinition(options) {
 	};
 
 	// Alias selector parts
-	var tableFigure = selectorParts.tableFigure;
-	var thead = selectorParts.headerContainer;
-	var tbody = selectorParts.bodyContainer;
-	var tfoot = selectorParts.footerContainer;
-	var row = selectorParts.row;
-	var entry = selectorParts.cell;
-	var colspec = selectorParts.columnSpecification;
+	const tableFigure = selectorParts.tableFigure;
+	const thead = selectorParts.headerContainer;
+	const tbody = selectorParts.bodyContainer;
+	const tfoot = selectorParts.footerContainer;
+	const row = selectorParts.row;
+	const entry = selectorParts.cell;
+	const colspec = selectorParts.columnSpecification;
 
 	// Properties object
-	var properties = {
+	const properties = {
 		selectorParts: selectorParts,
 
 		supportsBorders: true,
@@ -109,38 +112,38 @@ function CalsTableDefinition(options) {
 
 		// Widths
 		widthToHtmlWidthStrategy: function(width, widths) {
-			var proportion = parseFloat(parseWidth(width)[1]) || 1;
-			var totalProportion = widths.reduce(function(total, proportion) {
+			const proportion = parseFloat(parseWidth(width)[1]) || 1;
+			const totalProportion = widths.reduce(function(total, proportion) {
 				return total + (parseFloat(parseWidth(proportion)[1]) || 1);
 			}, 0);
 
 			return (100 * proportion) / totalProportion + '%';
 		},
 		addWidthsStrategy: function(width1, width2) {
-			var parsedWidth1 = parseWidth(width1);
-			var proportion1 = parseFloat(parsedWidth1[1]) || 0;
-			var fixed1 = parseFloat(parsedWidth1[2]) || 0;
+			const parsedWidth1 = parseWidth(width1);
+			const proportion1 = parseFloat(parsedWidth1[1]) || 0;
+			const fixed1 = parseFloat(parsedWidth1[2]) || 0;
 
-			var parsedWidth2 = parseWidth(width2);
-			var proportion2 = parseFloat(parsedWidth2[1]) || 0;
-			var fixed2 = parseFloat(parsedWidth2[2]) || 0;
+			const parsedWidth2 = parseWidth(width2);
+			const proportion2 = parseFloat(parsedWidth2[1]) || 0;
+			const fixed2 = parseFloat(parsedWidth2[2]) || 0;
 
-			var proportion = proportion1 + proportion2;
-			var fixed = fixed1 + fixed2;
+			const proportion = proportion1 + proportion2;
+			const fixed = fixed1 + fixed2;
 
 			return proportion !== 0 ? proportion + '*' : '' + fixed !== 0 ? fixed + 'px' : '';
 		},
 		divideByTwoStrategy: function(width) {
-			var parsedWidth = parseWidth(width);
+			const parsedWidth = parseWidth(width);
 
-			var proportion = parseFloat(parsedWidth[1]);
-			var fixed = parseFloat(parsedWidth[2]);
+			const proportion = parseFloat(parsedWidth[1]);
+			const fixed = parseFloat(parsedWidth[2]);
 
 			return proportion ? proportion / 2 + '*' : '' + fixed ? fixed / 2 + 'px' : '';
 		},
 
 		widthsToFractionsStrategy: function(widths) {
-			var parsedWidths = widths.map(function(width) {
+			const parsedWidths = widths.map(function(width) {
 				if (width === '*') {
 					return 1;
 				}
@@ -148,13 +151,13 @@ function CalsTableDefinition(options) {
 				// Parsing withs for the column width popover does not use the parseWidth
 				// function bacause widths containing fixed widths are considered invalid
 				// values for the popover.
-				var match = /^([0-9]+(?:\.[0-9]+)?)\*$/.exec(width);
+				const match = /^([0-9]+(?:\.[0-9]+)?)\*$/.exec(width);
 
 				if (!match) {
 					return null;
 				}
 
-				var value = parseFloat(match[1]);
+				const value = parseFloat(match[1]);
 				return Number.isNaN(value) ? null : value;
 			});
 
@@ -164,7 +167,7 @@ function CalsTableDefinition(options) {
 				});
 			}
 
-			var totalWidth = parsedWidths.reduce(function(total, width) {
+			const totalWidth = parsedWidths.reduce(function(total, width) {
 				return total + width;
 			}, 0);
 
@@ -182,9 +185,6 @@ function CalsTableDefinition(options) {
 				return fraction / gcd + '*';
 			});
 		},
-
-		// Defining node selectors
-		tableDefiningNodeSelector: 'self::' + tableFigure,
 
 		// Header row node selector
 		headerRowNodeSelector: `self::${row}[parent::${thead}]`,
@@ -263,7 +263,7 @@ function CalsTableDefinition(options) {
 			columnSpecificationIndex,
 			columnSpecifications
 		) {
-			var startIndexAtZero =
+			const startIndexAtZero =
 				columnSpecifications[0] && columnSpecifications[0].columnNumber === 0;
 			return (
 				columnSpecification.columnNumber ===
@@ -471,7 +471,7 @@ CalsTableDefinition.prototype = Object.create(TableDefinition.prototype);
 CalsTableDefinition.prototype.constructor = CalsTableDefinition;
 
 CalsTableDefinition.prototype.buildTableGridModel = function(node, blueprint) {
-	var tableElement = evaluateXPathToFirstNode(
+	const tableElement = evaluateXPathToFirstNode(
 		'descendant-or-self::' + this.selectorParts.table,
 		node,
 		blueprint
@@ -480,7 +480,7 @@ CalsTableDefinition.prototype.buildTableGridModel = function(node, blueprint) {
 };
 
 CalsTableDefinition.prototype.buildTableGridModelKey = function(node, blueprint) {
-	var tableElement = evaluateXPathToFirstNode(
+	const tableElement = evaluateXPathToFirstNode(
 		'descendant-or-self::' + this.selectorParts.table,
 		node,
 		blueprint
@@ -489,7 +489,7 @@ CalsTableDefinition.prototype.buildTableGridModelKey = function(node, blueprint)
 };
 
 CalsTableDefinition.prototype.buildColumnSpecificationsKey = function(tableNode, blueprint) {
-	var tableElement = evaluateXPathToFirstNode(
+	const tableElement = evaluateXPathToFirstNode(
 		'descendant-or-self::' + this.selectorParts.table,
 		tableNode,
 		blueprint
@@ -498,7 +498,7 @@ CalsTableDefinition.prototype.buildColumnSpecificationsKey = function(tableNode,
 };
 
 CalsTableDefinition.prototype.applyToDom = function(tableGridModel, tableNode, blueprint, format) {
-	var actualTableNode = evaluateXPathToFirstNode(
+	let actualTableNode = evaluateXPathToFirstNode(
 		'descendant-or-self::' + this.selectorParts.table,
 		tableNode,
 		blueprint

@@ -11,7 +11,7 @@ describe('CalsTableDefinition', () => {
 
 	beforeEach(() => {
 		documentNode = new slimdom.Document();
-		tableNode = documentNode.createElement('table');
+		tableNode = documentNode.createElement('tgroup');
 		documentNode.appendChild(tableNode);
 		rowNode = documentNode.createElement('row');
 		tableNode.appendChild(rowNode);
