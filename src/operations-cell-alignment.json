@@ -12,7 +12,7 @@
 			]
 		},
 		"label": "t__Align left",
-		"description": "t__Align content of the current cells to the left",
+		"description": "t__Align to the left",
 		"icon": "align-left",
 		"steps": [
 			{
@@ -31,7 +31,7 @@
 			"category": "add-on/fontoxml-table-flow-cals"
 		},
 		"label": "t__Align left",
-		"description": "t__Align content of the current cells to the left",
+		"description": "t__Align to the left",
 		"icon": "align-left",
 		"steps": [
 			{
@@ -40,7 +40,9 @@
 					"nodeName": "entry"
 				}
 			},
-			{ "type": "operation/contextual-cals-set-cell-horizontal-alignment-left" }
+			{
+				"type": "operation/contextual-cals-set-cell-horizontal-alignment-left"
+			}
 		]
 	},
 	"contextual-cals-set-cell-horizontal-alignment-right": {
@@ -56,9 +58,9 @@
 			]
 		},
 		"label": "t__Align right",
-		"description": "t__Align  content of the current cells to the right",
+		"description": "t__Align to the right",
 		"icon": "align-right",
-		"steps":  [
+		"steps": [
 			{
 				"type": "operation/toggle-cell-data",
 				"data": {
@@ -75,16 +77,18 @@
 			"category": "add-on/fontoxml-table-flow-cals"
 		},
 		"label": "t__Align right",
-		"description": "t__Align  content of the current cells to the right",
+		"description": "t__Align to the right",
 		"icon": "align-right",
-		"steps":  [
+		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
 					"nodeName": "entry"
 				}
 			},
-			{ "type": "operation/contextual-cals-set-cell-horizontal-alignment-right" }
+			{
+				"type": "operation/contextual-cals-set-cell-horizontal-alignment-right"
+			}
 		]
 	},
 	"contextual-cals-set-cell-horizontal-alignment-center": {
@@ -100,7 +104,7 @@
 			]
 		},
 		"label": "t__Align center",
-		"description": "t__Align content of the current cells to the center",
+		"description": "t__Align to the center",
 		"icon": "align-center",
 		"steps": [
 			{
@@ -119,7 +123,7 @@
 			"category": "add-on/fontoxml-table-flow-cals"
 		},
 		"label": "t__Align center",
-		"description": "t__Align content of the current cells to the center",
+		"description": "t__Align to the center",
 		"icon": "align-center",
 		"steps": [
 			{
@@ -128,7 +132,9 @@
 					"nodeName": "entry"
 				}
 			},
-			{ "type": "operation/contextual-cals-set-cell-horizontal-alignment-center" }
+			{
+				"type": "operation/contextual-cals-set-cell-horizontal-alignment-center"
+			}
 		]
 	},
 	"contextual-cals-set-cell-horizontal-alignment-justify": {
@@ -172,7 +178,9 @@
 					"nodeName": "entry"
 				}
 			},
-			{ "type": "operation/contextual-cals-set-cell-horizontal-alignment-justify" }
+			{
+				"type": "operation/contextual-cals-set-cell-horizontal-alignment-justify"
+			}
 		]
 	},
 	"contextual-cals-set-cell-vertical-alignment-top": {
@@ -188,7 +196,7 @@
 			]
 		},
 		"label": "t__Align top",
-		"description": "t__Align content of the current cells to the top",
+		"description": "t__Align to the top",
 		"icon": "align-top",
 		"steps": [
 			{
@@ -207,7 +215,7 @@
 			"category": "add-on/fontoxml-table-flow-cals"
 		},
 		"label": "t__Align top",
-		"description": "t__Align content of the current cells to the top",
+		"description": "t__Align to the top",
 		"icon": "align-top",
 		"steps": [
 			{
@@ -216,7 +224,9 @@
 					"nodeName": "entry"
 				}
 			},
-			{ "type": "operation/contextual-cals-set-cell-vertical-alignment-top"	}
+			{
+				"type": "operation/contextual-cals-set-cell-vertical-alignment-top"
+			}
 		]
 	},
 	"contextual-cals-set-cell-vertical-alignment-bottom": {
@@ -232,7 +242,7 @@
 			]
 		},
 		"label": "t__Align bottom",
-		"description": "t__Align content of the current cells to the bottom",
+		"description": "t__Align to the bottom",
 		"icon": "align-bottom",
 		"steps": [
 			{
@@ -251,7 +261,7 @@
 			"category": "add-on/fontoxml-table-flow-cals"
 		},
 		"label": "t__Align bottom",
-		"description": "t__Align content of the current cells to the bottom",
+		"description": "t__Align to the bottom",
 		"icon": "align-bottom",
 		"steps": [
 			{
@@ -260,7 +270,9 @@
 					"nodeName": "entry"
 				}
 			},
-			{ "type": "operation/contextual-cals-set-cell-vertical-alignment-bottom" }
+			{
+				"type": "operation/contextual-cals-set-cell-vertical-alignment-bottom"
+			}
 		]
 	},
 	"contextual-cals-set-cell-vertical-alignment-center": {
@@ -277,7 +289,7 @@
 			]
 		},
 		"label": "t__Align middle",
-		"description": "t__Align content of the current cells to the middle",
+		"description": "t__Align to the middle",
 		"icon": "align-vertical-center",
 		"steps": [
 			{
@@ -297,7 +309,7 @@
 			"fontosdk": true
 		},
 		"label": "t__Align middle",
-		"description": "t__Align content of the current cells to the middle",
+		"description": "t__Align to the middle",
 		"icon": "align-vertical-center",
 		"steps": [
 			{
@@ -306,7 +318,9 @@
 					"nodeName": "entry"
 				}
 			},
-			{ "type": "operation/contextual-cals-set-cell-vertical-alignment-center" }
+			{
+				"type": "operation/contextual-cals-set-cell-vertical-alignment-center"
+			}
 		]
 	}
 }
