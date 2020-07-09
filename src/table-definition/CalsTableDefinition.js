@@ -17,7 +17,7 @@ function parseWidth(width) {
 	return /(?:(\d*(?:\.\d*)?)\*)?\+?(?:(\d+(?:\.\d*)?)px)?/i.exec(width);
 }
 
-function createTableBorderAttributeStrategy(parentNodeSelector) {
+function createTableBorderAttributeStrategy(parentNodeSelector, frameLocalName, frameValues) {
 	return function tableBorderAttributeStrategy(context, _data, blueprint) {
 		const tableFigureNode = evaluateXPathToFirstNode(
 			parentNodeSelector,
@@ -27,8 +27,8 @@ function createTableBorderAttributeStrategy(parentNodeSelector) {
 		if (tableFigureNode) {
 			blueprint.setAttribute(
 				tableFigureNode,
-				'frame',
-				context.specification.borders ? 'all' : 'none'
+				frameLocalName,
+				context.specification.borders ? frameValues['all'] : frameValues['none']
 			);
 		}
 	};
@@ -53,45 +53,235 @@ function findGreatestCommonDivisor(input) {
 	return a;
 }
 
-/**
- * Configures the table definition for CALS tables.
- *
- * @param {CalsTableOptions} options
- */
-function CalsTableDefinition(options) {
+const FALLBACK_TO_TGROUP = Symbol('fallback');
+
+const DEFAULT_OPTIONS = {
+	align: {
+		localName: 'align',
+		leftValue: 'left',
+		rightValue: 'right',
+		centerValue: 'center',
+		justifyValue: 'justify'
+	},
+
+	colname: { localName: 'colname' },
+
+	colnum: { localName: 'colnum' },
+
+	cols: { localName: 'cols' },
+
+	colsep: { localName: 'colsep' },
+
+	colspec: {
+		localName: 'colspec',
+		// Will default to tgroup namespaceURI first
+		namespaceURI: FALLBACK_TO_TGROUP
+	},
+
+	colwidth: { localName: 'colwidth' },
+
+	entry: {
+		localName: 'entry',
+		// Will default to tgroup namespaceURI first
+		namespaceURI: FALLBACK_TO_TGROUP,
+		defaultTextContainer: null
+	},
+
+	frame: { localName: 'frame', allValue: 'all', noneValue: 'none' },
+
+	morerows: { localName: 'morerows' },
+
+	nameend: { localName: 'nameend' },
+
+	namest: { localName: 'namest' },
+
+	row: {
+		localName: 'row',
+		// Will default to tgroup namespaceURI first
+		namespaceURI: FALLBACK_TO_TGROUP
+	},
+
+	rowsep: { localName: 'rowsep' },
+
+	table: {
+		localName: undefined,
+		namespaceURI: null
+	},
+
+	tbody: {
+		localName: 'tbody',
+		namespaceURI: FALLBACK_TO_TGROUP
+	},
+
+	tgroup: {
+		localName: 'tgroup',
+		namespaceURI: FALLBACK_TO_TGROUP,
+		tableFigureFilterSelector: ''
+	},
+
+	thead: {
+		localName: 'thead',
+		// Will default to tgroup namespaceURI first
+		namespaceURI: FALLBACK_TO_TGROUP
+	},
+
+	valign: {
+		localName: 'valign',
+		topValue: 'top',
+		middleValue: 'middle',
+		bottomValue: 'bottom'
+	},
+
+	// Is used in multiple places
+	yesOrNo: {
+		yesValue: '1',
+		noValue: '0'
+	},
+
+	showInsertionWidget: false,
+	showHighlightingWidget: false,
+	rowBefore: false,
+	columnBefore: false,
+	useDefaultContextMenu: true
+};
+
+function isObject(variable) {
+	return variable !== null && typeof variable === 'object';
+}
+
+function applyDefaults(options, defaultOptions, path, rootOptions) {
+	const newOptions = {};
+	for (const defaultOptionKey of Object.keys(defaultOptions)) {
+		const defaultOption = defaultOptions[defaultOptionKey];
+
+		if (!(defaultOptionKey in options)) {
+			if (isObject(defaultOption)) {
+				newOptions[defaultOptionKey] = applyDefaults(
+					{},
+					defaultOption,
+					[...path, defaultOptionKey],
+					rootOptions
+				);
+				continue;
+			}
+
+			if (defaultOption === FALLBACK_TO_TGROUP) {
+				// Fall back to the TGROUP namespace uri
+				if (rootOptions.tgroup && rootOptions.tgroup.namespaceURI) {
+					newOptions[defaultOptionKey] = rootOptions.tgroup.namespaceURI;
+					continue;
+				}
+				newOptions[defaultOptionKey] = null;
+				continue;
+			}
+
+			newOptions[defaultOptionKey] = defaultOption;
+		} else {
+			const option = options[defaultOptionKey];
+
+			if (isObject(defaultOption)) {
+				newOptions[defaultOptionKey] = applyDefaults(
+					option,
+					defaultOption,
+					[...path, defaultOptionKey],
+					rootOptions
+				);
+				continue;
+			}
+
+			newOptions[defaultOptionKey] = option;
+		}
+	}
+
+	// Sanity check, there should not be additional values set. If they are, someone is doing
+	// something wrong
+	for (const optionKey of Object.keys(options)) {
+		if (!(optionKey in defaultOptions)) {
+			throw new Error(
+				`The option ${optionKey} in ${path.join(
+					'.'
+				)} is not supported. Please refer to the API docs of https://documentation.fontoxml.com/api/latest/fontoxml-table-flow-cals-33435746.html to see which options are supported.`
+			);
+		}
+	}
+
+	return newOptions;
+}
+
+function getTableDefinitionProperties(options) {
+	options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
+
+	const attributeValuesByAttributeName = new Map();
+	const alignValues = {
+		left: options.align.leftValue,
+		right: options.align.rightValue,
+		center: options.align.centerValue,
+		justify: options.align.justifyValue
+	};
+	attributeValuesByAttributeName.set('horizontalAlignment', alignValues);
+
+	const valignValues = {
+		top: options.valign.topValue,
+		middle: options.valign.middleValue,
+		bottom: options.valign.bottomValue
+	};
+	attributeValuesByAttributeName.set('verticalAlignment', valignValues);
+
+	const frameValues = {
+		all: options.frame.allValue,
+		none: options.frame.noneValue
+	};
+	attributeValuesByAttributeName.set('border', frameValues);
+
 	// Configurable element names
 	const tableFigureLocalName = options.table.localName;
-	const headLocalName =
-		options.thead && options.thead.localName ? options.thead.localName : 'thead';
-	const footLocalName =
-		options.tfoot && options.tfoot.localName ? options.tfoot.localName : 'tfoot';
+	const tgroupLocalName = options.tgroup.localName;
+	const colspecLocalName = options.colspec.localName;
+	const theadLocalName = options.thead.localName;
+	const tbodyLocalName = options.tbody.localName;
+	const rowLocalName = options.row.localName;
+	const entryLocalName = options.entry.localName;
 
 	// Configurable namespace URIs
-	const tableFigureNamespaceURI =
-		options.table && options.table.namespaceURI ? options.table.namespaceURI : '';
-	const namespaceURI =
-		options.tgroup && options.tgroup.namespaceURI ? options.tgroup.namespaceURI : '';
+	const tableFigureNamespaceURI = options.table.namespaceURI || '';
+	const colspecNamespaceURI = options.colspec.namespaceURI || '';
+	const tgroupNamespaceURI = options.tgroup.namespaceURI || '';
+	const theadNamespaceURI = options.thead.namespaceURI || '';
+	const tbodyNamespaceURI = options.tbody.namespaceURI || '';
+	const rowNamespaceURI = options.row.namespaceURI || '';
+	const entryNamespaceURI = options.entry.namespaceURI || '';
+
+	// Various attribute names
+	const colnameLocalName = options.colname.localName;
+	const frameLocalName = options.frame.localName;
+	const namestLocalName = options.namest.localName;
+	const nameendLocalName = options.nameend.localName;
+	const colnumLocalName = options.colnum.localName;
+	const colsepLocalName = options.colsep.localName;
+	const rowsepLocalName = options.rowsep.localName;
+	const alignLocalName = options.align.localName;
+	const valignLocalName = options.valign.localName;
+	const colwidthLocalName = options.colwidth.localName;
+	const morerowsLocalName = options.morerows.localName;
+	const colsLocalName = options.cols.localName;
 
 	// Configurable true/false values
-	this.trueValue = options.yesOrNo && options.yesOrNo.yesValue ? options.yesOrNo.yesValue : '1';
-	this.falseValue = options.yesOrNo && options.yesOrNo.noValue ? options.yesOrNo.noValue : '0';
+	const trueValue = options.yesOrNo.yesValue;
+	const falseValue = options.yesOrNo.noValue;
 
-	const tableFigureFilter =
-		options.tgroup && options.tgroup.tableFigureFilterSelector
-			? `[${options.tgroup.tableFigureFilterSelector}]`
-			: '';
+	const tableFigureFilter = options.tgroup.tableFigureFilterSelector
+		? `[${options.tgroup.tableFigureFilterSelector}]`
+		: '';
 	const tableFigureSelectorPart = `Q{${tableFigureNamespaceURI}}${tableFigureLocalName}${tableFigureFilter}`;
 	const tableFigureParentFilter = tableFigureFilter ? `[parent::${tableFigureSelectorPart}]` : '';
-	const namespaceSelector = 'Q{' + namespaceURI + '}';
 	const selectorParts = {
 		tableFigure: tableFigureSelectorPart,
-		table: `${namespaceSelector}tgroup${tableFigureParentFilter}`,
-		headerContainer: namespaceSelector + headLocalName,
-		bodyContainer: namespaceSelector + 'tbody',
-		footerContainer: namespaceSelector + footLocalName,
-		row: namespaceSelector + 'row',
-		cell: namespaceSelector + 'entry',
-		columnSpecification: namespaceSelector + 'colspec'
+		table: `Q{${tgroupNamespaceURI}}${tgroupLocalName}${tableFigureParentFilter}`,
+		headerContainer: `Q{${theadNamespaceURI}}${theadLocalName}`,
+		bodyContainer: `Q{${tbodyNamespaceURI}}${tbodyLocalName}`,
+		row: `Q{${rowNamespaceURI}}${rowLocalName}`,
+		cell: `Q{${entryNamespaceURI}}${entryLocalName}`,
+		columnSpecification: `Q{${colspecNamespaceURI}}${colspecLocalName}`
 	};
 
 	// Alias selector parts
@@ -196,14 +386,12 @@ function CalsTableDefinition(options) {
 
 		findHeaderContainerNodesXPathQuery: './' + thead,
 		findBodyContainerNodesXPathQuery: './' + tbody,
-		findFooterContainerNodesXPathQuery: './' + tfoot,
 
 		findColumnSpecificationNodesXPathQuery: './' + colspec,
 
 		findCellNodesXPathQuery: './' + entry,
 
-		getColumnIdentifiersXPathQuery:
-			'map {"columnName": string(./@colname), "namest": string(./@namest), "nameend": string(./@nameend)}',
+		getColumnIdentifiersXPathQuery: `map {"columnName": string(./@${colnameLocalName}), "namest": string(./@${namestLocalName}), "nameend": string(./@${nameendLocalName})}`,
 
 		getColumnDataForCellXPathQuery: `
 			if($columnIdentifiers("namest") and $columnIdentifiers("nameend")) then
@@ -237,20 +425,19 @@ function CalsTableDefinition(options) {
 				map {"colsep": true(), "rowsep": true(), "colspan": 1}`,
 
 		// Data
-		getNumberOfColumnsXPathQuery: './@cols => number()',
-		getRowSpanForCellNodeXPathQuery:
-			'let $rowspan := ./@morerows => number() return if ($rowspan) then $rowspan + 1 else 1',
+		getNumberOfColumnsXPathQuery: `./@${colsLocalName} => number()`,
+		getRowSpanForCellNodeXPathQuery: `let $rowspan := ./@${morerowsLocalName} => number() return if ($rowspan) then $rowspan + 1 else 1`,
 		getColumnSpanForCellNodeXPathQuery: '$columnDataForCell("colspan")',
 
 		// Normalizations
 		normalizeContainerNodeStrategies: [
 			normalizeContainerNodeStrategies.createAddHeaderContainerNodeStrategy(
-				namespaceURI,
-				'thead'
+				theadNamespaceURI,
+				theadLocalName
 			),
 			normalizeContainerNodeStrategies.createAddBodyContainerNodeStrategy(
-				namespaceURI,
-				'tbody'
+				tbodyNamespaceURI,
+				tbodyLocalName
 			)
 		],
 
@@ -293,159 +480,200 @@ function CalsTableDefinition(options) {
 		},
 
 		// Create elements
-		createCellNodeStrategy: createCreateCellNodeStrategy(namespaceURI, 'entry'),
+		createCellNodeStrategy: createCreateCellNodeStrategy(entryNamespaceURI, entryLocalName),
 		createColumnSpecificationNodeStrategy: createCreateColumnSpecificationNodeStrategy(
-			namespaceURI,
-			'colspec',
-			'./*[self::' + thead + ' or self::' + tbody + ']'
+			colspecNamespaceURI,
+			colspecLocalName,
+			`./*[self::${thead} or self::${tbody}]`
 		),
-		createRowStrategy: createCreateRowStrategy(namespaceURI, 'row'),
+		createRowStrategy: createCreateRowStrategy(rowNamespaceURI, rowLocalName),
 
 		// Specifications
 		getTableSpecificationStrategies: [
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 				'borders',
-				'./parent::' + tableFigure + '/@frame = "all"'
+				`./parent::${tableFigure}/@${frameLocalName} = "${options.frame.allValue}"`
 			)
 		],
 
 		getColumnSpecificationStrategies: [
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 				'columnSeparator',
-				'let $sep := ./@colsep return if ($sep) then $sep = "' +
-					this.trueValue +
-					'" else true()'
+				`let $sep := ./@${colsepLocalName} return if ($sep) then $sep = "${trueValue}" else true()`
 			),
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 				'rowSeparator',
-				'let $sep := ./@rowsep return if ($sep) then $sep = "' +
-					this.trueValue +
-					'" else true()'
+				`let $sep := ./@${rowsepLocalName} return if ($sep) then $sep = "${trueValue}" else true()`
 			),
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'horizontalAlignment',
-				'./@align'
+				`./@${alignLocalName}`
 			),
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'columnWidth',
-				'let $colwidth := ./@colwidth return if ($colwidth) then $colwidth else "1*"'
+				`let $colwidth := ./@${colwidthLocalName} return if ($colwidth) then $colwidth else "1*"`
 			),
 			getSpecificationValueStrategies.createGetValueAsNumberStrategy(
 				'columnNumber',
-				'number(./@colnum)'
+				`number(./@${colnumLocalName})`
 			),
 			getSpecificationValueStrategies.createGetValueAsNumberStrategy(
 				'index',
-				'if(./@colnum) then number(./@colnum) else preceding-sibling::' +
-					colspec +
-					' => count()'
+				`if(./@${colnumLocalName}) then number(./@${colnumLocalName}) else preceding-sibling::${colspecLocalName} => count()`
 			),
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'columnName',
-				'let $name := ./@colname return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()'
+				`let $name := ./@${colnameLocalName} return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()`
 			)
 		],
 
 		getRowSpecificationStrategies: [
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'verticalAlignment',
-				'let $valign := ./@valign return if ($valign) then $valign else "bottom"'
+				`let $valign := ./@${valignLocalName} return if ($valign) then $valign else "bottom"`,
+				value => {
+					const verticalAlignmentValuesByKey = attributeValuesByAttributeName.get(
+						'verticalAlignment'
+					);
+					return Object.keys(verticalAlignmentValuesByKey).find(
+						verticalAlignmentKey =>
+							verticalAlignmentValuesByKey[verticalAlignmentKey] === value
+					);
+				}
 			)
 		],
 
 		getCellSpecificationStrategies: [
+			// first option
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'horizontalAlignment',
-				'./@align'
+				`./@${alignLocalName}`,
+				value => {
+					const horizontalAlignmentValuesByKey = attributeValuesByAttributeName.get(
+						'horizontalAlignment'
+					);
+					return Object.keys(horizontalAlignmentValuesByKey).find(
+						horizontalAlignmentKey =>
+							horizontalAlignmentValuesByKey[horizontalAlignmentKey] === value
+					);
+				}
 			),
+			// second option
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'verticalAlignment',
-				'./@valign'
+				`./@${valignLocalName}`,
+				value => {
+					const verticalAlignmentValuesByKey = attributeValuesByAttributeName.get(
+						'verticalAlignment'
+					);
+					return Object.keys(verticalAlignmentValuesByKey).find(
+						verticalAlignmentKey =>
+							verticalAlignmentValuesByKey[verticalAlignmentKey] === value
+					);
+				}
 			),
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 				'rowSeparator',
-				'if (./@rowsep) then ' +
-					'./@rowsep = "' +
-					this.trueValue +
-					'" ' +
-					'else ' +
-					'$columnDataForCell("rowsep")'
+				`if (./@${rowsepLocalName}) then
+					./@${rowsepLocalName} = "${trueValue}"
+				else
+					$columnDataForCell("rowsep")`
 			),
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 				'columnSeparator',
-				'if (./@colsep) then ' +
-					'./@colsep = "' +
-					this.trueValue +
-					'" ' +
-					'else ' +
-					'$columnDataForCell("colsep")'
+				`if (./@${colsepLocalName}) then
+					./@${colsepLocalName} = "${trueValue}"
+				else
+					$columnDataForCell("colsep")`
 			),
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'columnName',
-				'./@colname'
+				`./@${colnameLocalName}`
 			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy('nameEnd', './@nameend'),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy('nameStart', './@namest')
+			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				'nameEnd',
+				`./@${nameendLocalName}`
+			),
+			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				'nameStart',
+				`./@${namestLocalName}`
+			)
 		],
 
 		// Set attributes
 		setTableNodeAttributeStrategies: [
-			setAttributeStrategies.createColumnCountAsAttributeStrategy('cols'),
-			createTableBorderAttributeStrategy('./parent::' + tableFigure)
+			setAttributeStrategies.createColumnCountAsAttributeStrategy(colsLocalName),
+			createTableBorderAttributeStrategy(
+				'./parent::' + tableFigure,
+				frameLocalName,
+				frameValues
+			)
 		],
 
 		setColumnSpecificationNodeAttributeStrategies: [
-			setAttributeStrategies.createStringValueAsAttributeStrategy('colname', 'columnName'),
-			setAttributeStrategies.createColumnNumberAsAttributeStrategy('colnum', 1),
+			setAttributeStrategies.createStringValueAsAttributeStrategy(
+				colnameLocalName,
+				'columnName'
+			),
+			setAttributeStrategies.createColumnNumberAsAttributeStrategy(colnumLocalName, 1),
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
-				'colsep',
+				colsepLocalName,
 				'columnSeparator',
-				this.trueValue,
-				this.trueValue,
-				this.falseValue
+				trueValue,
+				trueValue,
+				falseValue
 			),
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
-				'rowsep',
+				rowsepLocalName,
 				'rowSeparator',
-				this.trueValue,
-				this.trueValue,
-				this.falseValue
+				trueValue,
+				trueValue,
+				falseValue
 			),
 			setAttributeStrategies.createStringValueAsAttributeStrategy(
-				'align',
-				'horizontalAlignment'
+				alignLocalName,
+				'horizontalAlignment',
+				undefined,
+				value => attributeValuesByAttributeName.get('horizontalAlignment')[value]
 			),
-			setAttributeStrategies.createStringValueAsAttributeStrategy('colwidth', 'columnWidth')
+			setAttributeStrategies.createStringValueAsAttributeStrategy(
+				colwidthLocalName,
+				'columnWidth'
+			)
 		],
 
 		setCellNodeAttributeStrategies: [
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
-				'rowsep',
+				rowsepLocalName,
 				'rowSeparator',
-				this.trueValue,
-				this.trueValue,
-				this.falseValue
+				trueValue,
+				trueValue,
+				falseValue
 			),
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
-				'colsep',
+				colsepLocalName,
 				'columnSeparator',
-				this.trueValue,
-				this.trueValue,
-				this.falseValue
+				trueValue,
+				trueValue,
+				falseValue
 			),
 			setAttributeStrategies.createColumnNameAsAttributeStrategy(
-				'colname',
-				'namest',
-				'nameend'
+				colnameLocalName,
+				namestLocalName,
+				nameendLocalName
 			),
-			setAttributeStrategies.createRowSpanAsAttributeStrategy('morerows', true),
+			setAttributeStrategies.createRowSpanAsAttributeStrategy(morerowsLocalName, true),
 			setAttributeStrategies.createStringValueAsAttributeStrategy(
-				'align',
-				'horizontalAlignment'
+				alignLocalName,
+				'horizontalAlignment',
+				undefined,
+				value => attributeValuesByAttributeName.get('horizontalAlignment')[value]
 			),
 			setAttributeStrategies.createStringValueAsAttributeStrategy(
-				'valign',
-				'verticalAlignment'
+				valignLocalName,
+				'verticalAlignment',
+				undefined,
+				value => attributeValuesByAttributeName.get('verticalAlignment')[value]
 			)
 		],
 
@@ -464,58 +692,79 @@ function CalsTableDefinition(options) {
 		rowBorderOperationNames: ['contextual-cals-toggle-cell-border-all']
 	};
 
-	TableDefinition.call(this, properties);
+	return properties;
 }
 
-CalsTableDefinition.prototype = Object.create(TableDefinition.prototype);
-CalsTableDefinition.prototype.constructor = CalsTableDefinition;
+/**
+ * Configures the table definition for CALS tables.
+ *
+ * @param {CalsTableOptions} options
+ */
+export default class CalsTableDefinition extends TableDefinition {
+	constructor(options) {
+		super(getTableDefinitionProperties(options));
+		this._options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
+		this._tgroupNamespaceURI = this._options.tgroup.namespaceURI || '';
+		this._tgroupLocalName = this._options.tgroup.localName;
 
-CalsTableDefinition.prototype.buildTableGridModel = function(node, blueprint) {
-	const tableElement = evaluateXPathToFirstNode(
-		'descendant-or-self::' + this.selectorParts.table,
-		node,
-		blueprint
-	);
-	return TableDefinition.prototype.buildTableGridModel.call(this, tableElement, blueprint);
-};
+		// This attribute names are required at other places
+		this.colsepLocalName = this._options.colsep.localName;
+		this.rowsepLocalName = this._options.rowsep.localName;
 
-CalsTableDefinition.prototype.buildTableGridModelKey = function(node, blueprint) {
-	const tableElement = evaluateXPathToFirstNode(
-		'descendant-or-self::' + this.selectorParts.table,
-		node,
-		blueprint
-	);
-	return TableDefinition.prototype.buildTableGridModelKey.call(this, tableElement, blueprint);
-};
+		// Configurable true/false values
+		this.trueValue = this._options.yesOrNo.yesValue;
+		this.falseValue = this._options.yesOrNo.noValue;
+	}
 
-CalsTableDefinition.prototype.buildColumnSpecificationsKey = function(tableNode, blueprint) {
-	const tableElement = evaluateXPathToFirstNode(
-		'descendant-or-self::' + this.selectorParts.table,
-		tableNode,
-		blueprint
-	);
-	return TableDefinition.prototype.buildColumnSpecificationsKey.call(this, tableElement);
-};
+	buildTableGridModel(node, blueprint) {
+		const tableElement = evaluateXPathToFirstNode(
+			'descendant-or-self::' + this.selectorParts.table,
+			node,
+			blueprint
+		);
+		return TableDefinition.prototype.buildTableGridModel.call(this, tableElement, blueprint);
+	}
 
-CalsTableDefinition.prototype.applyToDom = function(tableGridModel, tableNode, blueprint, format) {
-	let actualTableNode = evaluateXPathToFirstNode(
-		'descendant-or-self::' + this.selectorParts.table,
-		tableNode,
-		blueprint
-	);
-	if (!actualTableNode) {
-		actualTableNode = blueprint.appendChild(
+	buildTableGridModelKey(node, blueprint) {
+		const tableElement = evaluateXPathToFirstNode(
+			'descendant-or-self::' + this.selectorParts.table,
+			node,
+			blueprint
+		);
+		return TableDefinition.prototype.buildTableGridModelKey.call(this, tableElement, blueprint);
+	}
+
+	buildColumnSpecificationsKey(tableNode, blueprint) {
+		const tableElement = evaluateXPathToFirstNode(
+			'descendant-or-self::' + this.selectorParts.table,
 			tableNode,
-			namespaceManager.createElementNS(tableNode.ownerDocument, this.namespaceURI, 'tgroup')
+			blueprint
+		);
+		return TableDefinition.prototype.buildColumnSpecificationsKey.call(this, tableElement);
+	}
+
+	applyToDom(tableGridModel, tableNode, blueprint, format) {
+		let actualTableNode = evaluateXPathToFirstNode(
+			'descendant-or-self::' + this.selectorParts.table,
+			tableNode,
+			blueprint
+		);
+		if (!actualTableNode) {
+			actualTableNode = blueprint.appendChild(
+				tableNode,
+				namespaceManager.createElementNS(
+					tableNode.ownerDocument,
+					this._tgroupNamespaceURI,
+					this._tgroupLocalName
+				)
+			);
+		}
+		return TableDefinition.prototype.applyToDom.call(
+			this,
+			tableGridModel,
+			actualTableNode,
+			blueprint,
+			format
 		);
 	}
-	return TableDefinition.prototype.applyToDom.call(
-		this,
-		tableGridModel,
-		actualTableNode,
-		blueprint,
-		format
-	);
-};
-
-export default CalsTableDefinition;
+}

@@ -238,7 +238,8 @@ describe('CALS tables: XML to GridModel', () => {
 			chai.assert.equal(gridModel.headerRowCount, 2);
 		});
 
-		it('can deserialize a 4x4 table with 1 header row and 1 footer row', () => {
+		// footer implementation is removed
+		it.skip('can deserialize a 4x4 table with 1 header row and 1 footer row', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(
 					[

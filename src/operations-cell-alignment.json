@@ -37,7 +37,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": "entry"
+					"tableSelector": "fonto:is-cals-table(.)"
 				}
 			},
 			{
@@ -83,7 +83,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": "entry"
+					"tableSelector": "fonto:is-cals-table(.)"
 				}
 			},
 			{
@@ -129,7 +129,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": "entry"
+					"tableSelector": "fonto:is-cals-table(.)"
 				}
 			},
 			{
@@ -175,7 +175,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": "entry"
+					"tableSelector": "fonto:is-cals-table(.)"
 				}
 			},
 			{
@@ -221,7 +221,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": "entry"
+					"tableSelector": "fonto:is-cals-table(.)"
 				}
 			},
 			{
@@ -267,7 +267,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": "entry"
+					"tableSelector": "fonto:is-cals-table(.)"
 				}
 			},
 			{
@@ -315,7 +315,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": "entry"
+					"tableSelector": "fonto:is-cals-table(.)"
 				}
 			},
 			{

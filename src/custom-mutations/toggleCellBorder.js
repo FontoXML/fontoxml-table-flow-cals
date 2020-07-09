@@ -29,9 +29,11 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 		return CustomMutationResult.notAllowed();
 	}
 
+	const tableDefinition = tableGridModel.tableDefinition;
+
 	// Note: The trueValue and falseValue properties on the table definition are CALS-specific.
-	const trueValue = tableGridModel.tableDefinition.trueValue;
-	const falseValue = tableGridModel.tableDefinition.falseValue;
+	const trueValue = tableDefinition.trueValue;
+	const falseValue = tableDefinition.falseValue;
 
 	for (const cellNodeId of cellNodeIds) {
 		const cellInfo = tableGridModel.getCellByNode(blueprint.lookup(cellNodeId));
@@ -42,16 +44,26 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 		currentBorders.bottom =
 			borders.bottom &&
 			currentBorders.bottom &&
-			evaluateXPathToBoolean('./@rowsep = $setValue', cellInfo.element, blueprint, {
-				setValue: borders.bottom ? trueValue : falseValue
-			});
+			evaluateXPathToBoolean(
+				`./@${tableDefinition.rowsepLocalName} = $setValue`,
+				cellInfo.element,
+				blueprint,
+				{
+					setValue: borders.bottom ? trueValue : falseValue
+				}
+			);
 
 		currentBorders.right =
 			borders.right &&
 			currentBorders.right &&
-			evaluateXPathToBoolean('./@colsep = $setValue', cellInfo.element, blueprint, {
-				setValue: borders.right ? trueValue : falseValue
-			});
+			evaluateXPathToBoolean(
+				`./@${tableDefinition.colsepLocalName} = $setValue`,
+				cellInfo.element,
+				blueprint,
+				{
+					setValue: borders.right ? trueValue : falseValue
+				}
+			);
 
 		if (borders.top !== undefined && cellInfo.origin.row > 0) {
 			for (let i = 0; i < cellInfo.size.columns; i++) {
@@ -64,7 +76,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 					borders.top &&
 					currentBorders.top &&
 					evaluateXPathToBoolean(
-						'./@rowsep = $setValue',
+						`./@${tableDefinition.rowsepLocalName} = $setValue`,
 						neighborCellInfo.element,
 						blueprint,
 						{ setValue: borders.top ? trueValue : falseValue }
@@ -83,7 +95,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 					borders.left &&
 					currentBorders.left &&
 					evaluateXPathToBoolean(
-						'./@colsep = $setValue',
+						`./@${tableDefinition.colsepLocalName} = $setValue`,
 						neighborCellInfo.element,
 						blueprint,
 						{ setValue: borders.left ? trueValue : falseValue }
@@ -111,7 +123,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 
 			blueprint.setAttribute(
 				cellInfo.element,
-				'rowsep',
+				tableDefinition.rowsepLocalName,
 				(isToggle ? !isActive : borders.bottom) ? trueValue : falseValue
 			);
 		}
@@ -125,7 +137,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 
 			blueprint.setAttribute(
 				cellInfo.element,
-				'colsep',
+				tableDefinition.colsepLocalName,
 				(isToggle ? !isActive : borders.right) ? trueValue : falseValue
 			);
 		}
@@ -141,7 +153,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 
 				blueprint.setAttribute(
 					neighborCellInfo.element,
-					'rowsep',
+					tableDefinition.rowsepLocalName,
 					(isToggle ? !isActive : borders.top) ? trueValue : falseValue
 				);
 			}
@@ -158,7 +170,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 
 				blueprint.setAttribute(
 					neighborCellInfo.element,
-					'colsep',
+					tableDefinition.colsepLocalName,
 					(isToggle ? !isActive : borders.left) ? trueValue : falseValue
 				);
 			}

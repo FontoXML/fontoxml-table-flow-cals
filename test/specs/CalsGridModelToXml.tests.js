@@ -518,7 +518,7 @@ describe('CALS tables: Grid model to XML', () => {
 	});
 
 	describe('Namespaces', () => {
-		it('can serialize a 4x4 table with namespaces and non-default names for thead and tfoot', () => {
+		it('can serialize a 4x4 table with namespaces and non-default names for thead', () => {
 			namespaceManager.addNamespace('ns1', 'http://example.com/ns1');
 			namespaceManager.addNamespace('ns2', 'http://example.com/ns2');
 
@@ -646,6 +646,248 @@ describe('CALS tables: Grid model to XML', () => {
 							'</tbody>',
 							'</tgroup>',
 							'</matrix>'
+						].join(''),
+						'text/xml'
+					).documentElement
+				}),
+				'deep equal'
+			);
+		});
+	});
+
+	describe('Non-default names and namespaces', () => {
+		it('can serialize a 4x4 table with non-default names and namespaces', () => {
+			namespaceManager.addNamespace('nstable', 'http://example.com/nstable');
+			namespaceManager.addNamespace('nstgroup', 'http://example.com/nstgroup');
+			namespaceManager.addNamespace('nsentry', 'http://example.com/nsentry');
+			namespaceManager.addNamespace('nscolspec', 'http://example.com/nscolspec');
+			namespaceManager.addNamespace('nsrow', 'http://example.com/nsrow');
+			namespaceManager.addNamespace('nstbody', 'http://example.com/nstbody');
+			namespaceManager.addNamespace('nsthead', 'http://example.com/nsthead');
+
+			const mtableOptions = {
+				table: {
+					localName: 'mtable',
+					namespaceURI: 'http://example.com/nstable'
+				},
+				tgroup: {
+					localName: 'mtgroup',
+					namespaceURI: 'http://example.com/nstgroup'
+				},
+				entry: {
+					localName: 'mentry',
+					namespaceURI: 'http://example.com/nsentry',
+					defaultTextContainer: 'p'
+				},
+
+				align: {
+					localName: 'malign',
+					leftValue: 'mleft',
+					rightValue: 'mright',
+					centerValue: 'mcenter',
+					justifyValue: 'mjustify'
+				},
+
+				colname: {
+					localName: 'mcolname'
+				},
+
+				colnum: { localName: 'mcolnum' },
+
+				cols: { localName: 'mcols' },
+
+				colsep: { localName: 'mcolsep' },
+
+				colspec: {
+					localName: 'mcolspec',
+					namespaceURI: 'http://example.com/nscolspec'
+				},
+
+				colwidth: { localName: 'mcolwidth' },
+
+				frame: { localName: 'mframe', allValue: 'mall', noneValue: 'mnone' },
+
+				morerows: { localName: 'mmorerows' },
+
+				nameend: {
+					localName: 'mnameend'
+				},
+
+				namest: {
+					localName: 'mnamest'
+				},
+
+				row: {
+					localName: 'mrow',
+					namespaceURI: 'http://example.com/nsrow'
+				},
+
+				rowsep: { localName: 'mrowsep' },
+
+				tbody: {
+					localName: 'mtbody',
+					namespaceURI: 'http://example.com/nstbody'
+				},
+
+				thead: {
+					localName: 'mthead',
+					namespaceURI: 'http://example.com/nsthead'
+				},
+
+				valign: {
+					localName: 'mvalign',
+					topValue: 'mtop',
+					middleValue: 'mmiddle',
+					bottomValue: 'mbottom'
+				},
+
+				yesOrNo: {
+					yesValue: 'm1',
+					noValue: 'm0'
+				}
+			};
+
+			const tableDefinition = new CalsTableDefinition(mtableOptions);
+			const createTable = tableDefinition.getTableGridModelBuilder();
+			const tableGridModel = createTable(4, 4, true, documentNode, 'ns2:entry');
+
+			const tableNodeWithNamespace = documentNode.createElementNS(
+				'http://example.com/nstable',
+				'nstable:mtable'
+			);
+			const tgroupNodeWithNamespace = documentNode.createElementNS(
+				'http://example.com/nstgroup',
+				'nstgroup:mtgroup'
+			);
+			tableNodeWithNamespace.appendChild(tgroupNodeWithNamespace);
+
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(
+					tableGridModel,
+					tgroupNodeWithNamespace,
+					blueprint,
+					stubFormat
+				)
+			);
+
+			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
+			chai.assert.deepEqual(jsonMLMapper.serialize(tableNodeWithNamespace), [
+				'nstable:mtable',
+				{ mframe: 'mall' },
+				[
+					'nstgroup:mtgroup',
+					{ mcols: '4' },
+					[
+						'nscolspec:mcolspec',
+						{
+							mcolname: 'column-0',
+							mcolnum: '1',
+							mcolwidth: '1*'
+						}
+					],
+					[
+						'nscolspec:mcolspec',
+						{
+							mcolname: 'column-1',
+							mcolnum: '2',
+							mcolwidth: '1*'
+						}
+					],
+					[
+						'nscolspec:mcolspec',
+						{
+							mcolname: 'column-2',
+							mcolnum: '3',
+							mcolwidth: '1*'
+						}
+					],
+					[
+						'nscolspec:mcolspec',
+						{
+							mcolname: 'column-3',
+							mcolnum: '4',
+							mcolwidth: '1*'
+						}
+					],
+					[
+						'nsthead:mthead',
+						[
+							'nsrow:mrow',
+							['nsentry:mentry', { mcolname: 'column-0' }],
+							['nsentry:mentry', { mcolname: 'column-1' }],
+							['nsentry:mentry', { mcolname: 'column-2' }],
+							['nsentry:mentry', { mcolname: 'column-3' }]
+						]
+					],
+					[
+						'nstbody:mtbody',
+						[
+							'nsrow:mrow',
+							['nsentry:mentry', { mcolname: 'column-0' }],
+							['nsentry:mentry', { mcolname: 'column-1' }],
+							['nsentry:mentry', { mcolname: 'column-2' }],
+							['nsentry:mentry', { mcolname: 'column-3' }]
+						],
+						[
+							'nsrow:mrow',
+							['nsentry:mentry', { mcolname: 'column-0' }],
+							['nsentry:mentry', { mcolname: 'column-1' }],
+							['nsentry:mentry', { mcolname: 'column-2' }],
+							['nsentry:mentry', { mcolname: 'column-3' }]
+						],
+						[
+							'nsrow:mrow',
+							['nsentry:mentry', { mcolname: 'column-0' }],
+							['nsentry:mentry', { mcolname: 'column-1' }],
+							['nsentry:mentry', { mcolname: 'column-2' }],
+							['nsentry:mentry', { mcolname: 'column-3' }]
+						]
+					]
+				]
+			]);
+
+			chai.assert.isTrue(
+				evaluateXPathToBoolean('deep-equal($a, $b)', null, blueprint, {
+					a: tableNodeWithNamespace,
+					b: new DOMParser().parseFromString(
+						[
+							'<mtable mframe="mall" xmlns="http://example.com/nstable">',
+							'<mtgroup mcols="4" xmlns="http://example.com/nstgroup">',
+							'<mcolspec mcolname="column-0" mcolnum="1" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
+							'<mcolspec mcolname="column-1" mcolnum="2" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
+							'<mcolspec mcolname="column-2" mcolnum="3" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
+							'<mcolspec mcolname="column-3" mcolnum="4" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
+							'<mthead xmlns="http://example.com/nsthead" >',
+							'<mrow xmlns="http://example.com/nsrow" >',
+							'<mentry mcolname="column-0" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-1" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-2" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-3" xmlns="http://example.com/nsentry" />',
+							'</mrow>',
+							'</mthead>',
+							'<mtbody xmlns="http://example.com/nstbody">',
+							'<mrow xmlns="http://example.com/nsrow" >',
+							'<mentry mcolname="column-0" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-1" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-2" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-3" xmlns="http://example.com/nsentry" />',
+							'</mrow>',
+							'<mrow xmlns="http://example.com/nsrow" >',
+							'<mentry mcolname="column-0" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-1" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-2" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-3" xmlns="http://example.com/nsentry" />',
+							'</mrow>',
+							'<mrow xmlns="http://example.com/nsrow" >',
+							'<mentry mcolname="column-0" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-1" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-2" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolname="column-3" xmlns="http://example.com/nsentry" />',
+							'</mrow>',
+							'</mtbody>',
+							'</mtgroup>',
+							'</mtable>'
 						].join(''),
 						'text/xml'
 					).documentElement
