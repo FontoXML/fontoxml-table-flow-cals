@@ -215,6 +215,20 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  *		// This will show areas that can be hovered over to hightlight a column or row and that can be clicked to show a operations popover. Optional, defaults to false.
  *		showHighlightingWidget: true
  *	});
+ * ```
+ *
+ * The cell element menu button widgets are added based on the existence of contextual operations on
+ * cell level. Make sure that only cell-specific operations are added to the cell widget, so that
+ * users are only given options relevant to them.
+ * Example on how you can add this element menu on the widget:
+ *
+ * ```
+ *	configureProperties(sxModule, 'self::entry', {
+ *		contextualOperations: [
+ *			{ name: 'contextual-set-total-cell', hideIn: ['context-menu'] }
+ *		]
+ *	});
+ * ```
  *
  * @fontosdk
  *
