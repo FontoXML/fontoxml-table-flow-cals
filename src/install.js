@@ -26,7 +26,7 @@ export default function install() {
 				dynamicContext.domFacade
 			);
 
-			return (
+			return !!(
 				tableDefinition &&
 				tableDefinition instanceof CalsTableDefinition &&
 				tableDefinition.isTable(node, dynamicContext.domFacade)
