@@ -18,12 +18,13 @@ describe('toggleCellBorder custom mutation', () => {
 	let coreDocument;
 	let blueprint;
 	let tableDefinition;
+	let documentId;
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		documentNode = new slimdom.Document();
 		coreDocument = new CoreDocument(documentNode);
 		const documentController = new DocumentController(coreDocument);
-		documentsManager.addDocument({}, documentController);
+		documentId = await documentsManager.addDocument({}, documentController);
 
 		blueprint = new Blueprint(coreDocument.dom);
 		tableDefinition = new CalsTableDefinition({
@@ -35,12 +36,15 @@ describe('toggleCellBorder custom mutation', () => {
 				namespaceURI: ''
 			}
 		});
+		tableDefinitionManager
+			.getTableDefinitions()
+			.forEach(def => tableDefinitionManager.removeTableDefinition(def));
 		tableDefinitionManager.addTableDefinition(tableDefinition);
 	});
-
 	afterEach(() => {
-		// The CacheInvalidationHook is not registered so we need to commit merge after each test.
-		indicesManager.getIndexSet().commitMerge();
+		blueprint.destroy();
+		tableDefinitionManager.removeTableDefinition(tableDefinition);
+		documentsManager.removeDocument(documentId);
 	});
 
 	const threeByThreeTable = [
