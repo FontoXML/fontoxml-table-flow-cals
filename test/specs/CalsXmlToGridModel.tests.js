@@ -597,7 +597,50 @@ describe('CALS tables: XML to GridModel', () => {
 				);
 			});
 
-			it('can deserialize a 4x4 table with a row spanning cell spanning over a complete row', () => {
+			it('can deserialize a 2x2 table with row spanning cells on the first row', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tgroup',
+								{ cols: 2 },
+								['colspec', { colname: 'c1' }],
+								['colspec', { colname: 'c2' }],
+								[
+									'tbody',
+									[
+										'row',
+										['entry', { morerows: '1' }],
+										['entry', { morerows: '1' }]
+									],
+									['row']
+								]
+							]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const tgroupElement = tableElement.firstChild;
+
+				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+				chai.assert.isUndefined(gridModel.error);
+
+				chai.assert.equal(gridModel.getHeight(), 2);
+				chai.assert.equal(gridModel.getWidth(), 2);
+				chai.assert.equal(gridModel.headerRowCount, 0);
+
+				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
+				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 0);
+				chai.assert.equal(
+					getNodeId(firstSpanningCell.element),
+					getNodeId(secondSpanningCell.element)
+				);
+			});
+
+			it('throws error on 4x4 table with a row spanning cell spanning over a complete row', () => {
 				coreDocument.dom.mutate(() =>
 					jsonMLMapper.parse(
 						[
@@ -631,16 +674,54 @@ describe('CALS tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 				const tgroupElement = tableElement.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
-				chai.assert.isUndefined(gridModel.error);
-
-				// Normalization happens AFTER the first change to the table
-				chai.assert.equal(gridModel.getHeight(), 5);
-				chai.assert.equal(gridModel.getWidth(), 4);
-				chai.assert.equal(gridModel.headerRowCount, 0);
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					'error'
+				);
 			});
 
-			it('throws when building a gridModel from a cals table containing incorrect rowspans', () => {
+			// virtual row flag should prevent last-row row spanning cells from creating virtual rows for Cals Table grid
+			it('throws error on 4x4 table with a row spanning cell when not enough rows are provided', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tgroup',
+								{ cols: 4 },
+								['colspec', { colname: 'c1' }],
+								['colspec', { colname: 'c2' }],
+								['colspec', { colname: 'c3' }],
+								['colspec', { colname: 'c4' }],
+								[
+									'tbody',
+									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									[
+										'row',
+										['entry', { morerows: '1' }],
+										['entry', { morerows: '1' }],
+										['entry', { morerows: '1' }],
+										['entry', { morerows: '1' }]
+									]
+								]
+							]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const tgroupElement = tableElement.firstChild;
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					'error'
+				);
+			});
+
+			it('throws error when a empty row which is not covered by row spans is detected right after other empty rows', () => {
 				coreDocument.dom.mutate(() =>
 					jsonMLMapper.parse(
 						[
@@ -657,12 +738,176 @@ describe('CALS tables: XML to GridModel', () => {
 									['row', ['entry'], ['entry'], ['entry'], ['entry']],
 									[
 										'row',
+										['entry', { morerows: 2 }],
+										['entry', { morerows: 2 }],
+										['entry', { morerows: 2 }],
+										['entry', { morerows: 2 }]
+									],
+									['row'],
+									['row'],
+									['row'],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']]
+								]
+							]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const tgroupElement = tableElement.firstChild;
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					'error'
+				);
+			});
+
+			it('throws error when a empty row which is not covered by row spans is detected', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tgroup',
+								{ cols: 4 },
+								['colspec', { colname: 'c1' }],
+								['colspec', { colname: 'c2' }],
+								['colspec', { colname: 'c3' }],
+								['colspec', { colname: 'c4' }],
+								[
+									'tbody',
+									[
+										'row',
+										['entry', { morerows: 1 }],
+										['entry', { morerows: 1 }],
+										['entry', { morerows: 1 }],
+										['entry', { morerows: 1 }]
+									],
+									['row'],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									['row'],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']]
+								]
+							]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const tgroupElement = tableElement.firstChild;
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					'error'
+				);
+			});
+
+			it('throws error when not enough row spans are provided and empty entries are found', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tgroup',
+								{ cols: 4 },
+								['colspec', { colname: 'c1' }],
+								['colspec', { colname: 'c2' }],
+								['colspec', { colname: 'c3' }],
+								['colspec', { colname: 'c4' }],
+								[
+									'tbody',
+									[
+										'row',
+										['entry', { morerows: 2 }],
 										['entry', { morerows: 3 }],
+										['entry', { morerows: 2 }],
+										['entry', { morerows: 2 }]
+									],
+									['row'],
+									['row'],
+									['row'],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']]
+								]
+							]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const tgroupElement = tableElement.firstChild;
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					'error'
+				);
+			});
+
+			it('throws error when there is no empty row for the spanning cells', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tgroup',
+								{ cols: 4 },
+								['colspec', { colname: 'c1' }],
+								['colspec', { colname: 'c2' }],
+								['colspec', { colname: 'c3' }],
+								['colspec', { colname: 'c4' }],
+								[
+									'tbody',
+									[
+										'row',
+										['entry', { morerows: 1 }],
+										['entry', { morerows: 1 }],
+										['entry', { morerows: 1 }],
+										['entry', { morerows: 1 }]
+									],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									['row', ['entry'], ['entry'], ['entry'], ['entry']]
+								]
+							]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const tgroupElement = tableElement.firstChild;
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					'error'
+				);
+			});
+
+			it('throws error when there is an empty row right after a row-span with empty entries and a space is available in the row after the empty row for the row spanning cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tgroup',
+								{ cols: 4 },
+								['colspec', { colname: 'c1' }],
+								['colspec', { colname: 'c2' }],
+								['colspec', { colname: 'c3' }],
+								['colspec', { colname: 'c4' }],
+								[
+									'tbody',
+									[
+										'row',
 										['entry'],
+										['entry', { morerows: 1 }],
 										['entry'],
 										['entry']
 									],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									['row'],
+									['row', ['entry'], ['entry'], ['entry']],
 									['row', ['entry'], ['entry'], ['entry'], ['entry']]
 								]
 							]

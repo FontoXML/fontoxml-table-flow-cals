@@ -299,6 +299,7 @@ function getTableDefinitionProperties(options) {
 
 		supportsBorders: true,
 		supportsCellAlignment: true,
+		supportsRowSpanningCellsAtBottom: false,
 
 		// Widths
 		widthToHtmlWidthStrategy: function(width, widths) {
