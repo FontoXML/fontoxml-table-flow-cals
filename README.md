@@ -62,7 +62,47 @@ configureAsCalsTableElements(sxModule, {
 	showInsertionWidget: true,
 
 	// This will show areas that can be hovered over to hightlight a column or row and that can be clicked to show a operations popover. Optional, defaults to false.
-	showHighlightingWidget: true
+	showHighlightingWidget: true,
+
+	// In CALS table, there are some operations in the column/row widget menus as default. But they can be overridden.
+ 	columnWidgetMenuOperations: [
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+			]
+		},
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+			]
+		},
+		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
+		{ contents: [{ name: 'column-delete-at-index' }] }
+	],
+ 	rowWidgetMenuOperations: [
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+			]
+		},
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+			]
+		},
+		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
+		{ contents: [{ name: 'contextual-row-delete' }] }
+	]
 });
 ```
 
@@ -251,7 +291,47 @@ configureAsCalsTableElements(sxModule, {
 	showInsertionWidget: true,
 
 	// This will show areas that can be hovered over to hightlight a column or row and that can be clicked to show a operations popover. Optional, defaults to false.
-	showHighlightingWidget: true
+	showHighlightingWidget: true,
+
+	// In CALS table, there are some operations in the column/row widget menus as default. But they can be overridden.
+ 	columnWidgetMenuOperations: [
+		 {
+			contents: [
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+			]
+		},
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+			]
+		},
+		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
+		{ contents: [{ name: 'column-delete-at-index' }] }
+	],
+ 	rowWidgetMenuOperations:  [
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+			]
+		},
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+			]
+		},
+		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
+		{ contents: [{ name: 'contextual-row-delete' }] }
+	]
 });
 ```
 

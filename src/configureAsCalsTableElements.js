@@ -26,7 +26,45 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  *			})
  *		],
  *		showInsertionWidget: true,
- *		showHighlightingWidget: true
+ *		showHighlightingWidget: true,
+ *		columnWidgetMenuOperations: [
+ *			{
+ *				contents: [
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+ *				]
+ *			},
+ *			{
+ *				contents: [
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+ *				]
+ *			},
+ *			{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
+ *			{ contents: [{ name: 'column-delete-at-index' }] }
+ *		],
+ *		rowWidgetMenuOperations: [
+ *			{
+ *				contents: [
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+ *				]
+ *			},
+ *			{
+ *				contents: [
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+ *				]
+ *			},
+ *			{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
+ *			{ contents: [{ name: 'contextual-row-delete' }] }
+ *		]
  *	});
  *```
  * It is also possible to configure all element names and attributes, and attribute names and possible values.
@@ -302,7 +340,8 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  * @param  {boolean}         [options.showHighlightingWidget]            To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
  * @param  {Widget[]|null}   [options.columnBefore]                      To add column icon widgets by using {@link createIconWidget}. Column widgets are linked to the colspec elements. Any widget can be added but only icon widget is supported.
  * @param  {Widget[]|null}   [options.rowBefore]                         To add row icon widgets by using {@link createIconWidget}. Row widgets are linked to the row elements of the table. Any widget can be added but only icon widget is supported.
-
+ * @param  {Object[]|null}   [options.columnWidgetMenuOperations]        To configure table widget menu for columns. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
+ * @param  {Object[]|null}   [options.rowWidgetMenuOperations]           To configure table widget menu for rows. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
  * @param  {boolean}         [options.useDefaultContextMenu=true]        Whether or not to use a preconfigured context menu for elements within the table
  */
 export default function configureAsCalsTableElements(sxModule, options) {

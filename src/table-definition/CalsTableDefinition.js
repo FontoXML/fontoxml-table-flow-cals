@@ -142,11 +142,51 @@ const DEFAULT_OPTIONS = {
 	showHighlightingWidget: false,
 	rowBefore: false,
 	columnBefore: false,
-	useDefaultContextMenu: true
+	useDefaultContextMenu: true,
+
+	// Widget menu operations
+	columnWidgetMenuOperations: [
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+			]
+		},
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+			]
+		},
+		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
+		{ contents: [{ name: 'column-delete-at-index' }] }
+	],
+	rowWidgetMenuOperations: [
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+			]
+		},
+		{
+			contents: [
+				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+			]
+		},
+		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
+		{ contents: [{ name: 'contextual-row-delete' }] }
+	]
 };
 
 function isObject(variable) {
-	return variable !== null && typeof variable === 'object';
+	return variable !== null && typeof variable === 'object' && !Array.isArray(variable);
 }
 
 function applyDefaults(options, defaultOptions, path, rootOptions) {
@@ -678,19 +718,9 @@ function getTableDefinitionProperties(options) {
 			)
 		],
 
-		horizontalAlignmentOperationNames: [
-			'contextual-cals-set-cell-horizontal-alignment-left',
-			'contextual-cals-set-cell-horizontal-alignment-center',
-			'contextual-cals-set-cell-horizontal-alignment-right',
-			'contextual-cals-set-cell-horizontal-alignment-justify'
-		],
-		verticalAlignmentOperationNames: [
-			'contextual-cals-set-cell-vertical-alignment-top',
-			'contextual-cals-set-cell-vertical-alignment-center',
-			'contextual-cals-set-cell-vertical-alignment-bottom'
-		],
-		columnBorderOperationNames: ['contextual-cals-toggle-cell-border-all'],
-		rowBorderOperationNames: ['contextual-cals-toggle-cell-border-all']
+		// Widget menu operations
+		columnWidgetMenuOperations: options.columnWidgetMenuOperations,
+		rowWidgetMenuOperations: options.rowWidgetMenuOperations
 	};
 
 	return properties;
