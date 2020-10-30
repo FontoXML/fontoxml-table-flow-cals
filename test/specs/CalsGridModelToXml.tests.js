@@ -566,6 +566,8 @@ describe('CALS tables: Grid model to XML', () => {
 						{
 							colname: 'column-0',
 							colnum: '1',
+							colsep: '1',
+							rowsep: '1',
 							colwidth: '1*'
 						}
 					],
@@ -574,6 +576,8 @@ describe('CALS tables: Grid model to XML', () => {
 						{
 							colname: 'column-1',
 							colnum: '2',
+							colsep: '1',
+							rowsep: '1',
 							colwidth: '1*'
 						}
 					],
@@ -582,6 +586,8 @@ describe('CALS tables: Grid model to XML', () => {
 						{
 							colname: 'column-2',
 							colnum: '3',
+							colsep: '1',
+							rowsep: '1',
 							colwidth: '1*'
 						}
 					],
@@ -590,6 +596,8 @@ describe('CALS tables: Grid model to XML', () => {
 						{
 							colname: 'column-3',
 							colnum: '4',
+							colsep: '1',
+							rowsep: '1',
 							colwidth: '1*'
 						}
 					],
@@ -597,34 +605,34 @@ describe('CALS tables: Grid model to XML', () => {
 						'ns2:thead',
 						[
 							'ns2:row',
-							['ns2:entry', { colname: 'column-0' }],
-							['ns2:entry', { colname: 'column-1' }],
-							['ns2:entry', { colname: 'column-2' }],
-							['ns2:entry', { colname: 'column-3' }]
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-0' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-1' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-2' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-3' }]
 						]
 					],
 					[
 						'ns2:tbody',
 						[
 							'ns2:row',
-							['ns2:entry', { colname: 'column-0' }],
-							['ns2:entry', { colname: 'column-1' }],
-							['ns2:entry', { colname: 'column-2' }],
-							['ns2:entry', { colname: 'column-3' }]
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-0' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-1' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-2' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-3' }]
 						],
 						[
 							'ns2:row',
-							['ns2:entry', { colname: 'column-0' }],
-							['ns2:entry', { colname: 'column-1' }],
-							['ns2:entry', { colname: 'column-2' }],
-							['ns2:entry', { colname: 'column-3' }]
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-0' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-1' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-2' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-3' }]
 						],
 						[
 							'ns2:row',
-							['ns2:entry', { colname: 'column-0' }],
-							['ns2:entry', { colname: 'column-1' }],
-							['ns2:entry', { colname: 'column-2' }],
-							['ns2:entry', { colname: 'column-3' }]
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-0' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-1' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-2' }],
+							['ns2:entry', { colsep: '1', rowsep: '1', colname: 'column-3' }]
 						]
 					]
 				]
@@ -637,12 +645,37 @@ describe('CALS tables: Grid model to XML', () => {
 						[
 							'<matrix frame="all" xmlns="http://example.com/ns1">',
 							'<tgroup cols="4" xmlns="http://example.com/ns2">',
-							'<colspec colname="column-0" colnum="1" colwidth="1*" /><colspec colname="column-1" colnum="2" colwidth="1*" /><colspec colname="column-2" colnum="3" colwidth="1*" /><colspec colname="column-3" colnum="4" colwidth="1*" />',
-							'<thead><row><entry colname="column-0" /><entry colname="column-1" /><entry colname="column-2" /><entry colname="column-3" /></row></thead>',
+							'<colspec colsep="1" rowsep="1" colname="column-0" colnum="1" colwidth="1*" />',
+							'<colspec colsep="1" rowsep="1" colname="column-1" colnum="2" colwidth="1*" />',
+							'<colspec colsep="1" rowsep="1" colname="column-2" colnum="3" colwidth="1*" />',
+							'<colspec colsep="1" rowsep="1" colname="column-3" colnum="4" colwidth="1*" />',
+							'<thead>',
+							'<row>',
+							'<entry colsep="1" rowsep="1" colname="column-0" />',
+							'<entry colsep="1" rowsep="1" colname="column-1" />',
+							'<entry colsep="1" rowsep="1" colname="column-2" />',
+							'<entry colsep="1" rowsep="1" colname="column-3" />',
+							'</row>',
+							'</thead>',
 							'<tbody>',
-							'<row><entry colname="column-0" /><entry colname="column-1" /><entry colname="column-2" /><entry colname="column-3" /></row>',
-							'<row><entry colname="column-0" /><entry colname="column-1" /><entry colname="column-2" /><entry colname="column-3" /></row>',
-							'<row><entry colname="column-0" /><entry colname="column-1" /><entry colname="column-2" /><entry colname="column-3" /></row>',
+							'<row>',
+							'<entry colsep="1" rowsep="1" colname="column-0" />',
+							'<entry colsep="1" rowsep="1" colname="column-1" />',
+							'<entry colsep="1" rowsep="1" colname="column-2" />',
+							'<entry colsep="1" rowsep="1" colname="column-3" />',
+							'</row>',
+							'<row>',
+							'<entry colsep="1" rowsep="1" colname="column-0" />',
+							'<entry colsep="1" rowsep="1" colname="column-1" />',
+							'<entry colsep="1" rowsep="1" colname="column-2" />',
+							'<entry colsep="1" rowsep="1" colname="column-3" />',
+							'</row>',
+							'<row>',
+							'<entry colsep="1" rowsep="1" colname="column-0" />',
+							'<entry colsep="1" rowsep="1" colname="column-1" />',
+							'<entry colsep="1" rowsep="1" colname="column-2" />',
+							'<entry colsep="1" rowsep="1" colname="column-3" />',
+							'</row>',
 							'</tbody>',
 							'</tgroup>',
 							'</matrix>'
@@ -783,6 +816,8 @@ describe('CALS tables: Grid model to XML', () => {
 						{
 							mcolname: 'column-0',
 							mcolnum: '1',
+							mcolsep: 'm1',
+							mrowsep: 'm1',
 							mcolwidth: '1*'
 						}
 					],
@@ -791,6 +826,8 @@ describe('CALS tables: Grid model to XML', () => {
 						{
 							mcolname: 'column-1',
 							mcolnum: '2',
+							mcolsep: 'm1',
+							mrowsep: 'm1',
 							mcolwidth: '1*'
 						}
 					],
@@ -799,6 +836,8 @@ describe('CALS tables: Grid model to XML', () => {
 						{
 							mcolname: 'column-2',
 							mcolnum: '3',
+							mcolsep: 'm1',
+							mrowsep: 'm1',
 							mcolwidth: '1*'
 						}
 					],
@@ -807,6 +846,8 @@ describe('CALS tables: Grid model to XML', () => {
 						{
 							mcolname: 'column-3',
 							mcolnum: '4',
+							mcolsep: 'm1',
+							mrowsep: 'm1',
 							mcolwidth: '1*'
 						}
 					],
@@ -814,34 +855,82 @@ describe('CALS tables: Grid model to XML', () => {
 						'nsthead:mthead',
 						[
 							'nsrow:mrow',
-							['nsentry:mentry', { mcolname: 'column-0' }],
-							['nsentry:mentry', { mcolname: 'column-1' }],
-							['nsentry:mentry', { mcolname: 'column-2' }],
-							['nsentry:mentry', { mcolname: 'column-3' }]
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-0' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-1' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-2' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-3' }
+							]
 						]
 					],
 					[
 						'nstbody:mtbody',
 						[
 							'nsrow:mrow',
-							['nsentry:mentry', { mcolname: 'column-0' }],
-							['nsentry:mentry', { mcolname: 'column-1' }],
-							['nsentry:mentry', { mcolname: 'column-2' }],
-							['nsentry:mentry', { mcolname: 'column-3' }]
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-0' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-1' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-2' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-3' }
+							]
 						],
 						[
 							'nsrow:mrow',
-							['nsentry:mentry', { mcolname: 'column-0' }],
-							['nsentry:mentry', { mcolname: 'column-1' }],
-							['nsentry:mentry', { mcolname: 'column-2' }],
-							['nsentry:mentry', { mcolname: 'column-3' }]
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-0' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-1' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-2' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-3' }
+							]
 						],
 						[
 							'nsrow:mrow',
-							['nsentry:mentry', { mcolname: 'column-0' }],
-							['nsentry:mentry', { mcolname: 'column-1' }],
-							['nsentry:mentry', { mcolname: 'column-2' }],
-							['nsentry:mentry', { mcolname: 'column-3' }]
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-0' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-1' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-2' }
+							],
+							[
+								'nsentry:mentry',
+								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-3' }
+							]
 						]
 					]
 				]
@@ -854,36 +943,36 @@ describe('CALS tables: Grid model to XML', () => {
 						[
 							'<mtable mframe="mall" xmlns="http://example.com/nstable">',
 							'<mtgroup mcols="4" xmlns="http://example.com/nstgroup">',
-							'<mcolspec mcolname="column-0" mcolnum="1" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
-							'<mcolspec mcolname="column-1" mcolnum="2" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
-							'<mcolspec mcolname="column-2" mcolnum="3" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
-							'<mcolspec mcolname="column-3" mcolnum="4" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
+							'<mcolspec mcolsep="m1" mrowsep="m1" mcolname="column-0" mcolnum="1" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
+							'<mcolspec mcolsep="m1" mrowsep="m1" mcolname="column-1" mcolnum="2" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
+							'<mcolspec mcolsep="m1" mrowsep="m1" mcolname="column-2" mcolnum="3" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
+							'<mcolspec mcolsep="m1" mrowsep="m1" mcolname="column-3" mcolnum="4" mcolwidth="1*" xmlns="http://example.com/nscolspec" />',
 							'<mthead xmlns="http://example.com/nsthead" >',
 							'<mrow xmlns="http://example.com/nsrow" >',
-							'<mentry mcolname="column-0" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-1" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-2" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-3" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-0" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-1" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-2" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-3" xmlns="http://example.com/nsentry" />',
 							'</mrow>',
 							'</mthead>',
 							'<mtbody xmlns="http://example.com/nstbody">',
 							'<mrow xmlns="http://example.com/nsrow" >',
-							'<mentry mcolname="column-0" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-1" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-2" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-3" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-0" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-1" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-2" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-3" xmlns="http://example.com/nsentry" />',
 							'</mrow>',
 							'<mrow xmlns="http://example.com/nsrow" >',
-							'<mentry mcolname="column-0" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-1" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-2" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-3" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-0" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-1" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-2" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-3" xmlns="http://example.com/nsentry" />',
 							'</mrow>',
 							'<mrow xmlns="http://example.com/nsrow" >',
-							'<mentry mcolname="column-0" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-1" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-2" xmlns="http://example.com/nsentry" />',
-							'<mentry mcolname="column-3" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-0" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-1" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-2" xmlns="http://example.com/nsentry" />',
+							'<mentry mcolsep="m1" mrowsep="m1" mcolname="column-3" xmlns="http://example.com/nsentry" />',
 							'</mrow>',
 							'</mtbody>',
 							'</mtgroup>',
