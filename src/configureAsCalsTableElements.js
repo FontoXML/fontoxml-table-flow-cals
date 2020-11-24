@@ -268,6 +268,8 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  *	});
  * ```
  *
+ * Cals tables can also be configured to be collapsible. Refer to {@link fonto-documentation/docs/editor/fontoxml-editor-documentation/quickstarts/configure-tables.xml#id-6c3f43af-b40c-4fa3-ab47-f0fd2d4ab85c our guide} to learn more.
+ *
  * @fontosdk
  *
  * @category add-on/fontoxml-table-flow-cals
@@ -343,6 +345,8 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  * @param  {Object[]|null}   [options.columnWidgetMenuOperations]        To configure table widget menu for columns. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
  * @param  {Object[]|null}   [options.rowWidgetMenuOperations]           To configure table widget menu for rows. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
  * @param  {boolean}         [options.useDefaultContextMenu=true]        Whether or not to use a preconfigured context menu for elements within the table
+ * @param  {XPathQuery}      [options.isCollapsibleQuery=false()]        The {@link XPathQuery} to determine whether or not a table has the ability to be collapsible. Optional, defaults to 'false()'. $rowCount and $columnCount helper variables can optionally be used in this XPath expression which evaluate to the total rows and total columns in a table.
+ * @param  {XPathQuery}      [options.isInitiallyCollapsedQuery=true()]  The {@link XPathQuery} to determine whether or not a table should initially start off as collapsed. Tables must first have the ability to be collapsible with isCollapsibleQuery. Optional, defaults to 'true()'. $rowCount and $columnCount helper variables can optionally be used in this XPath expression which evaluate to the total rows and total columns in a table.
  */
 export default function configureAsCalsTableElements(sxModule, options) {
 	options = options || {};

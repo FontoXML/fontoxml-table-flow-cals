@@ -143,6 +143,8 @@ const DEFAULT_OPTIONS = {
 	rowBefore: false,
 	columnBefore: false,
 	useDefaultContextMenu: true,
+	isCollapsibleQuery: 'false()',
+	isInitiallyCollapsedQuery: 'true()',
 
 	// Widget menu operations
 	columnWidgetMenuOperations: [
