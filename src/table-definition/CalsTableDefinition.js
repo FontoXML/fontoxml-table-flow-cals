@@ -445,8 +445,8 @@ function getTableDefinitionProperties(options) {
 				return
 					if($colSpecifications(1) instance of map(*) and $colSpecifications(2) instance of map(*)) then
 						map {
-							"colsep": $colSpecifications(1)("borderRight"),
-							"rowsep": $colSpecifications(1)("borderBottom"),
+							"colsep": $colSpecifications(1)("columnSeparator"),
+							"rowsep": $colSpecifications(1)("rowSeparator"),
 							"colspan": number($colSpecifications(2)("index")) -
 								number($colSpecifications(1)("index")) + 1
 						}
@@ -457,8 +457,8 @@ function getTableDefinitionProperties(options) {
 				return
 					if($colSpecification instance of map(*)) then
 						map {
-							"colsep": $colSpecification("borderRight"),
-							"rowsep": $colSpecification("borderBottom"),
+							"colsep": $colSpecification("columnSeparator"),
+							"rowsep": $colSpecification("rowSeparator"),
 							"colspan": 1
 						}
 					else
@@ -509,16 +509,16 @@ function getTableDefinitionProperties(options) {
 				columnName: 'column-' + context.columnIndex,
 				columnNumber: context.columnIndex + 1,
 				columnWidth: '1*',
-				borderBottom: true,
-				borderRight: true
+				rowSeparator: true,
+				columnSeparator: true
 			};
 		},
 		getDefaultCellSpecificationStrategy: function(context) {
 			return {
 				width: '1*',
 				columnName: 'column-' + context.columnIndex,
-				borderBottom: true,
-				borderRight: true
+				rowSeparator: true,
+				columnSeparator: true
 			};
 		},
 
@@ -541,11 +541,11 @@ function getTableDefinitionProperties(options) {
 
 		getColumnSpecificationStrategies: [
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
-				'borderRight',
+				'columnSeparator',
 				`let $sep := ./@${colsepLocalName} return if ($sep) then $sep = "${trueValue}" else true()`
 			),
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
-				'borderBottom',
+				'rowSeparator',
 				`let $sep := ./@${rowsepLocalName} return if ($sep) then $sep = "${trueValue}" else true()`
 			),
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
@@ -616,7 +616,7 @@ function getTableDefinitionProperties(options) {
 				}
 			),
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
-				'borderBottom',
+				'rowSeparator',
 				`if (./@${rowsepLocalName}) then
 					./@${rowsepLocalName} = "${trueValue}"
 				else
@@ -624,7 +624,7 @@ function getTableDefinitionProperties(options) {
 			),
 
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
-				'borderRight',
+				'columnSeparator',
 				`if (./@${colsepLocalName}) then
 					./@${colsepLocalName} = "${trueValue}"
 				else
@@ -662,14 +662,14 @@ function getTableDefinitionProperties(options) {
 			setAttributeStrategies.createColumnNumberAsAttributeStrategy(colnumLocalName, 1),
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
 				colsepLocalName,
-				'borderRight',
+				'columnSeparator',
 				trueValue,
 				trueValue,
 				falseValue
 			),
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
 				rowsepLocalName,
-				'borderBottom',
+				'rowSeparator',
 				trueValue,
 				trueValue,
 				falseValue
@@ -689,14 +689,14 @@ function getTableDefinitionProperties(options) {
 		setCellNodeAttributeStrategies: [
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
 				rowsepLocalName,
-				'borderBottom',
+				'rowSeparator',
 				trueValue,
 				trueValue,
 				falseValue
 			),
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
 				colsepLocalName,
-				'borderRight',
+				'columnSeparator',
 				trueValue,
 				trueValue,
 				falseValue
