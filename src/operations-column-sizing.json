@@ -18,7 +18,7 @@
 			{
 				"type": "operation/open-table-column-sizing-popover",
 				"data": {
-					"popoverAnchorNodeId": "x__$data('contextNode')/child::*[fonto:is-cals-table(.)]"
+					"popoverAnchorNodeId": "x__$data('contextNode')/child::*[fonto:is-cals-table(.)] => head()"
 				}
 			}
 		]
