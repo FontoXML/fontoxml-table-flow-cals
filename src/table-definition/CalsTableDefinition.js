@@ -145,6 +145,7 @@ const DEFAULT_OPTIONS = {
 	useDefaultContextMenu: true,
 	isCollapsibleQuery: 'false()',
 	isInitiallyCollapsedQuery: 'true()',
+	priority: null,
 
 	// Widget menu operations
 	columnWidgetMenuOperations: [
