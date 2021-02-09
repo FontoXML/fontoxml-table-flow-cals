@@ -760,24 +760,6 @@ export default class CalsTableDefinition extends TableDefinition {
 		return TableDefinition.prototype.buildTableGridModel.call(this, tableElement, blueprint);
 	}
 
-	buildTableGridModelKey(node, blueprint) {
-		const tableElement = evaluateXPathToFirstNode(
-			'descendant-or-self::' + this.selectorParts.table,
-			node,
-			blueprint
-		);
-		return TableDefinition.prototype.buildTableGridModelKey.call(this, tableElement, blueprint);
-	}
-
-	buildColumnSpecificationsKey(tableNode, blueprint) {
-		const tableElement = evaluateXPathToFirstNode(
-			'descendant-or-self::' + this.selectorParts.table,
-			tableNode,
-			blueprint
-		);
-		return TableDefinition.prototype.buildColumnSpecificationsKey.call(this, tableElement);
-	}
-
 	applyToDom(tableGridModel, tableNode, blueprint, format) {
 		let actualTableNode = evaluateXPathToFirstNode(
 			'descendant-or-self::' + this.selectorParts.table,

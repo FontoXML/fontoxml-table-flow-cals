@@ -6,7 +6,6 @@ import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirs
 import getNodeId from 'fontoxml-dom-identification/src/getNodeId.js';
 import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
 import indicesManager from 'fontoxml-indices/src/indicesManager.js';
-import { getGridModelKey } from 'fontoxml-table-flow/src/indexedTableGridModels.js';
 import * as slimdom from 'slimdom';
 
 import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
@@ -550,9 +549,6 @@ describe('toggleCellBorder custom mutation', () => {
 				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
 			);
 
-			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			getGridModelKey(tableDefinition, tableNode, blueprint);
-
 			const cellNodeId = getNodeId(
 				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
 			);
@@ -637,9 +633,6 @@ describe('toggleCellBorder custom mutation', () => {
 				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
 			);
 
-			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			getGridModelKey(tableDefinition, tableNode, blueprint);
-
 			const cellNodeId = getNodeId(
 				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
 			);
@@ -723,9 +716,6 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
 			);
-
-			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			getGridModelKey(tableDefinition, tableNode, blueprint);
 
 			const cellNodeId = getNodeId(
 				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
@@ -894,9 +884,6 @@ describe('toggleCellBorder custom mutation', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(threeByThreeTableWithBorders, documentNode)
 			);
-
-			const tableNode = evaluateXPathToFirstNode('//table', documentNode, blueprint);
-			getGridModelKey(tableDefinition, tableNode, blueprint);
 
 			const cellNodeId = getNodeId(
 				evaluateXPathToFirstNode('//entry[@id="center"]', documentNode, blueprint)
