@@ -243,7 +243,7 @@ function applyDefaults(options, defaultOptions, path, rootOptions) {
 			throw new Error(
 				`The option ${optionKey} in ${path.join(
 					'.'
-				)} is not supported. Please refer to the API docs of https://documentation.fontoxml.com/api/latest/fontoxml-table-flow-cals-33435746.html to see which options are supported.`
+				)} is not supported. Please refer to the API docs of https://documentation.fontoxml.com/latest/fontoxml-table-flow-cals-09573b5e811b to see which options are supported.`
 			);
 		}
 	}
