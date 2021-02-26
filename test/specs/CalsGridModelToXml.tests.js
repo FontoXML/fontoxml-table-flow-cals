@@ -557,10 +557,10 @@ describe('CALS tables: Grid model to XML', () => {
 			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(tableNodeWithNamespace), [
 				'ns1:matrix',
-				{ frame: 'all' },
+				{ 'xmlns:ns1': 'http://example.com/ns1', 'frame': 'all' },
 				[
 					'ns2:tgroup',
-					{ cols: '4' },
+					{ 'xmlns:ns2': 'http://example.com/ns2', 'cols': '4' },
 					[
 						'ns2:colspec',
 						{
@@ -807,129 +807,219 @@ describe('CALS tables: Grid model to XML', () => {
 			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(tableNodeWithNamespace), [
 				'nstable:mtable',
-				{ mframe: 'mall' },
+				{ 'xmlns:nstable': 'http://example.com/nstable', 'mframe': 'mall' },
 				[
 					'nstgroup:mtgroup',
-					{ mcols: '4' },
+					{ 'xmlns:nstgroup': 'http://example.com/nstgroup', 'mcols': '4' },
 					[
 						'nscolspec:mcolspec',
 						{
-							mcolname: 'column-0',
-							mcolnum: '1',
-							mcolsep: 'm1',
-							mrowsep: 'm1',
-							mcolwidth: '1*'
+							'mcolname': 'column-0',
+							'mcolnum': '1',
+							'mcolsep': 'm1',
+							'mrowsep': 'm1',
+							'mcolwidth': '1*',
+							'xmlns:nscolspec': 'http://example.com/nscolspec'
 						}
 					],
 					[
 						'nscolspec:mcolspec',
 						{
-							mcolname: 'column-1',
-							mcolnum: '2',
-							mcolsep: 'm1',
-							mrowsep: 'm1',
-							mcolwidth: '1*'
+							'mcolname': 'column-1',
+							'mcolnum': '2',
+							'mcolsep': 'm1',
+							'mrowsep': 'm1',
+							'mcolwidth': '1*',
+							'xmlns:nscolspec': 'http://example.com/nscolspec'
 						}
 					],
 					[
 						'nscolspec:mcolspec',
 						{
-							mcolname: 'column-2',
-							mcolnum: '3',
-							mcolsep: 'm1',
-							mrowsep: 'm1',
-							mcolwidth: '1*'
+							'mcolname': 'column-2',
+							'mcolnum': '3',
+							'mcolsep': 'm1',
+							'mrowsep': 'm1',
+							'mcolwidth': '1*',
+							'xmlns:nscolspec': 'http://example.com/nscolspec'
 						}
 					],
 					[
 						'nscolspec:mcolspec',
 						{
-							mcolname: 'column-3',
-							mcolnum: '4',
-							mcolsep: 'm1',
-							mrowsep: 'm1',
-							mcolwidth: '1*'
+							'mcolname': 'column-3',
+							'mcolnum': '4',
+							'mcolsep': 'm1',
+							'mrowsep': 'm1',
+							'mcolwidth': '1*',
+							'xmlns:nscolspec': 'http://example.com/nscolspec'
 						}
 					],
 					[
 						'nsthead:mthead',
+						{ 'xmlns:nsthead': 'http://example.com/nsthead' },
 						[
 							'nsrow:mrow',
+							{ 'xmlns:nsrow': 'http://example.com/nsrow' },
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-0' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-0',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-1' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-1',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-2' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-2',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-3' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-3',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							]
 						]
 					],
 					[
 						'nstbody:mtbody',
+						{ 'xmlns:nstbody': 'http://example.com/nstbody' },
 						[
 							'nsrow:mrow',
+							{ 'xmlns:nsrow': 'http://example.com/nsrow' },
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-0' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-0',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-1' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-1',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-2' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-2',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-3' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-3',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							]
 						],
 						[
 							'nsrow:mrow',
+							{ 'xmlns:nsrow': 'http://example.com/nsrow' },
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-0' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-0',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-1' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-1',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-2' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-2',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-3' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-3',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							]
 						],
 						[
 							'nsrow:mrow',
+							{ 'xmlns:nsrow': 'http://example.com/nsrow' },
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-0' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-0',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-1' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-1',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-2' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-2',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							],
 							[
 								'nsentry:mentry',
-								{ mcolsep: 'm1', mrowsep: 'm1', mcolname: 'column-3' }
+								{
+									'mcolsep': 'm1',
+									'mrowsep': 'm1',
+									'mcolname': 'column-3',
+									'xmlns:nsentry': 'http://example.com/nsentry'
+								}
 							]
 						]
 					]

@@ -77,7 +77,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
-			{ frame: 'all' },
+			{ 'xmlns:somenamespace': 'somenamespace-uri', 'frame': 'all' },
 			[
 				'somenamespace:tgroup',
 				{ cols: '1' },
@@ -106,7 +106,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
-			{ frame: 'all' },
+			{ 'xmlns:somenamespace': 'somenamespace-uri', 'frame': 'all' },
 			[
 				'somenamespace:tgroup',
 				{ cols: '4' },
@@ -170,7 +170,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
-			{ frame: 'all' },
+			{ 'xmlns:somenamespace': 'somenamespace-uri', 'frame': 'all' },
 			[
 				'somenamespace:tgroup',
 				{ cols: '4' },
