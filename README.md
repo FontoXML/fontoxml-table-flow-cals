@@ -371,3 +371,16 @@ configureProperties(sxModule, 'self::entry', {
 	]
 });
 ```
+
+# Contributing
+
+This package can serve as a base for custom versions of CALS tables. It can be forked by checking
+it out directly in the `packages` folder of an editor. When making a fork, consider keeping it
+up-to-date with new Fonto Editor versions when they release. Please refer to [our documentation on
+open-source add-ons](https://documentation.fontoxml.com/latest/add-ons-03165378ea7b#id-2cd061ac-8db3-1afa-57db-c07876d3bd11)
+for possible approaches to maintaining and integrating (forks of) this add-on.
+
+The code in this package is complex and is continously optimized for performance. We would like to
+maintain any changes and extensions that you make to this package. We highly appreciate pull
+requests for bug fixes, changes, or extensions to this package, as long as they are stable enough
+and they are in line with the CALS standard.
