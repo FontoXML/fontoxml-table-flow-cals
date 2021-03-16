@@ -365,7 +365,7 @@ function getTableDefinitionProperties(options) {
 			const proportion = proportion1 + proportion2;
 			const fixed = fixed1 + fixed2;
 
-			return proportion !== 0 ? proportion + '*' : '' + fixed !== 0 ? fixed + 'px' : '';
+			return proportion !== 0 ? proportion + '*' : fixed !== 0 ? fixed + 'px' : '';
 		},
 		divideByTwoStrategy: function(width) {
 			const parsedWidth = parseWidth(width);
@@ -373,7 +373,7 @@ function getTableDefinitionProperties(options) {
 			const proportion = parseFloat(parsedWidth[1]);
 			const fixed = parseFloat(parsedWidth[2]);
 
-			return proportion ? proportion / 2 + '*' : '' + fixed ? fixed / 2 + 'px' : '';
+			return proportion ? proportion / 2 + '*' : fixed ? fixed / 2 + 'px' : '';
 		},
 
 		widthsToFractionsStrategy: function(widths) {
