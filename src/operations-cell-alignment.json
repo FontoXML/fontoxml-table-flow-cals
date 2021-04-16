@@ -16,6 +16,9 @@
 		"icon": "align-left",
 		"steps": [
 			{
+				"type": "transform/checkCalsTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -64,6 +67,9 @@
 		"description": "t__Align to the right",
 		"icon": "align-right",
 		"steps": [
+			{
+				"type": "transform/checkCalsTableCell"
+			},
 			{
 				"type": "operation/toggle-cell-data",
 				"data": {
@@ -114,6 +120,9 @@
 		"icon": "align-center",
 		"steps": [
 			{
+				"type": "transform/checkCalsTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -162,6 +171,9 @@
 		"description": "t__Justify the text in the current cells",
 		"icon": "align-justify",
 		"steps": [
+			{
+				"type": "transform/checkCalsTableCell"
+			},
 			{
 				"type": "operation/toggle-cell-data",
 				"data": {
@@ -212,6 +224,9 @@
 		"icon": "align-top",
 		"steps": [
 			{
+				"type": "transform/checkCalsTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -260,6 +275,9 @@
 		"description": "t__Align to the bottom",
 		"icon": "align-bottom",
 		"steps": [
+			{
+				"type": "transform/checkCalsTableCell"
+			},
 			{
 				"type": "operation/toggle-cell-data",
 				"data": {
@@ -310,6 +328,9 @@
 		"description": "t__Align to the middle",
 		"icon": "align-vertical-center",
 		"steps": [
+			{
+				"type": "transform/checkCalsTableCell"
+			},
 			{
 				"type": "operation/toggle-cell-data",
 				"data": {

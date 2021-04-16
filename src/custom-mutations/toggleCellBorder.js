@@ -4,8 +4,13 @@ import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels.js'
 
 export default function toggleCellBorder(argument, blueprint, _format, _selection) {
 	const cellNodeIds = argument.cellNodeIds;
-	if (!cellNodeIds.length) {
-		// When no cells are to be changed; return.
+	const cellNode = cellNodeIds[0] && blueprint.lookup(cellNodeIds[0]);
+	if (
+		!cellNode ||
+		// ancestors: row, tbody/thead, tgroup
+		!evaluateXPathToBoolean('ancestor::*[3][fonto:is-cals-table(.)]', cellNode, blueprint)
+	) {
+		// We allow to execute this when the cellNodeIds are part of a cals table
 		return CustomMutationResult.notAllowed();
 	}
 
@@ -23,7 +28,6 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 	};
 	const isToggle = argument.isToggle;
 
-	const cellNode = blueprint.lookup(cellNodeIds[0]);
 	const tableGridModel = getGridModel(cellNode, blueprint);
 	if (!tableGridModel || tableGridModel.error) {
 		return CustomMutationResult.notAllowed();

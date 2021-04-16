@@ -1,7 +1,11 @@
 import addCustomMutation from 'fontoxml-base-flow/src/addCustomMutation.js';
-import operationsManager from 'fontoxml-operations/src/operationsManager.js';
-import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction.js';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint.js';
+import documentsManager from 'fontoxml-documents/src/documentsManager.js';
 import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
+import addTransform from 'fontoxml-operations/src/addTransform.js';
+import operationsManager from 'fontoxml-operations/src/operationsManager.js';
+import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
+import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction.js';
 import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
 
 import toggleCellBorder from './custom-mutations/toggleCellBorder.js';
@@ -12,6 +16,19 @@ const FONTO_FUNCTIONS = namespaceManager.getNamespaceUri(null, 'fonto');
 export default function install() {
 	addCustomMutation('calsToggleCellBorder', toggleCellBorder);
 
+	/**
+	 * Returns whether the given node is a cals table node. This will return true for both table
+	 * figure node (table) and table defining node (tgroup). If null or nothing is passed, the
+	 * function will return false.
+	 *
+	 * @name fonto:is-cals-table
+	 *
+	 * @category xpath
+	 *
+	 * @param  {node()}  [node]
+	 *
+	 * @return {xs:boolean}  Whether the passed node is a cals table.
+	 */
 	registerCustomXPathFunction(
 		{ namespaceURI: FONTO_FUNCTIONS, localName: 'is-cals-table' },
 		['node()?'],
@@ -65,4 +82,31 @@ export default function install() {
 		'set-cell-vertical-alignment-middle',
 		'cals-set-cell-vertical-alignment-center'
 	);
+
+	addTransform('checkCalsTableCell', function(stepData) {
+		// Whilst we pass all cellNodeIds as parameter, we are only going to use the first one,
+		// because we only need one cell to do the check.
+		const cellNode =
+			stepData.cellNodeIds &&
+			stepData.cellNodeIds.length &&
+			documentsManager.getNodeById(stepData.cellNodeIds[0]);
+
+		if (
+			!(
+				cellNode &&
+				// ancestors: row, tbody/thead, tgroup
+				evaluateXPathToBoolean(
+					'ancestor::*[3][fonto:is-cals-table(.)]',
+					cellNode,
+					readOnlyBlueprint
+				)
+			)
+		) {
+			// If there is no node or the node is not a cals table cell,
+			// disable the operation.
+			stepData.operationState = { enabled: false, active: false };
+		}
+
+		return stepData;
+	});
 }
