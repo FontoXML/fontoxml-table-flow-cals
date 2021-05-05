@@ -732,10 +732,11 @@ function getTableDefinitionProperties(options) {
 
 /**
  * Configures the table definition for CALS tables.
- *
- * @param {CalsTableOptions} options
  */
 export default class CalsTableDefinition extends TableDefinition {
+	/**
+	 * @param {CalsTableOptions} options
+	 */
 	constructor(options) {
 		super(getTableDefinitionProperties(options));
 		this._options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
