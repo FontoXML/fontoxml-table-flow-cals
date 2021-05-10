@@ -1,5 +1,6 @@
 ---
 category: add-on/fontoxml-table-flow-cals
+fontosdk: true
 ---
 
 # CALS table support
