@@ -341,6 +341,7 @@ function getTableDefinitionProperties(options) {
 		selectorParts: selectorParts,
 
 		supportsBorders: true,
+		supportsCellBorder: true,
 		supportsCellAlignment: true,
 		supportsRowSpanningCellsAtBottom: false,
 
