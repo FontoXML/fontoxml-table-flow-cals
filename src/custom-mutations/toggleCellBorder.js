@@ -46,7 +46,6 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 		}
 
 		currentBorders.bottom =
-			borders.bottom &&
 			currentBorders.bottom &&
 			evaluateXPathToBoolean(
 				`./@${tableDefinition.rowsepLocalName} = $setValue`,
@@ -58,7 +57,6 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 			);
 
 		currentBorders.right =
-			borders.right &&
 			currentBorders.right &&
 			evaluateXPathToBoolean(
 				`./@${tableDefinition.colsepLocalName} = $setValue`,
@@ -77,7 +75,6 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 				);
 
 				currentBorders.top =
-					borders.top &&
 					currentBorders.top &&
 					evaluateXPathToBoolean(
 						`./@${tableDefinition.rowsepLocalName} = $setValue`,
@@ -96,7 +93,6 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 				);
 
 				currentBorders.left =
-					borders.left &&
 					currentBorders.left &&
 					evaluateXPathToBoolean(
 						`./@${tableDefinition.colsepLocalName} = $setValue`,
