@@ -753,6 +753,11 @@ export default class CalsTableDefinition extends TableDefinition {
 		this.falseValue = this._options.yesOrNo.noValue;
 	}
 
+	/**
+	* @param  {Node}      node      The node to deserialize
+	* @param  {Blueprint} blueprint The blueprint to use
+	* @return {TableGridModel}
+	*/
 	buildTableGridModel(node, blueprint) {
 		const tableElement = evaluateXPathToFirstNode(
 			'descendant-or-self::' + this.selectorParts.table,
@@ -762,6 +767,13 @@ export default class CalsTableDefinition extends TableDefinition {
 		return TableDefinition.prototype.buildTableGridModel.call(this, tableElement, blueprint);
 	}
 
+	/**
+	 * @param  {TableGridModel} tableGridModel The TableGridModel to serialize
+	 * @param  {Node}           tableNode      The node to serialize to
+	 * @param  {Blueprint}      blueprint      The blueprint to use
+	 * @param  {Format}         format         The format to use
+	 * @return {boolean}
+	 */
 	applyToDom(tableGridModel, tableNode, blueprint, format) {
 		let actualTableNode = evaluateXPathToFirstNode(
 			'descendant-or-self::' + this.selectorParts.table,
