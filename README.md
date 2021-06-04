@@ -358,12 +358,20 @@ configureAsCalsTableElements(sxModule, {
 });
 ```
 
-**Note** that this add-on supports existing tables that contain `tfoot` elements. However, it _does not_ support inserting these elements in new tables.
+**Note** that this add-on supports existing tables that contain `tfoot` elements. However, it _does
+not_ support inserting these elements in new tables.
 
-To configure the markup labels and contextual operations, use the {@link configureProperties} function.
+**Note** that this add-on requires all entries in a table to be present. The cals specification
+allows entry elements to be omitted if they are empty and their location can be deduced from the
+other cells. This add-on requires all entry elements to be present in order to display the table.
 
-The cell element menu button widgets are added based on the existence of contextual operations on cell level. Make sure that only cell-specific operations are added to the cell widget, so that users are only given options relevant to them.
-Example on how you can add this element menu on the widget:
+To configure the markup labels and contextual operations, use the {@link configureProperties}
+function.
+
+The cell element menu button widgets are added based on the existence of contextual operations on
+cell level. Make sure that only cell-specific operations are added to the cell widget, so that users
+are only given options relevant to them.  Example on how you can add this element menu on the
+widget:
 
 ```
 configureProperties(sxModule, 'self::entry', {
