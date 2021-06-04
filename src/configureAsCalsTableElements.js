@@ -279,6 +279,7 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  * @param  {number}          [options.priority]                          Selector priority for all elements configured by this function
  * @param  {Object}          options.table                               Configuration options for
  * the table which is the frame surrounding one or more CALS tables
+ * @param {AllowExpansionInContentView} [options.allowExpansionInContentView] Defines the availability of expansion of a table.
  * @param  {string}          options.table.localName                     The local name of the table
  * @param  {string}          [options.table.namespaceURI]                The namespace URI unique to the table
  * @param  {Object}          [options.tgroup]                            Configuration options for the tgroup which is table defining element
