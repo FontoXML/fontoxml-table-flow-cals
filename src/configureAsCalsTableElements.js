@@ -274,83 +274,112 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  *
  * @category add-on/fontoxml-table-flow-cals
  *
- * @param  {Object}          sxModule
- * @param  {Object}          options
- * @param  {number}          [options.priority]                          Selector priority for all elements configured by this function
- * @param  {Object}          options.table                               Configuration options for
- * the table which is the frame surrounding one or more CALS tables
- * @param {AllowExpansionInContentView} [options.allowExpansionInContentView] Defines the availability of expansion of a table.
- * @param  {string}          options.table.localName                     The local name of the table
- * @param  {string}          [options.table.namespaceURI]                The namespace URI unique to the table
- * @param  {Object}          [options.tgroup]                            Configuration options for the tgroup which is table defining element
- * @param  {Object}          [options.tgroup.localName='tgroup']         The local name of the tgroup
- * @param  {string}          [options.tgroup.namespaceURI]               The namespace URI for the tgroup and its child elements unless their namespaceURIs are set
- * @param  {string}          [options.tgroup.tableFigureFilterSelector]  An optional selector which is used to filter which possible tables should be seen as cals tables for this configuration.
- * @param  {Object}          [options.colspec]                           Configuration options for the colspec
- * @param  {string}          [options.colspec.localName='colspec']       The local name for the colspec
- * @param  {string}          [options.colspec.namespaceURI]              The namespace URI for the colspec
- * @param  {Object}          [options.thead]                             Configuration options for the thead which is the container element of header rows
- * @param  {string}          [options.thead.localName='thead']           The local name for the thead
- * @param  {string}          [options.thead.namespaceURI]                The namespace URI for the thead
- * @param  {Object}          [options.tbody]                             Configuration options for the tbody which is the container element of the normal rows
- * @param  {string}          [options.tbody.localName='tbody']           The local name for the tbody
- * @param  {string}          [options.tbody.namespaceURI]                The namespace URI for the tbody
- * @param  {Object}          [options.row]                               Configuration options for the row
- * @param  {string}          [options.row.localName='row']               The local name for the row
- * @param  {string}          [options.row.namespaceURI]                  The namespace URI for the row
- * @param  {Object}          [options.entry]                             Configuration options for the entry
- * @param  {string}          [options.entry.localName='entry']           The local name for the entry
- * @param  {string}          [options.entry.namespaceURI]                The namespace URI for the entry
- * @param  {string}          [options.entry.defaultTextContainer]        The default text container for the entry
- * @param  {Object}          [options.frame]                             Configuration options for the frame attribute which describes position of outer rulings
- * @param  {string}          [options.frame.localName='frame']           The local name for the frame attribute
- * @param  {string}          [options.frame.allValue='all']              The all value
- * @param  {string}          [options.frame.noneValue='none']            The none value
- * @param  {Object}          [options.cols]                              Configuration options for the cols attribute which shows number of columns in the tgroup
- * @param  {string}          [options.cols.localName='cols']             The local name for the cols attribute
- * @param  {Object}          [options.colname]                           Configuration options for the colname attribute which is the name of the column
- * @param  {string}          [options.colname.localName='colname']       The local name for the colname attribute
- * @param  {Object}          [options.colnum]                            Configuration options for the colnum attribute which is the number of the column
- * @param  {string}          [options.colnum.localName='colnum']         The local name for the colnum attribute
- * @param  {Object}          [options.colwidth]                          Configuration options for the colwidth attribute which determines the width of the column
- * @param  {string}          [options.colwidth.localName='colwidth']     The local name for the colwidth attribute
- * @param  {Object}          [options.colsep]                            Configuration options for the colsep attribute which display the internal vertical column ruling at the right of the entry if other than that false value; if false value, do not display it
- * @param  {string}          [options.colsep.localName='colsep']         The local name for the colsep attribute
- * @param  {Object}          [options.rowsep]                            Configuration options for the rowsep attribute which display the internal horizontal row ruling at the bottom of the entry if other than that false value; if false value, do not display it
- * @param  {string}          [options.rowsep.localName='rowsep']         The local name for the rowsep attribute
- * @param  {Object}          [options.morerows]                          Configuration options for the morerows attribute which is the number of additional rows in a vertical straddle
- * @param  {string}          [options.morerows.localName='morerows']     The local name for the morerows attribute
- * @param  {Object}          [options.namest]                            Configuration options for the namest attribute which is the name of leftmost column of span
- * @param  {string}          [options.namest.localName='namest']         The local name for the namest attribute
- * @param  {Object}          [options.nameend]                           Configuration options for the nameend attribute which is the name of rightmost column of span
- * @param  {string}          [options.nameend.localName='nameend']       The local name for the nameend attribute
- * @param  {Object}          [options.align]                             Configuration options for the align attribute which determines the text horizontal position within the entry
- * @param  {string}          [options.align.localName='align']           The local name for the align attribute
- * @param  {string}          [options.align.leftValue='left']            The left alignment value
- * @param  {string}          [options.align.rightValue='right']          The right alignment value
- * @param  {string}          [options.align.centerValue='center']        The center alignment value
- * @param  {string}          [options.align.justifyValue='justify']      The justify alignment value
- * @param  {Object}          [options.valign]                            Configuration options for the valign attribute which determines the text vertical positioning within the entry
- * @param  {string}          [options.valign.localName='valign']         The local name for the valign attribute
- * @param  {string}          [options.valign.leftValue='left']           The top vertical alignment value
- * @param  {string}          [options.valign.rightValue='right']         The bottom vertical alignment value
- * @param  {string}          [options.valign.centerValue='center']       The middle vertical alignment value
- * @param  {Object}          [options.yesOrNo]                           Defines the true and false values for attributes like colsep, rowsep
- * @param  {string}          [options.yesOrNo.yesValue='1']              The true value
- * @param  {string}          [options.yesOrNo.noValue='0']               The false value
+ * @param  {Object}                             sxModule
+ * @param  {Object}                             options
+ * @param  {number}                             [options.priority]                          Selector priority for all elements configured by this function.
+ * @param  {Object}                             options.table                               Configuration options for
+ *                                                                                          the table which is the frame surrounding one or more CALS tables.
+ * @param  {AllowExpansionInContentView}        [options.allowExpansionInContentView]       Defines the availability of expansion of a table.
+ * @param  {string}                             options.table.localName                     The local name of the table.
+ * @param  {string}                             [options.table.namespaceURI]                The namespace URI unique to the table.
+ * @param  {Object}                             [options.tgroup]                            Configuration options for the tgroup which is table defining element.
+ * @param  {Object}                             [options.tgroup.localName='tgroup']         The local name of the tgroup.
+ * @param  {string}                             [options.tgroup.namespaceURI]               The namespace URI for the tgroup and its child elements unless their
+ *                                                                                          namespaceURIs are set.
+ * @param  {string}                             [options.tgroup.tableFigureFilterSelector]  An optional selector which is used to filter which possible tables should
+ *                                                                                          be seen as cals tables for this configuration.
+ * @param  {Object}                             [options.colspec]                           Configuration options for the colspec.
+ * @param  {string}                             [options.colspec.localName='colspec']       The local name for the colspec.
+ * @param  {string}                             [options.colspec.namespaceURI]              The namespace URI for the colspec.
+ * @param  {Object}                             [options.thead]                             Configuration options for the thead which is the container element of header rows.
+ * @param  {string}                             [options.thead.localName='thead']           The local name for the thead.
+ * @param  {string}                             [options.thead.namespaceURI]                The namespace URI for the thead.
+ * @param  {Object}                             [options.tbody]                             Configuration options for the tbody which is the container element of the normal rows.
+ * @param  {string}                             [options.tbody.localName='tbody']           The local name for the tbody.
+ * @param  {string}                             [options.tbody.namespaceURI]                The namespace URI for the tbody.
+ * @param  {Object}                             [options.row]                               Configuration options for the row.
+ * @param  {string}                             [options.row.localName='row']               The local name for the row.
+ * @param  {string}                             [options.row.namespaceURI]                  The namespace URI for the row.
+ * @param  {Object}                             [options.entry]                             Configuration options for the entry.
+ * @param  {string}                             [options.entry.localName='entry']           The local name for the entry.
+ * @param  {string}                             [options.entry.namespaceURI]                The namespace URI for the entry.
+ * @param  {string}                             [options.entry.defaultTextContainer]        The default text container for the entry.
+ * @param  {Object}                             [options.frame]                             Configuration options for the frame attribute which describes
+ *                                                                                          position of outer rulings.
+ * @param  {string}                             [options.frame.localName='frame']           The local name for the frame attribute.
+ * @param  {string}                             [options.frame.allValue='all']              The all value.
+ * @param  {string}                             [options.frame.noneValue='none']            The none value.
+ * @param  {Object}                             [options.cols]                              Configuration options for the cols attribute which shows number of
+ *                                                                                          columns in the tgroup.
+ * @param  {string}                             [options.cols.localName='cols']             The local name for the cols attribute.
+ * @param  {Object}                             [options.colname]                           Configuration options for the colname attribute which is the name of the column.
+ * @param  {string}                             [options.colname.localName='colname']       The local name for the colname attribute.
+ * @param  {Object}                             [options.colnum]                            Configuration options for the colnum attribute which is the number of the column.
+ * @param  {string}                             [options.colnum.localName='colnum']         The local name for the colnum attribute.
+ * @param  {Object}                             [options.colwidth]                          Configuration options for the colwidth attribute which determines the
+ *                                                                                          width of the column.
+ * @param  {string}                             [options.colwidth.localName='colwidth']     The local name for the colwidth attribute.
+ * @param  {Object}                             [options.colsep]                            Configuration options for the colsep attribute which display the internal
+ *                                                                                          vertical column ruling at the right of the entry if other than that false value;
+ *                                                                                          if false value, do not display it.
+ * @param  {string}                             [options.colsep.localName='colsep']         The local name for the colsep attribute.
+ * @param  {Object}                             [options.rowsep]                            Configuration options for the rowsep attribute which display the internal
+ *                                                                                          horizontal row ruling at the bottom of the entry if other than that false
+ *                                                                                          value; if false value, do not display it.
+ * @param  {string}                             [options.rowsep.localName='rowsep']         The local name for the rowsep attribute.
+ * @param  {Object}                             [options.morerows]                          Configuration options for the morerows attribute which is the number of
+ *                                                                                          additional rows in a vertical straddle.
+ * @param  {string}                             [options.morerows.localName='morerows']     The local name for the morerows attribute.
+ * @param  {Object}                             [options.namest]                            Configuration options for the namest attribute which is the name of leftmost
+ *                                                                                          column of span.
+ * @param  {string}                             [options.namest.localName='namest']         The local name for the namest attribute.
+ * @param  {Object}                             [options.nameend]                           Configuration options for the nameend attribute which is the name of
+ *                                                                                          rightmost column of span.
+ * @param  {string}                             [options.nameend.localName='nameend']       The local name for the nameend attribute.
+ * @param  {Object}                             [options.align]                             Configuration options for the align attribute which determines the text 
+ *                                                                                          horizontal position within the entry.
+ * @param  {string}                             [options.align.localName='align']           The local name for the align attribute.
+ * @param  {string}                             [options.align.leftValue='left']            The left alignment value.
+ * @param  {string}                             [options.align.rightValue='right']          The right alignment value.
+ * @param  {string}                             [options.align.centerValue='center']        The center alignment value.
+ * @param  {string}                             [options.align.justifyValue='justify']      The justify alignment value.
+ * @param  {Object}                             [options.valign]                            Configuration options for the valign attribute which determines the
+ *                                                                                          text vertical positioning within the entry.
+ * @param  {string}                             [options.valign.localName='valign']         The local name for the valign attribute.
+ * @param  {string}                             [options.valign.leftValue='left']           The top vertical alignment value.
+ * @param  {string}                             [options.valign.rightValue='right']         The bottom vertical alignment value.
+ * @param  {string}                             [options.valign.centerValue='center']       The middle vertical alignment value.
+ * @param  {Object}                             [options.yesOrNo]                           Defines the true and false values for attributes like colsep, rowsep.
+ * @param  {string}                             [options.yesOrNo.yesValue='1']              The true value.
+ * @param  {string}                             [options.yesOrNo.noValue='0']               The false value.
  *
- * @param  {boolean}         [options.showInsertionWidget]               To add insertion buttons which insert a column or a row to a specific place, default false.
- * @param  {boolean}         [options.showHighlightingWidget]            To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
- * @param  {WidgetSubAreaByName|Widget[]|null}  [options.columnBefore]   Used to add one or multiple
- * widgets before each column. The context node of each column widget is the colspec element. {@link fonto-documentation/docs/editor/api/index.xml#id-9d2b1ad5-bbc1-6c44-d491-16dc213c53f2 All widgets} are supported.
- * @param  {WidgetSubAreaByName|Widget[]|null}  [options.rowBefore]      Used to add a single icon widget
- * before each row using {@link createIconWidget}. Row widgets are linked to the row elements of
- * the table. Any widget can be added but only icon widget is supported.
- * @param  {Object[]|null}   [options.columnWidgetMenuOperations]        To configure table widget menu for columns. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
- * @param  {Object[]|null}   [options.rowWidgetMenuOperations]           To configure table widget menu for rows. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
- * @param  {boolean}         [options.useDefaultContextMenu=true]        Whether or not to use a preconfigured context menu for elements within the table
- * @param  {XPathQuery}      [options.isCollapsibleQuery=false()]        The {@link XPathQuery} to determine whether or not a table has the ability to be collapsible. Optional, defaults to 'false()'. $rowCount and $columnCount helper variables can optionally be used in this XPath expression which evaluate to the total rows and total columns in a table.
- * @param  {XPathQuery}      [options.isInitiallyCollapsedQuery=true()]  The {@link XPathQuery} to determine whether or not a table should initially start off as collapsed. Tables must first have the ability to be collapsible with isCollapsibleQuery. Optional, defaults to 'true()'. $rowCount and $columnCount helper variables can optionally be used in this XPath expression which evaluate to the total rows and total columns in a table.
+ * @param  {boolean}                            [options.showInsertionWidget]               To add insertion buttons which insert a column or a row to a specific place,
+ *                                                                                          default false.
+ * @param  {boolean}                            [options.showHighlightingWidget]            To add highlighting bars which highlight columns and rows, and provide
+ *                                                                                          operations popover, default false.
+ * @param  {WidgetSubAreaByName|Widget[]|null}  [options.columnBefore]                      Used to add one or multiple widgets before each column. The context node of
+ *                                                                                          each column widget is the colspec element.
+ *                                                                                          {@link fonto-documentation/docs/editor/api/index.xml#id-9d2b1ad5-bbc1-6c44-d491-16dc213c53f2 All widgets}
+ *                                                                                          are supported.
+ * @param  {WidgetSubAreaByName|Widget[]|null}  [options.rowBefore]                         Used to add a single icon widget before each row using {@link createIconWidget}.
+ *                                                                                          Row widgets are linked to the row elements of the table. Any widget can be
+ *                                                                                          added but only icon widget is supported.
+ * @param  {Object[]|null}                      [options.columnWidgetMenuOperations]        To configure table widget menu for columns. It accepts an array of
+ *                                                                                          {@link ContextualOperation}s, but only supports "name" and "contents" properties.
+ *                                                                                          It is allowed to have only one layer of menu.
+ * @param  {Object[]|null}                      [options.rowWidgetMenuOperations]           To configure table widget menu for rows. It accepts an array of
+ *                                                                                          {@link ContextualOperation}s, but only supports "name" and "contents" properties.
+ *                                                                                          It is allowed to have only one layer of menu.
+ * @param  {boolean}                            [options.useDefaultContextMenu=true]        Whether or not to use a preconfigured context menu for elements within the table.
+ * @param  {XPathQuery}                         [options.isCollapsibleQuery=false()]        The {@link XPathQuery} to determine whether or not a table has the ability
+ *                                                                                          to be collapsible. Optional, defaults to 'false()'. $rowCount and $columnCount
+ *                                                                                          helper variables can optionally be used in this XPath expression which evaluate
+ *                                                                                          to the total rows and total columns in a table.
+ * @param  {XPathQuery}                         [options.isInitiallyCollapsedQuery=true()]  The {@link XPathQuery} to determine whether or not a table should initially
+ *                                                                                          start off as collapsed. Tables must first have the ability to be collapsible
+ *                                                                                          with isCollapsibleQuery. Optional, defaults to 'true()'. $rowCount and
+ *                                                                                          $columnCount helper variables can optionally be used in this XPath expression
+ *                                                                                          which evaluate to the total rows and total columns in a table.
  */
 export default function configureAsCalsTableElements(sxModule, options) {
 	options = options || {};
