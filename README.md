@@ -318,7 +318,7 @@ configureAsCalsTableElements(sxModule, {
 
 	// In CALS table, there are some operations in the column/row widget menus as default. But they can be overridden.
  	columnWidgetMenuOperations: [
-		 {
+		{
 			contents: [
 				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
 				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
@@ -357,6 +357,13 @@ configureAsCalsTableElements(sxModule, {
 	]
 });
 ```
+
+**Note** that this add-on allows to create CALS tables based on its 
+{@link https://www.oasis-open.org/specs/a502.htm specified standard}. However, the `align` attribute
+on a `colspec` element is not currently supported. As an alternative to establish column alignment on 
+these kind of tables, you can create a column widget, that will call to one of cell alignment 
+operations for each cell of a column. This can be done by establishing a column widget operations menu 
+through `columnWidgetMenuOperations` option in CALS table configuration.
 
 **Note** that this add-on supports existing tables that contain `tfoot` elements. However, it _does
 not_ support inserting these elements in new tables.
