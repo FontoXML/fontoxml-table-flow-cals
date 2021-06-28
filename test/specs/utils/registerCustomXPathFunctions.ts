@@ -1,4 +1,4 @@
-import install from 'fontoxml-table-flow-cals/src/install.js';
+import install from 'fontoxml-table-flow-cals/src/install';
 
 let isRegistered = false;
 

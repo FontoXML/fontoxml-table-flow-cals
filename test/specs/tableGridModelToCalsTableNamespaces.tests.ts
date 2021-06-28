@@ -1,29 +1,34 @@
-import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
-import CoreDocument from 'fontoxml-core/src/Document.js';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
-import indicesManager from 'fontoxml-indices/src/indicesManager.js';
+import Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import CoreDocument from 'fontoxml-core/src/Document';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
+import indicesManager from 'fontoxml-indices/src/indicesManager';
 import * as slimdom from 'slimdom';
 
-import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
 
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
 
 namespaceManager.addNamespace('somenamespace', 'somenamespace-uri');
 
 const stubFormat = {
 	synthesizer: {
-		completeStructure: () => true
+		completeStructure: () => true,
 	},
 	metadata: {
-		get: (_option, _node) => false
+		get: (_option, _node) => false,
 	},
 	validator: {
-		canContain: () => true
-	}
+		canContain: () => true,
+	},
 };
 
 describe('tableGridModelToCalsTable with namespaces', () => {
-	let documentNode, coreDocument, blueprint, tgroupNode, calsTableStructure, createTable;
+	let documentNode,
+		coreDocument,
+		blueprint,
+		tgroupNode,
+		calsTableStructure,
+		createTable;
 
 	beforeEach(() => {
 		documentNode = new slimdom.Document();
@@ -31,7 +36,11 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 
 		blueprint = new Blueprint(coreDocument.dom);
 
-		tgroupNode = namespaceManager.createElementNS(documentNode, 'somenamespace-uri', 'tgroup');
+		tgroupNode = namespaceManager.createElementNS(
+			documentNode,
+			'somenamespace-uri',
+			'tgroup'
+		);
 		const tbodyNode = namespaceManager.createElementNS(
 			documentNode,
 			'somenamespace-uri',
@@ -46,11 +55,11 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		calsTableStructure = new CalsTableDefinition({
 			table: {
 				localName: 'table',
-				namespaceURI: 'somenamespace-uri'
+				namespaceURI: 'somenamespace-uri',
 			},
 			tgroup: {
-				namespaceURI: 'somenamespace-uri'
-			}
+				namespaceURI: 'somenamespace-uri',
+			},
 		});
 		createTable = calsTableStructure.getTableGridModelBuilder();
 
@@ -77,16 +86,22 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
-			{ 'xmlns:somenamespace': 'somenamespace-uri', 'frame': 'all' },
+			{ 'xmlns:somenamespace': 'somenamespace-uri', frame: 'all' },
 			[
 				'somenamespace:tgroup',
 				{ cols: '1' },
-				['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*' }],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-0', colnum: '1', colwidth: '1*' },
+				],
 				[
 					'somenamespace:tbody',
-					['somenamespace:row', ['somenamespace:entry', { colname: 'column-0' }]]
-				]
-			]
+					[
+						'somenamespace:row',
+						['somenamespace:entry', { colname: 'column-0' }],
+					],
+				],
+			],
 		]);
 	});
 
@@ -106,14 +121,26 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
-			{ 'xmlns:somenamespace': 'somenamespace-uri', 'frame': 'all' },
+			{ 'xmlns:somenamespace': 'somenamespace-uri', frame: 'all' },
 			[
 				'somenamespace:tgroup',
 				{ cols: '4' },
-				['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*' }],
-				['somenamespace:colspec', { colname: 'column-1', colnum: '2', colwidth: '1*' }],
-				['somenamespace:colspec', { colname: 'column-2', colnum: '3', colwidth: '1*' }],
-				['somenamespace:colspec', { colname: 'column-3', colnum: '4', colwidth: '1*' }],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-0', colnum: '1', colwidth: '1*' },
+				],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-1', colnum: '2', colwidth: '1*' },
+				],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-2', colnum: '3', colwidth: '1*' },
+				],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-3', colnum: '4', colwidth: '1*' },
+				],
 				[
 					'somenamespace:thead',
 					[
@@ -121,8 +148,8 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 						['somenamespace:entry', { colname: 'column-0' }],
 						['somenamespace:entry', { colname: 'column-1' }],
 						['somenamespace:entry', { colname: 'column-2' }],
-						['somenamespace:entry', { colname: 'column-3' }]
-					]
+						['somenamespace:entry', { colname: 'column-3' }],
+					],
 				],
 				[
 					'somenamespace:tbody',
@@ -131,17 +158,17 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 						['somenamespace:entry', { colname: 'column-0' }],
 						['somenamespace:entry', { colname: 'column-1' }],
 						['somenamespace:entry', { colname: 'column-2' }],
-						['somenamespace:entry', { colname: 'column-3' }]
+						['somenamespace:entry', { colname: 'column-3' }],
 					],
 					[
 						'somenamespace:row',
 						['somenamespace:entry', { colname: 'column-0' }],
 						['somenamespace:entry', { colname: 'column-1' }],
 						['somenamespace:entry', { colname: 'column-2' }],
-						['somenamespace:entry', { colname: 'column-3' }]
-					]
-				]
-			]
+						['somenamespace:entry', { colname: 'column-3' }],
+					],
+				],
+			],
 		]);
 	});
 
@@ -170,14 +197,26 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		indicesManager.getIndexSet().commitMerge();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 			'somenamespace:table',
-			{ 'xmlns:somenamespace': 'somenamespace-uri', 'frame': 'all' },
+			{ 'xmlns:somenamespace': 'somenamespace-uri', frame: 'all' },
 			[
 				'somenamespace:tgroup',
 				{ cols: '4' },
-				['somenamespace:colspec', { colname: 'column-0', colnum: '1', colwidth: '1*' }],
-				['somenamespace:colspec', { colname: 'column-1', colnum: '2', colwidth: '1*' }],
-				['somenamespace:colspec', { colname: 'column-2', colnum: '3', colwidth: '1*' }],
-				['somenamespace:colspec', { colname: 'column-3', colnum: '4', colwidth: '1*' }],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-0', colnum: '1', colwidth: '1*' },
+				],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-1', colnum: '2', colwidth: '1*' },
+				],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-2', colnum: '3', colwidth: '1*' },
+				],
+				[
+					'somenamespace:colspec',
+					{ colname: 'column-3', colnum: '4', colwidth: '1*' },
+				],
 				[
 					'somenamespace:thead',
 					[
@@ -185,8 +224,8 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 						['somenamespace:entry', { colname: 'column-0' }],
 						['somenamespace:entry', { colname: 'column-1' }],
 						['somenamespace:entry', { colname: 'column-2' }],
-						['somenamespace:entry', { colname: 'column-3' }]
-					]
+						['somenamespace:entry', { colname: 'column-3' }],
+					],
 				],
 				[
 					'somenamespace:tbody',
@@ -198,18 +237,18 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 							{
 								namest: 'column-1',
 								nameend: 'column-2',
-								morerows: '1'
-							}
+								morerows: '1',
+							},
 						],
-						['somenamespace:entry', { colname: 'column-3' }]
+						['somenamespace:entry', { colname: 'column-3' }],
 					],
 					[
 						'somenamespace:row',
 						['somenamespace:entry', { colname: 'column-0' }],
-						['somenamespace:entry', { colname: 'column-3' }]
-					]
-				]
-			]
+						['somenamespace:entry', { colname: 'column-3' }],
+					],
+				],
+			],
 		]);
 	});
 });

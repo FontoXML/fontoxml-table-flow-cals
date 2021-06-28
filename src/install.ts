@@ -1,19 +1,19 @@
-import addCustomMutation from 'fontoxml-base-flow/src/addCustomMutation.js';
-import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint.js';
-import documentsManager from 'fontoxml-documents/src/documentsManager.js';
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
-import addTransform from 'fontoxml-operations/src/addTransform.js';
-import operationsManager from 'fontoxml-operations/src/operationsManager.js';
-import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
-import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction.js';
-import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
+import addCustomMutation from 'fontoxml-base-flow/src/addCustomMutation';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
+import documentsManager from 'fontoxml-documents/src/documentsManager';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
+import addTransform from 'fontoxml-operations/src/addTransform';
+import operationsManager from 'fontoxml-operations/src/operationsManager';
+import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
+import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction';
+import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 
-import toggleCellBorder from './custom-mutations/toggleCellBorder.js';
-import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
+import toggleCellBorder from './custom-mutations/toggleCellBorder';
+import CalsTableDefinition from './table-definition/CalsTableDefinition';
 
 const FONTO_FUNCTIONS = namespaceManager.getNamespaceUri(null, 'fonto');
 
-export default function install() {
+export default function install(): void {
 	addCustomMutation('calsToggleCellBorder', toggleCellBorder);
 
 	/**
@@ -38,10 +38,11 @@ export default function install() {
 				return false;
 			}
 
-			const tableDefinition = tableDefinitionManager.getTableDefinitionForNode(
-				node,
-				dynamicContext.domFacade
-			);
+			const tableDefinition =
+				tableDefinitionManager.getTableDefinitionForNode(
+					node,
+					dynamicContext.domFacade
+				);
 
 			return !!(
 				tableDefinition &&
@@ -51,8 +52,14 @@ export default function install() {
 		}
 	);
 
-	operationsManager.addAlternativeOperation('set-cell-border-none', 'cals-set-cell-border-none');
-	operationsManager.addAlternativeOperation('set-cell-border-all', 'cals-set-cell-border-all');
+	operationsManager.addAlternativeOperation(
+		'set-cell-border-none',
+		'cals-set-cell-border-none'
+	);
+	operationsManager.addAlternativeOperation(
+		'set-cell-border-all',
+		'cals-set-cell-border-all'
+	);
 
 	operationsManager.addAlternativeOperation(
 		'set-cell-horizontal-alignment-left',
@@ -83,7 +90,7 @@ export default function install() {
 		'cals-set-cell-vertical-alignment-center'
 	);
 
-	addTransform('checkCalsTableCell', function(stepData) {
+	addTransform('checkCalsTableCell', function (stepData) {
 		// Whilst we pass all cellNodeIds as parameter, we are only going to use the first one,
 		// because we only need one cell to do the check.
 		const cellNode =

@@ -1,5 +1,7 @@
-import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements.js';
-import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
+import type { Widget, WidgetSubAreaByName } from 'fontoxml-families/src/types';
+import type { XPathQuery } from 'fontoxml-selectors/src/types';
+import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
+import CalsTableDefinition from './table-definition/CalsTableDefinition';
 
 /**
  * Configure the cals table implementation
@@ -336,7 +338,7 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  * @param  {Object}                             [options.nameend]                           Configuration options for the nameend attribute which is the name of
  *                                                                                          rightmost column of span.
  * @param  {string}                             [options.nameend.localName='nameend']       The local name for the nameend attribute.
- * @param  {Object}                             [options.align]                             Configuration options for the align attribute which determines the text 
+ * @param  {Object}                             [options.align]                             Configuration options for the align attribute which determines the text
  *                                                                                          horizontal position within the entry.
  * @param  {string}                             [options.align.localName='align']           The local name for the align attribute.
  * @param  {string}                             [options.align.leftValue='left']            The left alignment value.
@@ -381,14 +383,108 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition.js';
  *                                                                                          $columnCount helper variables can optionally be used in this XPath expression
  *                                                                                          which evaluate to the total rows and total columns in a table.
  */
-export default function configureAsCalsTableElements(sxModule, options) {
+export default function configureAsCalsTableElements(
+	sxModule: Object,
+	options: {
+		priority?: number;
+		table: Object;
+		allowExpansionInContentView?: {
+			localName: string;
+			namespaceURI?: string;
+		};
+		tgroup?: {
+			localName?: Object;
+			namespaceURI?: string;
+			tableFigureFilterSelector?: string;
+		};
+		colspec?: {
+			localName?: string;
+			namespaceURI?: string;
+		};
+		thead?: {
+			localName?: string;
+			namespaceURI?: string;
+		};
+		tbody?: {
+			localName?: string;
+			namespaceURI?: string;
+		};
+		row?: {
+			localName?: string;
+			namespaceURI?: string;
+		};
+		entry?: {
+			localName?: string;
+			namespaceURI?: string;
+			defaultTextContainer?: string;
+		};
+		frame?: {
+			localName?: string;
+			allValue?: string;
+			noneValue?: string;
+		};
+		cols?: {
+			localName?: string;
+		};
+		colname?: {
+			localName?: string;
+		};
+		colnum?: {
+			localName?: string;
+		};
+		colwidth?: {
+			localName?: string;
+		};
+		colsep?: {
+			localName?: string;
+		};
+		rowsep?: {
+			localName?: string;
+		};
+		morerows?: {
+			localName?: string;
+		};
+		namest?: {
+			localName?: string;
+		};
+		nameend?: {
+			localName?: string;
+		};
+		align?: {
+			localName?: string;
+			leftValue?: string;
+			rightValue?: string;
+			centerValue?: string;
+			justifyValue?: string;
+		};
+		valign?: {
+			localName?: string;
+			leftValue?: string;
+			rightValue?: string;
+			centerValue?: string;
+		};
+		yesOrNo?: {
+			yesValue?: string;
+			noValue?: string;
+		};
+		showInsertionWidget?: boolean;
+		showHighlightingWidget?: boolean;
+		columnBefore?: WidgetSubAreaByName | Array<Widget> | null;
+		rowBefore?: WidgetSubAreaByName | Array<Widget> | null;
+		columnWidgetMenuOperations?: Array<Object> | null;
+		rowWidgetMenuOperations?: Array<Object> | null;
+		useDefaultContextMenu?: boolean;
+		isCollapsibleQuery?: XPathQuery;
+		isInitiallyCollapsedQuery?: XPathQuery;
+	}
+): void {
 	options = options || {};
 	const tableDefinition = new CalsTableDefinition(options);
 	options['cell'] = {
 		defaultTextContainer:
 			options.entry && options.entry.defaultTextContainer
 				? options.entry.defaultTextContainer
-				: null
+				: null,
 	};
 	configureAsTableElements(sxModule, options, tableDefinition);
 }

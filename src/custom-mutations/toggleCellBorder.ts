@@ -1,14 +1,23 @@
-import CustomMutationResult from 'fontoxml-base-flow/src/CustomMutationResult.js';
-import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
-import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels.js';
+import CustomMutationResult from 'fontoxml-base-flow/src/CustomMutationResult';
+import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
+import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels';
 
-export default function toggleCellBorder(argument, blueprint, _format, _selection) {
+export default function toggleCellBorder(
+	argument: $TSFixMeAny,
+	blueprint: $TSFixMeAny,
+	_format: $TSFixMeAny,
+	_selection: $TSFixMeAny
+): $TSFixMeAny {
 	const cellNodeIds = argument.cellNodeIds;
 	const cellNode = cellNodeIds[0] && blueprint.lookup(cellNodeIds[0]);
 	if (
 		!cellNode ||
 		// ancestors: row, tbody/thead, tgroup
-		!evaluateXPathToBoolean('ancestor::*[3][fonto:is-cals-table(.)]', cellNode, blueprint)
+		!evaluateXPathToBoolean(
+			'ancestor::*[3][fonto:is-cals-table(.)]',
+			cellNode,
+			blueprint
+		)
 	) {
 		// We allow to execute this when the cellNodeIds are part of a cals table
 		return CustomMutationResult.notAllowed();
@@ -18,13 +27,13 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 		bottom: argument.bottom,
 		right: argument.right,
 		top: argument.top,
-		left: argument.left
+		left: argument.left,
 	};
 	const currentBorders = {
 		bottom: true,
 		right: true,
 		top: true,
-		left: true
+		left: true,
 	};
 	const isToggle = argument.isToggle;
 
@@ -40,7 +49,9 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 	const falseValue = tableDefinition.falseValue;
 
 	for (const cellNodeId of cellNodeIds) {
-		const cellInfo = tableGridModel.getCellByNode(blueprint.lookup(cellNodeId));
+		const cellInfo = tableGridModel.getCellByNode(
+			blueprint.lookup(cellNodeId)
+		);
 		if (!cellInfo) {
 			return CustomMutationResult.notAllowed();
 		}
@@ -52,7 +63,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 				cellInfo.element,
 				blueprint,
 				{
-					setValue: borders.bottom ? trueValue : falseValue
+					setValue: borders.bottom ? trueValue : falseValue,
 				}
 			);
 
@@ -63,7 +74,7 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 				cellInfo.element,
 				blueprint,
 				{
-					setValue: borders.right ? trueValue : falseValue
+					setValue: borders.right ? trueValue : falseValue,
 				}
 			);
 
@@ -105,11 +116,14 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 	}
 
 	const isActive = Object.keys(borders).every(
-		direction => borders[direction] === undefined || currentBorders[direction]
+		(direction) =>
+			borders[direction] === undefined || currentBorders[direction]
 	);
 
 	for (const cellNodeId of cellNodeIds) {
-		const cellInfo = tableGridModel.getCellByNode(blueprint.lookup(cellNodeId));
+		const cellInfo = tableGridModel.getCellByNode(
+			blueprint.lookup(cellNodeId)
+		);
 		if (!cellInfo) {
 			return CustomMutationResult.notAllowed();
 		}
@@ -154,7 +168,9 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 				blueprint.setAttribute(
 					neighborCellInfo.element,
 					tableDefinition.rowsepLocalName,
-					(isToggle ? !isActive : borders.top) ? trueValue : falseValue
+					(isToggle ? !isActive : borders.top)
+						? trueValue
+						: falseValue
 				);
 			}
 		}
@@ -171,7 +187,9 @@ export default function toggleCellBorder(argument, blueprint, _format, _selectio
 				blueprint.setAttribute(
 					neighborCellInfo.element,
 					tableDefinition.colsepLocalName,
-					(isToggle ? !isActive : borders.left) ? trueValue : falseValue
+					(isToggle ? !isActive : borders.left)
+						? trueValue
+						: falseValue
 				);
 			}
 		}

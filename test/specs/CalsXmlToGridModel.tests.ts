@@ -1,12 +1,12 @@
-import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
-import CoreDocument from 'fontoxml-core/src/Document.js';
-import getNodeId from 'fontoxml-dom-identification/src/getNodeId.js';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
-import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
-import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions.js';
+import Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import CoreDocument from 'fontoxml-core/src/Document';
+import getNodeId from 'fontoxml-dom-identification/src/getNodeId';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
+import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
+import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions';
 import * as slimdom from 'slimdom';
 
-import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition.js';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
 
 registerCustomXPathFunctions();
 
@@ -23,8 +23,8 @@ describe('CALS tables: XML to GridModel', () => {
 		blueprint = new Blueprint(coreDocument.dom);
 		tableDefinition = new CalsTableDefinition({
 			table: {
-				localName: 'table'
-			}
+				localName: 'table',
+			},
 		});
 		tableDefinitionManager.addTableDefinition(tableDefinition);
 	});
@@ -35,14 +35,22 @@ describe('CALS tables: XML to GridModel', () => {
 				jsonMLMapper.parse(
 					[
 						'table',
-						['tgroup', { cols: '1' }, ['colspec'], ['tbody', ['row', ['entry']]]]
+						[
+							'tgroup',
+							{ cols: '1' },
+							['colspec'],
+							['tbody', ['row', ['entry']]],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tgroupElement = documentNode.firstChild.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 1);
@@ -64,19 +72,46 @@ describe('CALS tables: XML to GridModel', () => {
 							['colspec'],
 							[
 								'tbody',
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']]
-							]
-						]
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+							],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tgroupElement = documentNode.firstChild.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -98,19 +133,46 @@ describe('CALS tables: XML to GridModel', () => {
 							['colspec', { colnum: '3' }],
 							[
 								'tbody',
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']]
-							]
-						]
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+							],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tgroupElement = documentNode.firstChild.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -134,10 +196,13 @@ describe('CALS tables: XML to GridModel', () => {
 								[
 									'row',
 									['entry'],
-									['?someProcessingInstruction', 'someContent'],
+									[
+										'?someProcessingInstruction',
+										'someContent',
+									],
 									['entry'],
 									['entry'],
-									['entry']
+									['entry'],
 								],
 								[
 									'row',
@@ -145,19 +210,34 @@ describe('CALS tables: XML to GridModel', () => {
 									['entry'],
 									['entry'],
 									['!', 'some comment'],
-									['entry']
+									['entry'],
 								],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']]
-							]
-						]
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+							],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tgroupElement = documentNode.firstChild.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -179,21 +259,51 @@ describe('CALS tables: XML to GridModel', () => {
 							['colspec', { colnum: '1' }],
 							['colspec', { colnum: '2' }],
 							['colspec', { colnum: '3' }],
-							['thead', ['row', ['entry'], ['entry'], ['entry'], ['entry']]],
+							[
+								'thead',
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+							],
 							[
 								'tbody',
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']]
-							]
-						]
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+							],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tgroupElement = documentNode.firstChild.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -215,22 +325,49 @@ describe('CALS tables: XML to GridModel', () => {
 							['colspec', { colnum: '3' }],
 							[
 								'thead',
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']]
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
 							],
 							[
 								'tbody',
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']]
-							]
-						]
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+							],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tgroupElement = documentNode.firstChild.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -251,21 +388,54 @@ describe('CALS tables: XML to GridModel', () => {
 							['colspec', { colnum: '1' }],
 							['colspec', { colnum: '2' }],
 							['colspec', { colnum: '3' }],
-							['thead', ['row', ['entry'], ['entry'], ['entry'], ['entry']]],
+							[
+								'thead',
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+							],
 							[
 								'tbody',
-								['row', ['entry'], ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry'], ['entry']]
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
 							],
-							['tfoot', ['row', ['entry'], ['entry'], ['entry'], ['entry']]]
-						]
+							[
+								'tfoot',
+								[
+									'row',
+									['entry'],
+									['entry'],
+									['entry'],
+									['entry'],
+								],
+							],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tgroupElement = documentNode.firstChild.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -291,8 +461,8 @@ describe('CALS tables: XML to GridModel', () => {
 										colnum: '1',
 										colwidth: '1*',
 										colsep: '1',
-										rowsep: '1'
-									}
+										rowsep: '1',
+									},
 								],
 								[
 									'colspec',
@@ -301,8 +471,8 @@ describe('CALS tables: XML to GridModel', () => {
 										colnum: '2',
 										colwidth: '1*',
 										colsep: '1',
-										rowsep: '1'
-									}
+										rowsep: '1',
+									},
 								],
 								[
 									'colspec',
@@ -311,8 +481,8 @@ describe('CALS tables: XML to GridModel', () => {
 										colnum: '3',
 										colwidth: '1*',
 										colsep: '1',
-										rowsep: '1'
-									}
+										rowsep: '1',
+									},
 								],
 								[
 									'colspec',
@@ -321,8 +491,8 @@ describe('CALS tables: XML to GridModel', () => {
 										colnum: '3',
 										colwidth: '1*',
 										colsep: '1',
-										rowsep: '1'
-									}
+										rowsep: '1',
+									},
 								],
 								[
 									'tbody',
@@ -333,24 +503,42 @@ describe('CALS tables: XML to GridModel', () => {
 											{
 												namest: 'column-0',
 												colname: 'column-0',
-												nameend: 'column-1'
-											}
+												nameend: 'column-1',
+											},
 										],
 										[
 											'entry',
 											{
 												namest: 'column-2',
 												colname: 'column-2',
-												nameend: 'column-2'
-											}
+												nameend: 'column-2',
+											},
 										],
-										['entry']
+										['entry'],
 									],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -359,7 +547,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 				const tgroupElement = tableElement.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tgroupElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
@@ -368,7 +559,10 @@ describe('CALS tables: XML to GridModel', () => {
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(0, 1);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('can deserialize a 4x4 table with a column spanning cell on the first header row', () => {
@@ -386,8 +580,8 @@ describe('CALS tables: XML to GridModel', () => {
 										colnum: '1',
 										colwidth: '1*',
 										colsep: '1',
-										rowsep: '1'
-									}
+										rowsep: '1',
+									},
 								],
 								[
 									'colspec',
@@ -396,8 +590,8 @@ describe('CALS tables: XML to GridModel', () => {
 										colnum: '2',
 										colwidth: '1*',
 										colsep: '1',
-										rowsep: '1'
-									}
+										rowsep: '1',
+									},
 								],
 								[
 									'colspec',
@@ -406,8 +600,8 @@ describe('CALS tables: XML to GridModel', () => {
 										colnum: '3',
 										colwidth: '1*',
 										colsep: '1',
-										rowsep: '1'
-									}
+										rowsep: '1',
+									},
 								],
 								[
 									'colspec',
@@ -416,8 +610,8 @@ describe('CALS tables: XML to GridModel', () => {
 										colnum: '3',
 										colwidth: '1*',
 										colsep: '1',
-										rowsep: '1'
-									}
+										rowsep: '1',
+									},
 								],
 								[
 									'thead',
@@ -428,27 +622,45 @@ describe('CALS tables: XML to GridModel', () => {
 											{
 												namest: 'column-0',
 												colname: 'column-0',
-												nameend: 'column-1'
-											}
+												nameend: 'column-1',
+											},
 										],
 										[
 											'entry',
 											{
 												namest: 'column-2',
 												colname: 'column-2',
-												nameend: 'column-2'
-											}
+												nameend: 'column-2',
+											},
 										],
-										['entry']
-									]
+										['entry'],
+									],
 								],
 								[
 									'tbody',
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -457,7 +669,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 				const tgroupElement = tableElement.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tgroupElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
@@ -466,7 +681,10 @@ describe('CALS tables: XML to GridModel', () => {
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(0, 1);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('can deserialize a 4x4 table with column spanning cells and missing colspecs', () => {
@@ -481,17 +699,38 @@ describe('CALS tables: XML to GridModel', () => {
 								['colspec', { colname: 'c3' }],
 								[
 									'tbody',
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
 									[
 										'row',
-										['entry', { namest: 'c1', nameend: 'c3' }],
 										['entry'],
-										['entry']
+										['entry'],
+										['entry'],
+										['entry'],
 									],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										[
+											'entry',
+											{ namest: 'c1', nameend: 'c3' },
+										],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -500,7 +739,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 				const tgroupElement = tableElement.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tgroupElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
@@ -509,7 +751,10 @@ describe('CALS tables: XML to GridModel', () => {
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(1, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 1);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('throws when building a gridModel from a cals table containing incorrect colspans', () => {
@@ -524,14 +769,42 @@ describe('CALS tables: XML to GridModel', () => {
 								['colspec', { colname: 'c2' }],
 								['colspec', { colname: 'c3' }],
 								['colspec', { colname: 'c4' }],
-								['thead', ['row', ['entry'], ['entry'], ['entry'], ['entry']]],
+								[
+									'thead',
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
 								[
 									'tbody',
-									['row', ['entry', { namest: 'c1', nameend: 'c4' }], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										[
+											'entry',
+											{ namest: 'c1', nameend: 'c4' },
+										],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -541,7 +814,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -567,13 +843,25 @@ describe('CALS tables: XML to GridModel', () => {
 										['entry', { morerows: '1' }],
 										['entry'],
 										['entry'],
-										['entry']
+										['entry'],
 									],
 									['row', ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -582,7 +870,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 				const tgroupElement = tableElement.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tgroupElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
@@ -612,11 +903,11 @@ describe('CALS tables: XML to GridModel', () => {
 									[
 										'row',
 										['entry', { morerows: '1' }],
-										['entry', { morerows: '1' }]
+										['entry', { morerows: '1' }],
 									],
-									['row']
-								]
-							]
+									['row'],
+								],
+							],
 						],
 						documentNode
 					)
@@ -625,7 +916,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 				const tgroupElement = tableElement.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tgroupElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 2);
@@ -659,13 +953,31 @@ describe('CALS tables: XML to GridModel', () => {
 										['entry', { morerows: '1' }],
 										['entry', { morerows: '1' }],
 										['entry', { morerows: '1' }],
-										['entry', { morerows: '1' }]
+										['entry', { morerows: '1' }],
 									],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -675,7 +987,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -695,18 +1010,36 @@ describe('CALS tables: XML to GridModel', () => {
 								['colspec', { colname: 'c4' }],
 								[
 									'tbody',
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
 									[
 										'row',
 										['entry', { morerows: '1' }],
 										['entry', { morerows: '1' }],
 										['entry', { morerows: '1' }],
-										['entry', { morerows: '1' }]
-									]
-								]
-							]
+										['entry', { morerows: '1' }],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -716,7 +1049,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -735,20 +1071,32 @@ describe('CALS tables: XML to GridModel', () => {
 								['colspec', { colname: 'c4' }],
 								[
 									'tbody',
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
 									[
 										'row',
 										['entry', { morerows: 2 }],
 										['entry', { morerows: 2 }],
 										['entry', { morerows: 2 }],
-										['entry', { morerows: 2 }]
+										['entry', { morerows: 2 }],
 									],
 									['row'],
 									['row'],
 									['row'],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -758,7 +1106,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -782,14 +1133,26 @@ describe('CALS tables: XML to GridModel', () => {
 										['entry', { morerows: 1 }],
 										['entry', { morerows: 1 }],
 										['entry', { morerows: 1 }],
-										['entry', { morerows: 1 }]
+										['entry', { morerows: 1 }],
 									],
 									['row'],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
 									['row'],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -799,7 +1162,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -823,15 +1189,27 @@ describe('CALS tables: XML to GridModel', () => {
 										['entry', { morerows: 2 }],
 										['entry', { morerows: 3 }],
 										['entry', { morerows: 2 }],
-										['entry', { morerows: 2 }]
+										['entry', { morerows: 2 }],
 									],
 									['row'],
 									['row'],
 									['row'],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -841,7 +1219,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -865,12 +1246,24 @@ describe('CALS tables: XML to GridModel', () => {
 										['entry', { morerows: 1 }],
 										['entry', { morerows: 1 }],
 										['entry', { morerows: 1 }],
-										['entry', { morerows: 1 }]
+										['entry', { morerows: 1 }],
 									],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -880,7 +1273,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -904,13 +1300,19 @@ describe('CALS tables: XML to GridModel', () => {
 										['entry'],
 										['entry', { morerows: 1 }],
 										['entry'],
-										['entry']
+										['entry'],
 									],
 									['row'],
 									['row', ['entry'], ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -920,7 +1322,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -941,17 +1346,36 @@ describe('CALS tables: XML to GridModel', () => {
 								['colspec', { colname: 'c4' }],
 								[
 									'tbody',
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
 									[
 										'row',
 										['entry'],
-										['entry', { morerows: '1', namest: 'c2', nameend: 'c3' }],
-										['entry']
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										[
+											'entry',
+											{
+												morerows: '1',
+												namest: 'c2',
+												nameend: 'c3',
+											},
+										],
+										['entry'],
 									],
 									['row', ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -960,7 +1384,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 				const tgroupElement = tableElement.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tgroupElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
@@ -999,17 +1426,36 @@ describe('CALS tables: XML to GridModel', () => {
 								['colspec', { colname: 'c4' }],
 								[
 									'tbody',
-									['row', ['entry'], ['entry'], ['entry'], ['entry']],
 									[
 										'row',
 										['entry'],
-										['entry', { morerows: '2', namest: 'c2', nameend: 'c4' }],
-										['entry']
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+									[
+										'row',
+										['entry'],
+										[
+											'entry',
+											{
+												morerows: '2',
+												namest: 'c2',
+												nameend: 'c4',
+											},
+										],
+										['entry'],
 									],
 									['row', ['entry'], ['entry']],
-									['row', ['entry'], ['entry'], ['entry'], ['entry']]
-								]
-							]
+									[
+										'row',
+										['entry'],
+										['entry'],
+										['entry'],
+										['entry'],
+									],
+								],
+							],
 						],
 						documentNode
 					)
@@ -1019,7 +1465,10 @@ describe('CALS tables: XML to GridModel', () => {
 				const tgroupElement = tableElement.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tgroupElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tgroupElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -1042,9 +1491,9 @@ describe('CALS tables: XML to GridModel', () => {
 								'tbody',
 								['row', ['entry'], ['entry'], ['entry']],
 								['row', ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry']]
-							]
-						]
+								['row', ['entry'], ['entry'], ['entry']],
+							],
+						],
 					],
 					documentNode
 				)
@@ -1053,7 +1502,10 @@ describe('CALS tables: XML to GridModel', () => {
 			const tableElement = documentNode.firstChild;
 			const tgroupElement = tableElement.firstChild;
 
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 3);
@@ -1084,9 +1536,9 @@ describe('CALS tables: XML to GridModel', () => {
 								'tbody',
 								['row', ['entry'], ['entry'], ['entry']],
 								['row', ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry']]
-							]
-						]
+								['row', ['entry'], ['entry'], ['entry']],
+							],
+						],
 					],
 					documentNode
 				)
@@ -1095,10 +1547,15 @@ describe('CALS tables: XML to GridModel', () => {
 			const tableElement = documentNode.firstChild;
 			const tgroupElement = tableElement.firstChild;
 
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
-			const columnWidths = gridModel.columnSpecifications.map(spec => spec.columnWidth);
+			const columnWidths = gridModel.columnSpecifications.map(
+				(spec) => spec.columnWidth
+			);
 
 			const leftColumnSpecification = gridModel.columnSpecifications[0];
 			const leftPercentage = tableDefinition.widthToHtmlWidth(
@@ -1138,9 +1595,9 @@ describe('CALS tables: XML to GridModel', () => {
 								'tbody',
 								['row', ['entry'], ['entry'], ['entry']],
 								['row', ['entry'], ['entry'], ['entry']],
-								['row', ['entry'], ['entry'], ['entry']]
-							]
-						]
+								['row', ['entry'], ['entry'], ['entry']],
+							],
+						],
 					],
 					documentNode
 				)
@@ -1149,7 +1606,10 @@ describe('CALS tables: XML to GridModel', () => {
 			const tableElement = documentNode.firstChild;
 			const tgroupElement = tableElement.firstChild;
 
-			const gridModel = tableDefinition.buildTableGridModel(tgroupElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 3);

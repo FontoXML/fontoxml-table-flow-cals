@@ -1,8 +1,8 @@
-import TableDefinition from 'fontoxml-table-flow/src/TableDefinition.js';
-import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy.js';
-import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy.js';
-import normalizeRowNodeStrategies from 'fontoxml-table-flow/src/normalizeRowNodeStrategies.js';
-import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies.js';
+import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
+import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
+import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
+import normalizeRowNodeStrategies from 'fontoxml-table-flow/src/normalizeRowNodeStrategies';
+import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
 
 class TestTableDefinition extends TableDefinition {
 	constructor() {
@@ -10,7 +10,7 @@ class TestTableDefinition extends TableDefinition {
 			table: 'table',
 			headerRow: 'headrow',
 			row: 'row',
-			cell: 'cell'
+			cell: 'cell',
 		};
 
 		// Alias for selector parts
@@ -43,8 +43,14 @@ class TestTableDefinition extends TableDefinition {
 
 			// Normalizations
 			normalizeRowNodeStrategies: [
-				normalizeRowNodeStrategies.createConvertNormalRowNodeStrategy(null, 'headrow'),
-				normalizeRowNodeStrategies.createConvertFormerHeaderRowNodeStrategy(null, 'row')
+				normalizeRowNodeStrategies.createConvertNormalRowNodeStrategy(
+					null,
+					'headrow'
+				),
+				normalizeRowNodeStrategies.createConvertFormerHeaderRowNodeStrategy(
+					null,
+					'row'
+				),
 			],
 
 			// Creates
@@ -53,9 +59,13 @@ class TestTableDefinition extends TableDefinition {
 
 			// Set attributes
 			setCellNodeAttributeStrategies: [
-				setAttributeStrategies.createRowSpanAsAttributeStrategy('rowspan'),
-				setAttributeStrategies.createColumnSpanAsAttributeStrategy('colspan')
-			]
+				setAttributeStrategies.createRowSpanAsAttributeStrategy(
+					'rowspan'
+				),
+				setAttributeStrategies.createColumnSpanAsAttributeStrategy(
+					'colspan'
+				),
+			],
 		};
 
 		super(properties);

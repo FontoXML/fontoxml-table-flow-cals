@@ -1,15 +1,19 @@
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
-import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode.js';
-import TableDefinition from 'fontoxml-table-flow/src/TableDefinition.js';
-import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy.js';
-import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy.js';
-import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy.js';
-import getSpecificationValueStrategies from 'fontoxml-table-flow/src/getSpecificationValueStrategies.js';
-import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies.js';
-import normalizeColumnSpecificationStrategies from 'fontoxml-table-flow/src/normalizeColumnSpecificationStrategies.js';
-import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies.js';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
+import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
+import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
+import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
+import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
+import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
+import getSpecificationValueStrategies from 'fontoxml-table-flow/src/getSpecificationValueStrategies';
+import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
+import normalizeColumnSpecificationStrategies from 'fontoxml-table-flow/src/normalizeColumnSpecificationStrategies';
+import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
+import type { CalsTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
+import type { FontoNode } from 'fontoxml-dom-utils/src/types';
+import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 
-function parseWidth(width) {
+function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
 	if (width === '*') {
 		// '*' is actually '1*'
 		return [width, '1', undefined];
@@ -17,7 +21,11 @@ function parseWidth(width) {
 	return /(?:(\d*(?:\.\d*)?)\*)?\+?(?:(\d+(?:\.\d*)?)px)?/i.exec(width);
 }
 
-function createTableBorderAttributeStrategy(parentNodeSelector, frameLocalName, frameValues) {
+function createTableBorderAttributeStrategy(
+	parentNodeSelector: $TSFixMeAny,
+	frameLocalName: $TSFixMeAny,
+	frameValues: $TSFixMeAny
+): $TSFixMeAny {
 	return function tableBorderAttributeStrategy(context, _data, blueprint) {
 		const tableFigureNode = evaluateXPathToFirstNode(
 			parentNodeSelector,
@@ -28,13 +36,15 @@ function createTableBorderAttributeStrategy(parentNodeSelector, frameLocalName, 
 			blueprint.setAttribute(
 				tableFigureNode,
 				frameLocalName,
-				context.specification.borders ? frameValues['all'] : frameValues['none']
+				context.specification.borders
+					? frameValues['all']
+					: frameValues['none']
 			);
 		}
 	};
 }
 
-function gcd(x, y) {
+function gcd(x: $TSFixMeAny, y: $TSFixMeAny): $TSFixMeAny {
 	while (y) {
 		const t = y;
 		y = x % y;
@@ -43,7 +53,7 @@ function gcd(x, y) {
 	return x;
 }
 
-function findGreatestCommonDivisor(input) {
+function findGreatestCommonDivisor(input: $TSFixMeAny): $TSFixMeAny {
 	let a = input[0];
 	let b;
 	for (let i = 1; i < input.length; i++) {
@@ -61,7 +71,7 @@ const DEFAULT_OPTIONS = {
 		leftValue: 'left',
 		rightValue: 'right',
 		centerValue: 'center',
-		justifyValue: 'justify'
+		justifyValue: 'justify',
 	},
 
 	colname: { localName: 'colname' },
@@ -75,7 +85,7 @@ const DEFAULT_OPTIONS = {
 	colspec: {
 		localName: 'colspec',
 		// Will default to tgroup namespaceURI first
-		namespaceURI: FALLBACK_TO_TGROUP
+		namespaceURI: FALLBACK_TO_TGROUP,
 	},
 
 	colwidth: { localName: 'colwidth' },
@@ -84,7 +94,7 @@ const DEFAULT_OPTIONS = {
 		localName: 'entry',
 		// Will default to tgroup namespaceURI first
 		namespaceURI: FALLBACK_TO_TGROUP,
-		defaultTextContainer: null
+		defaultTextContainer: null,
 	},
 
 	frame: { localName: 'frame', allValue: 'all', noneValue: 'none' },
@@ -98,44 +108,44 @@ const DEFAULT_OPTIONS = {
 	row: {
 		localName: 'row',
 		// Will default to tgroup namespaceURI first
-		namespaceURI: FALLBACK_TO_TGROUP
+		namespaceURI: FALLBACK_TO_TGROUP,
 	},
 
 	rowsep: { localName: 'rowsep' },
 
 	table: {
 		localName: undefined,
-		namespaceURI: null
+		namespaceURI: null,
 	},
 
 	tbody: {
 		localName: 'tbody',
-		namespaceURI: FALLBACK_TO_TGROUP
+		namespaceURI: FALLBACK_TO_TGROUP,
 	},
 
 	tgroup: {
 		localName: 'tgroup',
 		namespaceURI: FALLBACK_TO_TGROUP,
-		tableFigureFilterSelector: ''
+		tableFigureFilterSelector: '',
 	},
 
 	thead: {
 		localName: 'thead',
 		// Will default to tgroup namespaceURI first
-		namespaceURI: FALLBACK_TO_TGROUP
+		namespaceURI: FALLBACK_TO_TGROUP,
 	},
 
 	valign: {
 		localName: 'valign',
 		topValue: 'top',
 		middleValue: 'middle',
-		bottomValue: 'bottom'
+		bottomValue: 'bottom',
 	},
 
 	// Is used in multiple places
 	yesOrNo: {
 		yesValue: '1',
-		noValue: '0'
+		noValue: '0',
 	},
 
 	showInsertionWidget: false,
@@ -152,47 +162,64 @@ const DEFAULT_OPTIONS = {
 		{
 			contents: [
 				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
-				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+				{
+					name: 'contextual-cals-set-cell-horizontal-alignment-center',
+				},
 				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
-				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
-			]
+				{
+					name: 'contextual-cals-set-cell-horizontal-alignment-justify',
+				},
+			],
 		},
 		{
 			contents: [
 				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
 				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
-				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
-			]
+				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' },
+			],
 		},
 		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
-		{ contents: [{ name: 'column-delete-at-index' }] }
+		{ contents: [{ name: 'column-delete-at-index' }] },
 	],
 	rowWidgetMenuOperations: [
 		{
 			contents: [
 				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
-				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+				{
+					name: 'contextual-cals-set-cell-horizontal-alignment-center',
+				},
 				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
-				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
-			]
+				{
+					name: 'contextual-cals-set-cell-horizontal-alignment-justify',
+				},
+			],
 		},
 		{
 			contents: [
 				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
 				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
-				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
-			]
+				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' },
+			],
 		},
 		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
-		{ contents: [{ name: 'contextual-row-delete' }] }
-	]
+		{ contents: [{ name: 'contextual-row-delete' }] },
+	],
 };
 
-function isObject(variable) {
-	return variable !== null && typeof variable === 'object' && !Array.isArray(variable);
+function isObject(variable: $TSFixMeAny): $TSFixMeAny {
+	return (
+		variable !== null &&
+		typeof variable === 'object' &&
+		!Array.isArray(variable)
+	);
 }
 
-function applyDefaults(options, defaultOptions, path, rootOptions) {
+function applyDefaults(
+	options: $TSFixMeAny,
+	defaultOptions: $TSFixMeAny,
+	path: $TSFixMeAny,
+	rootOptions: $TSFixMeAny
+): $TSFixMeAny {
 	const newOptions = {};
 	for (const defaultOptionKey of Object.keys(defaultOptions)) {
 		const defaultOption = defaultOptions[defaultOptionKey];
@@ -211,7 +238,8 @@ function applyDefaults(options, defaultOptions, path, rootOptions) {
 			if (defaultOption === FALLBACK_TO_TGROUP) {
 				// Fall back to the TGROUP namespace uri
 				if (rootOptions.tgroup && rootOptions.tgroup.namespaceURI) {
-					newOptions[defaultOptionKey] = rootOptions.tgroup.namespaceURI;
+					newOptions[defaultOptionKey] =
+						rootOptions.tgroup.namespaceURI;
 					continue;
 				}
 				newOptions[defaultOptionKey] = null;
@@ -251,7 +279,7 @@ function applyDefaults(options, defaultOptions, path, rootOptions) {
 	return newOptions;
 }
 
-function getTableDefinitionProperties(options) {
+function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 	options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
 
 	const attributeValuesByAttributeName = new Map();
@@ -259,20 +287,20 @@ function getTableDefinitionProperties(options) {
 		left: options.align.leftValue,
 		right: options.align.rightValue,
 		center: options.align.centerValue,
-		justify: options.align.justifyValue
+		justify: options.align.justifyValue,
 	};
 	attributeValuesByAttributeName.set('horizontalAlignment', alignValues);
 
 	const valignValues = {
 		top: options.valign.topValue,
 		middle: options.valign.middleValue,
-		bottom: options.valign.bottomValue
+		bottom: options.valign.bottomValue,
 	};
 	attributeValuesByAttributeName.set('verticalAlignment', valignValues);
 
 	const frameValues = {
 		all: options.frame.allValue,
-		none: options.frame.noneValue
+		none: options.frame.noneValue,
 	};
 	attributeValuesByAttributeName.set('border', frameValues);
 
@@ -316,7 +344,9 @@ function getTableDefinitionProperties(options) {
 		? `[${options.tgroup.tableFigureFilterSelector}]`
 		: '';
 	const tableFigureSelectorPart = `Q{${tableFigureNamespaceURI}}${tableFigureLocalName}${tableFigureFilter}`;
-	const tableFigureParentFilter = tableFigureFilter ? `[parent::${tableFigureSelectorPart}]` : '';
+	const tableFigureParentFilter = tableFigureFilter
+		? `[parent::${tableFigureSelectorPart}]`
+		: '';
 	const selectorParts = {
 		tableFigure: tableFigureSelectorPart,
 		table: `Q{${tgroupNamespaceURI}}${tgroupLocalName}${tableFigureParentFilter}`,
@@ -324,7 +354,7 @@ function getTableDefinitionProperties(options) {
 		bodyContainer: `Q{${tbodyNamespaceURI}}${tbodyLocalName}`,
 		row: `Q{${rowNamespaceURI}}${rowLocalName}`,
 		cell: `Q{${entryNamespaceURI}}${entryLocalName}`,
-		columnSpecification: `Q{${colspecNamespaceURI}}${colspecLocalName}`
+		columnSpecification: `Q{${colspecNamespaceURI}}${colspecLocalName}`,
 	};
 
 	// Alias selector parts
@@ -346,15 +376,15 @@ function getTableDefinitionProperties(options) {
 		supportsRowSpanningCellsAtBottom: false,
 
 		// Widths
-		widthToHtmlWidthStrategy: function(width, widths) {
+		widthToHtmlWidthStrategy: function (width, widths) {
 			const proportion = parseFloat(parseWidth(width)[1]) || 1;
-			const totalProportion = widths.reduce(function(total, proportion) {
+			const totalProportion = widths.reduce(function (total, proportion) {
 				return total + (parseFloat(parseWidth(proportion)[1]) || 1);
 			}, 0);
 
 			return (100 * proportion) / totalProportion + '%';
 		},
-		addWidthsStrategy: function(width1, width2) {
+		addWidthsStrategy: function (width1, width2) {
 			const parsedWidth1 = parseWidth(width1);
 			const proportion1 = parseFloat(parsedWidth1[1]) || 0;
 			const fixed1 = parseFloat(parsedWidth1[2]) || 0;
@@ -366,19 +396,27 @@ function getTableDefinitionProperties(options) {
 			const proportion = proportion1 + proportion2;
 			const fixed = fixed1 + fixed2;
 
-			return proportion !== 0 ? proportion + '*' : fixed !== 0 ? fixed + 'px' : '';
+			return proportion !== 0
+				? proportion + '*'
+				: fixed !== 0
+				? fixed + 'px'
+				: '';
 		},
-		divideByTwoStrategy: function(width) {
+		divideByTwoStrategy: function (width) {
 			const parsedWidth = parseWidth(width);
 
 			const proportion = parseFloat(parsedWidth[1]);
 			const fixed = parseFloat(parsedWidth[2]);
 
-			return proportion ? proportion / 2 + '*' : fixed ? fixed / 2 + 'px' : '';
+			return proportion
+				? proportion / 2 + '*'
+				: fixed
+				? fixed / 2 + 'px'
+				: '';
 		},
 
-		widthsToFractionsStrategy: function(widths) {
-			const parsedWidths = widths.map(function(width) {
+		widthsToFractionsStrategy: function (widths) {
+			const parsedWidths = widths.map(function (width) {
 				if (width === '*') {
 					return 1;
 				}
@@ -397,26 +435,26 @@ function getTableDefinitionProperties(options) {
 			});
 
 			if (parsedWidths.indexOf(null) !== -1) {
-				return parsedWidths.map(function() {
+				return parsedWidths.map(function () {
 					return 1 / parsedWidths.length;
 				});
 			}
 
-			const totalWidth = parsedWidths.reduce(function(total, width) {
+			const totalWidth = parsedWidths.reduce(function (total, width) {
 				return total + width;
 			}, 0);
 
-			return parsedWidths.map(function(width) {
+			return parsedWidths.map(function (width) {
 				return width / totalWidth;
 			});
 		},
-		fractionsToWidthsStrategy: function(fractions) {
-			fractions = fractions.map(function(fraction) {
+		fractionsToWidthsStrategy: function (fractions) {
+			fractions = fractions.map(function (fraction) {
 				return Math.round(fraction * 100);
 			});
 
 			const gcd = findGreatestCommonDivisor(fractions);
-			return fractions.map(fraction => {
+			return fractions.map((fraction) => {
 				return fraction / gcd + '*';
 			});
 		},
@@ -483,20 +521,23 @@ function getTableDefinitionProperties(options) {
 			normalizeContainerNodeStrategies.createAddBodyContainerNodeStrategy(
 				tbodyNamespaceURI,
 				tbodyLocalName
-			)
+			),
 		],
 
 		normalizeColumnSpecificationStrategies: [
-			normalizeColumnSpecificationStrategies.createRecreateColumnName('column')
+			normalizeColumnSpecificationStrategies.createRecreateColumnName(
+				'column'
+			),
 		],
-		findNextColumnSpecification: function(
+		findNextColumnSpecification: function (
 			columnIndex,
 			columnSpecification,
 			columnSpecificationIndex,
 			columnSpecifications
 		) {
 			const startIndexAtZero =
-				columnSpecifications[0] && columnSpecifications[0].columnNumber === 0;
+				columnSpecifications[0] &&
+				columnSpecifications[0].columnNumber === 0;
 			return (
 				columnSpecification.columnNumber ===
 					(startIndexAtZero ? columnIndex : columnIndex + 1) ||
@@ -506,39 +547,46 @@ function getTableDefinitionProperties(options) {
 		},
 
 		// Defaults
-		getDefaultColumnSpecificationStrategy: function(context) {
+		getDefaultColumnSpecificationStrategy: function (context) {
 			return {
 				columnName: 'column-' + context.columnIndex,
 				columnNumber: context.columnIndex + 1,
 				columnWidth: '1*',
 				rowSeparator: true,
-				columnSeparator: true
+				columnSeparator: true,
 			};
 		},
-		getDefaultCellSpecificationStrategy: function(context) {
+		getDefaultCellSpecificationStrategy: function (context) {
 			return {
 				width: '1*',
 				columnName: 'column-' + context.columnIndex,
 				rowSeparator: true,
-				columnSeparator: true
+				columnSeparator: true,
 			};
 		},
 
 		// Create elements
-		createCellNodeStrategy: createCreateCellNodeStrategy(entryNamespaceURI, entryLocalName),
-		createColumnSpecificationNodeStrategy: createCreateColumnSpecificationNodeStrategy(
-			colspecNamespaceURI,
-			colspecLocalName,
-			`./*[self::${thead} or self::${tbody}]`
+		createCellNodeStrategy: createCreateCellNodeStrategy(
+			entryNamespaceURI,
+			entryLocalName
 		),
-		createRowStrategy: createCreateRowStrategy(rowNamespaceURI, rowLocalName),
+		createColumnSpecificationNodeStrategy:
+			createCreateColumnSpecificationNodeStrategy(
+				colspecNamespaceURI,
+				colspecLocalName,
+				`./*[self::${thead} or self::${tbody}]`
+			),
+		createRowStrategy: createCreateRowStrategy(
+			rowNamespaceURI,
+			rowLocalName
+		),
 
 		// Specifications
 		getTableSpecificationStrategies: [
 			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 				'borders',
 				`./parent::${tableFigure}/@${frameLocalName} = "${options.frame.allValue}"`
-			)
+			),
 		],
 
 		getColumnSpecificationStrategies: [
@@ -569,23 +617,24 @@ function getTableDefinitionProperties(options) {
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'columnName',
 				`let $name := ./@${colnameLocalName} return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()`
-			)
+			),
 		],
 
 		getRowSpecificationStrategies: [
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'verticalAlignment',
 				`let $valign := ./@${valignLocalName} return if ($valign) then $valign else "bottom"`,
-				value => {
-					const verticalAlignmentValuesByKey = attributeValuesByAttributeName.get(
-						'verticalAlignment'
-					);
+				(value) => {
+					const verticalAlignmentValuesByKey =
+						attributeValuesByAttributeName.get('verticalAlignment');
 					return Object.keys(verticalAlignmentValuesByKey).find(
-						verticalAlignmentKey =>
-							verticalAlignmentValuesByKey[verticalAlignmentKey] === value
+						(verticalAlignmentKey) =>
+							verticalAlignmentValuesByKey[
+								verticalAlignmentKey
+							] === value
 					);
 				}
-			)
+			),
 		],
 
 		getCellSpecificationStrategies: [
@@ -593,13 +642,16 @@ function getTableDefinitionProperties(options) {
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'horizontalAlignment',
 				`./@${alignLocalName}`,
-				value => {
-					const horizontalAlignmentValuesByKey = attributeValuesByAttributeName.get(
-						'horizontalAlignment'
-					);
+				(value) => {
+					const horizontalAlignmentValuesByKey =
+						attributeValuesByAttributeName.get(
+							'horizontalAlignment'
+						);
 					return Object.keys(horizontalAlignmentValuesByKey).find(
-						horizontalAlignmentKey =>
-							horizontalAlignmentValuesByKey[horizontalAlignmentKey] === value
+						(horizontalAlignmentKey) =>
+							horizontalAlignmentValuesByKey[
+								horizontalAlignmentKey
+							] === value
 					);
 				}
 			),
@@ -607,13 +659,14 @@ function getTableDefinitionProperties(options) {
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'verticalAlignment',
 				`./@${valignLocalName}`,
-				value => {
-					const verticalAlignmentValuesByKey = attributeValuesByAttributeName.get(
-						'verticalAlignment'
-					);
+				(value) => {
+					const verticalAlignmentValuesByKey =
+						attributeValuesByAttributeName.get('verticalAlignment');
 					return Object.keys(verticalAlignmentValuesByKey).find(
-						verticalAlignmentKey =>
-							verticalAlignmentValuesByKey[verticalAlignmentKey] === value
+						(verticalAlignmentKey) =>
+							verticalAlignmentValuesByKey[
+								verticalAlignmentKey
+							] === value
 					);
 				}
 			),
@@ -643,17 +696,19 @@ function getTableDefinitionProperties(options) {
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'nameStart',
 				`./@${namestLocalName}`
-			)
+			),
 		],
 
 		// Set attributes
 		setTableNodeAttributeStrategies: [
-			setAttributeStrategies.createColumnCountAsAttributeStrategy(colsLocalName),
+			setAttributeStrategies.createColumnCountAsAttributeStrategy(
+				colsLocalName
+			),
 			createTableBorderAttributeStrategy(
 				'./parent::' + tableFigure,
 				frameLocalName,
 				frameValues
-			)
+			),
 		],
 
 		setColumnSpecificationNodeAttributeStrategies: [
@@ -661,7 +716,10 @@ function getTableDefinitionProperties(options) {
 				colnameLocalName,
 				'columnName'
 			),
-			setAttributeStrategies.createColumnNumberAsAttributeStrategy(colnumLocalName, 1),
+			setAttributeStrategies.createColumnNumberAsAttributeStrategy(
+				colnumLocalName,
+				1
+			),
 			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
 				colsepLocalName,
 				'columnSeparator',
@@ -680,12 +738,15 @@ function getTableDefinitionProperties(options) {
 				alignLocalName,
 				'horizontalAlignment',
 				undefined,
-				value => attributeValuesByAttributeName.get('horizontalAlignment')[value]
+				(value) =>
+					attributeValuesByAttributeName.get('horizontalAlignment')[
+						value
+					]
 			),
 			setAttributeStrategies.createStringValueAsAttributeStrategy(
 				colwidthLocalName,
 				'columnWidth'
-			)
+			),
 		],
 
 		setCellNodeAttributeStrategies: [
@@ -708,24 +769,33 @@ function getTableDefinitionProperties(options) {
 				namestLocalName,
 				nameendLocalName
 			),
-			setAttributeStrategies.createRowSpanAsAttributeStrategy(morerowsLocalName, true),
+			setAttributeStrategies.createRowSpanAsAttributeStrategy(
+				morerowsLocalName,
+				true
+			),
 			setAttributeStrategies.createStringValueAsAttributeStrategy(
 				alignLocalName,
 				'horizontalAlignment',
 				undefined,
-				value => attributeValuesByAttributeName.get('horizontalAlignment')[value]
+				(value) =>
+					attributeValuesByAttributeName.get('horizontalAlignment')[
+						value
+					]
 			),
 			setAttributeStrategies.createStringValueAsAttributeStrategy(
 				valignLocalName,
 				'verticalAlignment',
 				undefined,
-				value => attributeValuesByAttributeName.get('verticalAlignment')[value]
-			)
+				(value) =>
+					attributeValuesByAttributeName.get('verticalAlignment')[
+						value
+					]
+			),
 		],
 
 		// Widget menu operations
 		columnWidgetMenuOperations: options.columnWidgetMenuOperations,
-		rowWidgetMenuOperations: options.rowWidgetMenuOperations
+		rowWidgetMenuOperations: options.rowWidgetMenuOperations,
 	};
 
 	return properties;
@@ -735,10 +805,18 @@ function getTableDefinitionProperties(options) {
  * Configures the table definition for CALS tables.
  */
 export default class CalsTableDefinition extends TableDefinition {
+	_options: $TSFixMeAny;
+	_tgroupNamespaceURI: $TSFixMeAny;
+	_tgroupLocalName: $TSFixMeAny;
+	colsepLocalName: $TSFixMeAny;
+	rowsepLocalName: $TSFixMeAny;
+	trueValue: $TSFixMeAny;
+	falseValue: $TSFixMeAny;
+
 	/**
 	 * @param {CalsTableOptions} options
 	 */
-	constructor(options) {
+	constructor(options: CalsTableOptions) {
 		super(getTableDefinitionProperties(options));
 		this._options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
 		this._tgroupNamespaceURI = this._options.tgroup.namespaceURI || '';
@@ -754,17 +832,21 @@ export default class CalsTableDefinition extends TableDefinition {
 	}
 
 	/**
-	* @param  {Node}      node      The node to deserialize
-	* @param  {Blueprint} blueprint The blueprint to use
-	* @return {TableGridModel}
-	*/
-	buildTableGridModel(node, blueprint) {
+	 * @param  {Node}      node      The node to deserialize
+	 * @param  {Blueprint} blueprint The blueprint to use
+	 * @return {TableGridModel}
+	 */
+	buildTableGridModel(node: FontoNode, blueprint: Blueprint): TableGridModel {
 		const tableElement = evaluateXPathToFirstNode(
 			'descendant-or-self::' + this.selectorParts.table,
 			node,
 			blueprint
 		);
-		return TableDefinition.prototype.buildTableGridModel.call(this, tableElement, blueprint);
+		return TableDefinition.prototype.buildTableGridModel.call(
+			this,
+			tableElement,
+			blueprint
+		);
 	}
 
 	/**
@@ -774,7 +856,12 @@ export default class CalsTableDefinition extends TableDefinition {
 	 * @param  {Format}         format         The format to use
 	 * @return {boolean}
 	 */
-	applyToDom(tableGridModel, tableNode, blueprint, format) {
+	applyToDom(
+		tableGridModel: TableGridModel,
+		tableNode: FontoNode,
+		blueprint: Blueprint,
+		format: Format
+	): boolean {
 		let actualTableNode = evaluateXPathToFirstNode(
 			'descendant-or-self::' + this.selectorParts.table,
 			tableNode,
