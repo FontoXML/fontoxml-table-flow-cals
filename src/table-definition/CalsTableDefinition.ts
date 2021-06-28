@@ -1,17 +1,17 @@
+import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
+import type { FontoNode } from 'fontoxml-dom-utils/src/types';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
-import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
 import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
 import getSpecificationValueStrategies from 'fontoxml-table-flow/src/getSpecificationValueStrategies';
-import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
 import normalizeColumnSpecificationStrategies from 'fontoxml-table-flow/src/normalizeColumnSpecificationStrategies';
+import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
 import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
-import type { CalsTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
-import type { FontoNode } from 'fontoxml-dom-utils/src/types';
-import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
+import type { CalsTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
 
 function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
 	if (width === '*') {
@@ -37,8 +37,8 @@ function createTableBorderAttributeStrategy(
 				tableFigureNode,
 				frameLocalName,
 				context.specification.borders
-					? frameValues['all']
-					: frameValues['none']
+					? frameValues.all
+					: frameValues.none
 			);
 		}
 	};
@@ -368,7 +368,7 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 
 	// Properties object
 	const properties = {
-		selectorParts: selectorParts,
+		selectorParts,
 
 		supportsBorders: true,
 		supportsCellBorder: true,
@@ -376,15 +376,15 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 		supportsRowSpanningCellsAtBottom: false,
 
 		// Widths
-		widthToHtmlWidthStrategy: function (width, widths) {
+		widthToHtmlWidthStrategy(width, widths) {
 			const proportion = parseFloat(parseWidth(width)[1]) || 1;
 			const totalProportion = widths.reduce(function (total, proportion) {
 				return total + (parseFloat(parseWidth(proportion)[1]) || 1);
 			}, 0);
 
-			return (100 * proportion) / totalProportion + '%';
+			return `${(100 * proportion) / totalProportion}%`;
 		},
-		addWidthsStrategy: function (width1, width2) {
+		addWidthsStrategy(width1, width2) {
 			const parsedWidth1 = parseWidth(width1);
 			const proportion1 = parseFloat(parsedWidth1[1]) || 0;
 			const fixed1 = parseFloat(parsedWidth1[2]) || 0;
@@ -397,25 +397,25 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 			const fixed = fixed1 + fixed2;
 
 			return proportion !== 0
-				? proportion + '*'
+				? `${proportion}*`
 				: fixed !== 0
-				? fixed + 'px'
+				? `${fixed}px`
 				: '';
 		},
-		divideByTwoStrategy: function (width) {
+		divideByTwoStrategy(width) {
 			const parsedWidth = parseWidth(width);
 
 			const proportion = parseFloat(parsedWidth[1]);
 			const fixed = parseFloat(parsedWidth[2]);
 
 			return proportion
-				? proportion / 2 + '*'
+				? `${proportion / 2}*`
 				: fixed
-				? fixed / 2 + 'px'
+				? `${fixed / 2}px`
 				: '';
 		},
 
-		widthsToFractionsStrategy: function (widths) {
+		widthsToFractionsStrategy(widths) {
 			const parsedWidths = widths.map(function (width) {
 				if (width === '*') {
 					return 1;
@@ -448,14 +448,14 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 				return width / totalWidth;
 			});
 		},
-		fractionsToWidthsStrategy: function (fractions) {
+		fractionsToWidthsStrategy(fractions) {
 			fractions = fractions.map(function (fraction) {
 				return Math.round(fraction * 100);
 			});
 
 			const gcd = findGreatestCommonDivisor(fractions);
 			return fractions.map((fraction) => {
-				return fraction / gcd + '*';
+				return `${fraction / gcd}*`;
 			});
 		},
 
@@ -463,16 +463,16 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 		headerRowNodeSelector: `self::${row}[parent::${thead}]`,
 
 		// Finds
-		findHeaderRowNodesXPathQuery: './' + thead + '/' + row,
-		findBodyRowNodesXPathQuery: './' + tbody + '/' + row,
-		findFooterRowNodesXPathQuery: './' + tfoot + '/' + row,
+		findHeaderRowNodesXPathQuery: `./${thead}/${row}`,
+		findBodyRowNodesXPathQuery: `./${tbody}/${row}`,
+		findFooterRowNodesXPathQuery: `./${tfoot}/${row}`,
 
-		findHeaderContainerNodesXPathQuery: './' + thead,
-		findBodyContainerNodesXPathQuery: './' + tbody,
+		findHeaderContainerNodesXPathQuery: `./${thead}`,
+		findBodyContainerNodesXPathQuery: `./${tbody}`,
 
-		findColumnSpecificationNodesXPathQuery: './' + colspec,
+		findColumnSpecificationNodesXPathQuery: `./${colspec}`,
 
-		findCellNodesXPathQuery: './' + entry,
+		findCellNodesXPathQuery: `./${entry}`,
 
 		getColumnIdentifiersXPathQuery: `map {"columnName": string(./@${colnameLocalName}), "namest": string(./@${namestLocalName}), "nameend": string(./@${nameendLocalName})}`,
 
@@ -529,7 +529,7 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 				'column'
 			),
 		],
-		findNextColumnSpecification: function (
+		findNextColumnSpecification(
 			columnIndex,
 			columnSpecification,
 			columnSpecificationIndex,
@@ -547,19 +547,19 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 		},
 
 		// Defaults
-		getDefaultColumnSpecificationStrategy: function (context) {
+		getDefaultColumnSpecificationStrategy(context) {
 			return {
-				columnName: 'column-' + context.columnIndex,
+				columnName: `column-${context.columnIndex}`,
 				columnNumber: context.columnIndex + 1,
 				columnWidth: '1*',
 				rowSeparator: true,
 				columnSeparator: true,
 			};
 		},
-		getDefaultCellSpecificationStrategy: function (context) {
+		getDefaultCellSpecificationStrategy(context) {
 			return {
 				width: '1*',
-				columnName: 'column-' + context.columnIndex,
+				columnName: `column-${context.columnIndex}`,
 				rowSeparator: true,
 				columnSeparator: true,
 			};
@@ -705,7 +705,7 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 				colsLocalName
 			),
 			createTableBorderAttributeStrategy(
-				'./parent::' + tableFigure,
+				`./parent::${tableFigure}`,
 				frameLocalName,
 				frameValues
 			),
@@ -806,11 +806,17 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
  */
 export default class CalsTableDefinition extends TableDefinition {
 	_options: $TSFixMeAny;
+
 	_tgroupNamespaceURI: $TSFixMeAny;
+
 	_tgroupLocalName: $TSFixMeAny;
+
 	colsepLocalName: $TSFixMeAny;
+
 	rowsepLocalName: $TSFixMeAny;
+
 	trueValue: $TSFixMeAny;
+
 	falseValue: $TSFixMeAny;
 
 	/**
@@ -838,7 +844,7 @@ export default class CalsTableDefinition extends TableDefinition {
 	 */
 	buildTableGridModel(node: FontoNode, blueprint: Blueprint): TableGridModel {
 		const tableElement = evaluateXPathToFirstNode(
-			'descendant-or-self::' + this.selectorParts.table,
+			`descendant-or-self::${this.selectorParts.table}`,
 			node,
 			blueprint
 		);
@@ -863,7 +869,7 @@ export default class CalsTableDefinition extends TableDefinition {
 		format: Format
 	): boolean {
 		let actualTableNode = evaluateXPathToFirstNode(
-			'descendant-or-self::' + this.selectorParts.table,
+			`descendant-or-self::${this.selectorParts.table}`,
 			tableNode,
 			blueprint
 		);

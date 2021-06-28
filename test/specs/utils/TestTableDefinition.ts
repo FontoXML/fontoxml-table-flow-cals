@@ -1,8 +1,8 @@
-import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
 import normalizeRowNodeStrategies from 'fontoxml-table-flow/src/normalizeRowNodeStrategies';
 import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
+import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 
 class TestTableDefinition extends TableDefinition {
 	constructor() {
@@ -20,22 +20,15 @@ class TestTableDefinition extends TableDefinition {
 
 		// Properties object
 		const properties = {
-			selectorParts: selectorParts,
+			selectorParts,
 
 			// Finds
-			findHeaderRowNodesXPathQuery: './' + head,
-			findBodyRowNodesXPathQuery: './' + row,
-			findCellNodesXPathQuery: './' + cell,
+			findHeaderRowNodesXPathQuery: `./${head}`,
+			findBodyRowNodesXPathQuery: `./${row}`,
+			findCellNodesXPathQuery: `./${cell}`,
 
 			// Data
-			getNumberOfColumnsXPathQuery:
-				'(let $cells := (*[self::' +
-				row +
-				' or self::' +
-				head +
-				'])[1]/*[self::' +
-				cell +
-				'] return for $node in $cells return let $colspan := $node/@colspan => number() return if ($colspan) then $colspan else 1) => sum()',
+			getNumberOfColumnsXPathQuery: `(let $cells := (*[self::${row} or self::${head}])[1]/*[self::${cell}] return for $node in $cells return let $colspan := $node/@colspan => number() return if ($colspan) then $colspan else 1) => sum()`,
 			getRowSpanForCellNodeXPathQuery:
 				'let $rowspan := ./@rowspan return if ($rowspan) then $rowspan => number() else 1',
 			getColumnSpanForCellNodeXPathQuery:

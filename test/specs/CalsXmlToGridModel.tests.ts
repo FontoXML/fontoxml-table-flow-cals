@@ -1,11 +1,11 @@
+import * as slimdom from 'slimdom';
+
 import Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import CoreDocument from 'fontoxml-core/src/Document';
 import getNodeId from 'fontoxml-dom-identification/src/getNodeId';
 import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
-import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions';
-import * as slimdom from 'slimdom';
-
+import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
 
 registerCustomXPathFunctions();

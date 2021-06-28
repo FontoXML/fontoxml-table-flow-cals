@@ -1,3 +1,5 @@
+import * as slimdom from 'slimdom';
+
 import Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import CoreDocument from 'fontoxml-core/src/Document';
 import DocumentController from 'fontoxml-core/src/DocumentController';
@@ -7,14 +9,12 @@ import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
 import indicesManager from 'fontoxml-indices/src/indicesManager';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
 import evaluateXPathToNodes from 'fontoxml-selectors/src/evaluateXPathToNodes';
-import * as slimdom from 'slimdom';
-
-import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
 import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 import toggleCellBorder from 'fontoxml-table-flow-cals/src/custom-mutations/toggleCellBorder';
-import TestTableDefinition from '../utils/TestTableDefinition';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
 
 import registerCustomXPathFunctions from '../utils/registerCustomXPathFunctions';
+import TestTableDefinition from '../utils/TestTableDefinition';
 
 registerCustomXPathFunctions();
 
@@ -112,11 +112,9 @@ describe('toggleCellBorder custom mutation', () => {
 					namespaceURI: '',
 				},
 			});
-			tableDefinitionManager
-				.getTableDefinitions()
-				.forEach((def) =>
-					tableDefinitionManager.removeTableDefinition(def)
-				);
+			tableDefinitionManager.getTableDefinitions().forEach((def) => {
+				tableDefinitionManager.removeTableDefinition(def);
+			});
 			tableDefinitionManager.addTableDefinition(tableDefinition);
 		});
 
@@ -1789,11 +1787,9 @@ describe('toggleCellBorder custom mutation', () => {
 					namespaceURI: '',
 				},
 			});
-			tableDefinitionManager
-				.getTableDefinitions()
-				.forEach((def) =>
-					tableDefinitionManager.removeTableDefinition(def)
-				);
+			tableDefinitionManager.getTableDefinitions().forEach((def) => {
+				tableDefinitionManager.removeTableDefinition(def);
+			});
 			tableDefinitionManager.addTableDefinition(tableDefinition);
 		});
 
@@ -1861,11 +1857,9 @@ describe('toggleCellBorder custom mutation', () => {
 					namespaceURI: '',
 				},
 			});
-			tableDefinitionManager
-				.getTableDefinitions()
-				.forEach((def) =>
-					tableDefinitionManager.removeTableDefinition(def)
-				);
+			tableDefinitionManager.getTableDefinitions().forEach((def) => {
+				tableDefinitionManager.removeTableDefinition(def);
+			});
 			tableDefinitionManager.addTableDefinition(tableDefinition);
 		});
 

@@ -1,16 +1,14 @@
+import * as slimdom from 'slimdom';
+
 import Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import CoreDocument from 'fontoxml-core/src/Document';
 import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
 import indicesManager from 'fontoxml-indices/src/indicesManager';
-import * as slimdom from 'slimdom';
-
-import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
-
-import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells';
-import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
-import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell';
-
 import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions';
+import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
+import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells';
+import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
 
 const mergeCellWithCellToTheRight = mergeCells.mergeCellWithCellToTheRight;
 const mergeCellWithCellToTheLeft = mergeCells.mergeCellWithCellToTheLeft;
@@ -6702,11 +6700,12 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (gridModel) => {
 				splitCellIntoRows(
 					gridModel,
 					gridModel.getCellAtCoordinates(1, 1)
 				);
+			};
 
 			const jsonOut = [
 				'table',
@@ -6957,11 +6956,12 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (gridModel) => {
 				splitCellIntoColumns(
 					gridModel,
 					gridModel.getCellAtCoordinates(1, 1)
 				);
+			};
 
 			const jsonOut = [
 				'table',

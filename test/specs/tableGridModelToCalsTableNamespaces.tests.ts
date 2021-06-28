@@ -1,12 +1,11 @@
-import Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import CoreDocument from 'fontoxml-core/src/Document';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
-import indicesManager from 'fontoxml-indices/src/indicesManager';
 import * as slimdom from 'slimdom';
 
-import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
-
+import Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import CoreDocument from 'fontoxml-core/src/Document';
 import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
+import indicesManager from 'fontoxml-indices/src/indicesManager';
+import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
 
 namespaceManager.addNamespace('somenamespace', 'somenamespace-uri');
 
@@ -23,12 +22,12 @@ const stubFormat = {
 };
 
 describe('tableGridModelToCalsTable with namespaces', () => {
-	let documentNode,
-		coreDocument,
-		blueprint,
-		tgroupNode,
-		calsTableStructure,
-		createTable;
+	let documentNode;
+	let coreDocument;
+	let blueprint;
+	let tgroupNode;
+	let calsTableStructure;
+	let createTable;
 
 	beforeEach(() => {
 		documentNode = new slimdom.Document();

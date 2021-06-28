@@ -1,6 +1,7 @@
 import type { Widget, WidgetSubAreaByName } from 'fontoxml-families/src/types';
 import type { XPathQuery } from 'fontoxml-selectors/src/types';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
+
 import CalsTableDefinition from './table-definition/CalsTableDefinition';
 
 /**
@@ -469,10 +470,10 @@ export default function configureAsCalsTableElements(
 		};
 		showInsertionWidget?: boolean;
 		showHighlightingWidget?: boolean;
-		columnBefore?: WidgetSubAreaByName | Array<Widget> | null;
-		rowBefore?: WidgetSubAreaByName | Array<Widget> | null;
-		columnWidgetMenuOperations?: Array<Object> | null;
-		rowWidgetMenuOperations?: Array<Object> | null;
+		columnBefore?: Widget[] | WidgetSubAreaByName | null;
+		rowBefore?: Widget[] | WidgetSubAreaByName | null;
+		columnWidgetMenuOperations?: Object[] | null;
+		rowWidgetMenuOperations?: Object[] | null;
 		useDefaultContextMenu?: boolean;
 		isCollapsibleQuery?: XPathQuery;
 		isInitiallyCollapsedQuery?: XPathQuery;
@@ -480,7 +481,7 @@ export default function configureAsCalsTableElements(
 ): void {
 	options = options || {};
 	const tableDefinition = new CalsTableDefinition(options);
-	options['cell'] = {
+	options.cell = {
 		defaultTextContainer:
 			options.entry && options.entry.defaultTextContainer
 				? options.entry.defaultTextContainer

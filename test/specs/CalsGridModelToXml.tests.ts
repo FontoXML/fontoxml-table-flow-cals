@@ -1,11 +1,11 @@
-import Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import CoreDocument from 'fontoxml-core/src/Document';
-import indicesManager from 'fontoxml-indices/src/indicesManager';
-import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
 import * as slimdom from 'slimdom';
 
+import Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import CoreDocument from 'fontoxml-core/src/Document';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
+import indicesManager from 'fontoxml-indices/src/indicesManager';
+import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
 import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
 
 const stubFormat = {
