@@ -358,11 +358,11 @@ configureAsCalsTableElements(sxModule, {
 });
 ```
 
-**Note** that this add-on allows to create CALS tables based on its 
+**Note** that this add-on allows to create CALS tables based on its
 {@link https://www.oasis-open.org/specs/a502.htm specified standard}. However, the `align` attribute
-on a `colspec` element is not currently supported. As an alternative to establish column alignment on 
-these kind of tables, you can create a column widget, that will call to one of cell alignment 
-operations for each cell of a column. This can be done by establishing a column widget operations menu 
+on a `colspec` element is not currently supported. As an alternative to establish column alignment on
+these kind of tables, you can create a column widget, that will call to one of cell alignment
+operations for each cell of a column. This can be done by establishing a column widget operations menu
 through `columnWidgetMenuOperations` option in CALS table configuration.
 
 **Note** that this add-on supports existing tables that contain `tfoot` elements. However, it _does
@@ -377,7 +377,7 @@ function.
 
 The cell element menu button widgets are added based on the existence of contextual operations on
 cell level. Make sure that only cell-specific operations are added to the cell widget, so that users
-are only given options relevant to them.  Example on how you can add this element menu on the
+are only given options relevant to them. Example on how you can add this element menu on the
 widget:
 
 ```
