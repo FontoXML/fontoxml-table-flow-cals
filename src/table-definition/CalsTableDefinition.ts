@@ -402,7 +402,7 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 				? `${fixed}px`
 				: '';
 		},
-		divideByTwoStrategy(width) {
+		divideWidthByTwoStrategy(width) {
 			const parsedWidth = parseWidth(width);
 
 			const proportion = parseFloat(parsedWidth[1]);
