@@ -94,6 +94,9 @@
 				}
 			},
 			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
+			},
+			{
 				"type": "operation/contextual-cals-set-cell-border-all"
 			}
 		]
@@ -141,6 +144,9 @@
 				"data": {
 					"tableSelector": "fonto:is-cals-table(.)"
 				}
+			},
+			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
 			},
 			{
 				"type": "operation/contextual-cals-set-cell-border-none"
