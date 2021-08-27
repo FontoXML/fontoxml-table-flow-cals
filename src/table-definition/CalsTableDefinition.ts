@@ -11,6 +11,7 @@ import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeC
 import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
+import type { TableDefinitionProperties } from 'fontoxml-table-flow/src/types';
 import type { CalsTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
 
 function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
@@ -279,7 +280,9 @@ function applyDefaults(
 	return newOptions;
 }
 
-function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
+function getTableDefinitionProperties(
+	options: $TSFixMeAny
+): TableDefinitionProperties {
 	options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
 
 	const attributeValuesByAttributeName = new Map();
@@ -367,7 +370,7 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 	const colspec = selectorParts.columnSpecification;
 
 	// Properties object
-	const properties = {
+	const properties: TableDefinitionProperties = {
 		selectorParts,
 
 		supportsBorders: true,
@@ -402,7 +405,7 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 				? `${fixed}px`
 				: '';
 		},
-		divideWidthByTwoStrategy(width) {
+		divideByTwoStrategy(width: string) {
 			const parsedWidth = parseWidth(width);
 
 			const proportion = parseFloat(parsedWidth[1]);
@@ -415,7 +418,7 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 				: '';
 		},
 
-		widthsToFractionsStrategy(widths) {
+		widthsToFractionsStrategy(widths: string[]) {
 			const parsedWidths = widths.map(function (width) {
 				if (width === '*') {
 					return 1;
@@ -448,7 +451,7 @@ function getTableDefinitionProperties(options: $TSFixMeAny): $TSFixMeAny {
 				return width / totalWidth;
 			});
 		},
-		fractionsToWidthsStrategy(fractions) {
+		fractionsToWidthsStrategy(fractions: number[]) {
 			fractions = fractions.map(function (fraction) {
 				return Math.round(fraction * 100);
 			});
