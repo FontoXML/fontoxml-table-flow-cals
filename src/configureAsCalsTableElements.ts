@@ -30,7 +30,7 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  *			})
  *		],
  *		showInsertionWidget: true,
- *		showHighlightingWidget: true,
+ *		showSelectionWidget: true,
  *		columnWidgetMenuOperations: [
  *			{
  *				contents: [
@@ -254,8 +254,8 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  *		// This will show buttons that insert a new column or row. Optional, defaults to false.
  *		showInsertionWidget: true,
  *
- *		// This will show areas that can be hovered over to hightlight a column or row and that can be clicked to show a operations popover. Optional, defaults to false.
- *		showHighlightingWidget: true
+ *		// This will show areas that can be hovered over to select a column or row and that can be clicked to show a operations popover. Optional, defaults to false.
+ *		showSelectionWidget: true
  *	});
  * ```
  *
@@ -359,7 +359,8 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  *
  * @param  {boolean}                            [options.showInsertionWidget]               To add insertion buttons which insert a column or a row to a specific place,
  *                                                                                          default false.
- * @param  {boolean}                            [options.showHighlightingWidget]            To add highlighting bars which highlight columns and rows, and provide
+ * @param  {boolean}                            [options.showHighlightingWidget]            This is @deprecated. Instead use showSelectionWidget.
+ * @param  {boolean}                            [options.showSelectionWidget]               To add selection bars which select columns and rows, and provide
  *                                                                                          operations popover, default false.
  * @param  {WidgetSubAreaByName|Widget[]|null}  [options.columnBefore]                      Used to add one or multiple widgets before each column. The context node of
  *                                                                                          each column widget is the colspec element.
@@ -470,7 +471,12 @@ export default function configureAsCalsTableElements(
 			noValue?: string;
 		};
 		showInsertionWidget?: boolean;
+		/**
+		 * @deprecated
+		 * Instead use showSelectionWidget.
+		 */
 		showHighlightingWidget?: boolean;
+		showSelectionWidget?: boolean;
 		columnBefore?: Widget[] | WidgetSubAreaByName | null;
 		rowBefore?: Widget[] | WidgetSubAreaByName | null;
 		columnWidgetMenuOperations?: Object[] | null;

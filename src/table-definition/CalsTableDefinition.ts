@@ -150,7 +150,9 @@ const DEFAULT_OPTIONS = {
 	},
 
 	showInsertionWidget: false,
-	showHighlightingWidget: false,
+	// This is deprecated.
+	showHighlightingWidget: undefined,
+	showSelectionWidget: false,
 	rowBefore: false,
 	columnBefore: false,
 	useDefaultContextMenu: true,
@@ -437,7 +439,7 @@ function getTableDefinitionProperties(
 				return Number.isNaN(value) ? null : value;
 			});
 
-			if (parsedWidths.indexOf(null) !== -1) {
+			if (parsedWidths.includes(null)) {
 				return parsedWidths.map(function () {
 					return 1 / parsedWidths.length;
 				});
