@@ -1,5 +1,6 @@
 import * as slimdom from 'slimdom';
 
+import CustomMutationResult from 'fontoxml-base-flow/src/CustomMutationResult';
 import Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import CoreDocument from 'fontoxml-core/src/Document';
 import DocumentController from 'fontoxml-core/src/DocumentController';
@@ -125,6 +126,317 @@ describe('toggleCellBorder custom mutation', () => {
 		});
 
 		describe('setting borders', () => {
+			// case: bottom right
+			it('cannot set the right border for the bottom right corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[3]/entry[3]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						right: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+			// case: bottom right
+			it('cannot set the bottom border for the bottom right corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[3]/entry[3]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						bottom: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+			// case: bottom left
+			it('cannot set the bottom border on the bottom left corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[3]/entry[1]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						bottom: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+			// case: bottom left
+			it('cannot set the left border on the bottom left corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[3]/entry[1]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						left: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+
+			// case: top left
+			it('cannot set the top border on the top left corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[1]/entry[1]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						top: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+			// case: top left
+			it('cannot set the left border on the top left corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[1]/entry[1]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						left: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+			// case: top right
+			it('cannot set the top border on the top right corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[1]/entry[3]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						top: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+			// case: top right
+			it('cannot set the right border on the top right corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[1]/entry[3]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						right: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+			// case: bottom middle
+			it('cannot set the bottom border on the bottom middle corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[3]/entry[2]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						bottom: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
+			// case: top middle
+			it('cannot set the top border on the top middle corner cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(threeByThreeTable, documentNode)
+				);
+
+				const cellNodeId = getNodeId(
+					evaluateXPathToFirstNode(
+						'//tbody/row[1]/entry[2]',
+						documentNode,
+						blueprint
+					)
+				);
+
+				blueprint.beginOverlay();
+				const result = toggleCellBorder(
+					{
+						cellNodeIds: [cellNodeId],
+						top: true,
+					},
+					blueprint
+				);
+				blueprint.applyOverlay();
+				blueprint.realize();
+				indicesManager.getIndexSet().commitMerge();
+
+				chai.assert.deepEqual(
+					result,
+					CustomMutationResult.notAllowed()
+				);
+			});
 			it('can set the top border on the middle cell in a 3x3 table', () => {
 				coreDocument.dom.mutate(() =>
 					jsonMLMapper.parse(threeByThreeTable, documentNode)

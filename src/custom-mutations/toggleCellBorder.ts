@@ -130,9 +130,15 @@ export default function toggleCellBorder(
 
 		if (borders.bottom !== undefined) {
 			// Find all cells that should get a border-bottom, which is easy
-
-			if (cellInfo.row === tableGridModel.getHeight() - 1) {
-				continue;
+			// Disable setting the BOTTOM border for the cells in the last row
+			if (
+				cellInfo.origin.row + cellInfo.size.rows ===
+					tableGridModel.getHeight() &&
+				borders.right === undefined &&
+				borders.top === undefined &&
+				borders.left === undefined
+			) {
+				return CustomMutationResult.notAllowed();
 			}
 
 			blueprint.setAttribute(
@@ -141,12 +147,17 @@ export default function toggleCellBorder(
 				(isToggle ? !isActive : borders.bottom) ? trueValue : falseValue
 			);
 		}
-
 		if (borders.right !== undefined) {
 			// Find all cells that should get a border-right, which is easy
-
-			if (cellInfo.column === tableGridModel.getWidth() - 1) {
-				continue;
+			// Disable setting the RIGHT border for the cells in last column
+			if (
+				cellInfo.origin.column + cellInfo.size.columns ===
+					tableGridModel.getWidth() &&
+				borders.bottom === undefined &&
+				borders.top === undefined &&
+				borders.left === undefined
+			) {
+				return CustomMutationResult.notAllowed();
 			}
 
 			blueprint.setAttribute(
@@ -154,6 +165,16 @@ export default function toggleCellBorder(
 				tableDefinition.colsepLocalName,
 				(isToggle ? !isActive : borders.right) ? trueValue : falseValue
 			);
+		}
+		// Disable setting the TOP border for the cells in the first row
+		if (
+			borders.top !== undefined &&
+			cellInfo.origin.row === 0 &&
+			borders.left === undefined &&
+			borders.bottom === undefined &&
+			borders.right === undefined
+		) {
+			return CustomMutationResult.notAllowed();
 		}
 
 		if (borders.top !== undefined && cellInfo.origin.row > 0) {
@@ -173,6 +194,17 @@ export default function toggleCellBorder(
 						: falseValue
 				);
 			}
+		}
+
+		// Disable setting the LEFT border for the cells in the first column
+		if (
+			borders.left !== undefined &&
+			cellInfo.origin.column === 0 &&
+			borders.bottom === undefined &&
+			borders.top === undefined &&
+			borders.right === undefined
+		) {
+			return CustomMutationResult.notAllowed();
 		}
 
 		if (borders.left !== undefined && cellInfo.origin.column > 0) {
