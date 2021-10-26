@@ -1,6 +1,7 @@
 import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
 import type { FontoNode } from 'fontoxml-dom-utils/src/types';
+import type { Format } from 'fontoxml-schema-experience/src/format';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
