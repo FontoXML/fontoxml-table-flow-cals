@@ -1,5 +1,11 @@
-import type { Widget, WidgetSubAreaByName } from 'fontoxml-families/src/types';
-import type { XPathQuery } from 'fontoxml-selectors/src/types';
+import type {
+	DefaultTextContainer,
+	Widget,
+	WidgetSubAreaByName,
+} from 'fontoxml-families/src/types';
+import type { SxModule } from 'fontoxml-modular-schema-experience/src/sxManager';
+import type { ContextualOperation } from 'fontoxml-operations/src/types';
+import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
 
 import CalsTableDefinition from './table-definition/CalsTableDefinition';
@@ -278,36 +284,36 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  *
  * @category add-on/fontoxml-table-flow-cals
  *
- * @param  {Object}                             sxModule
+ * @param  {SxModule}                           sxModule
  * @param  {Object}                             options
  * @param  {number}                             [options.priority]                          Selector priority for all elements configured by this function.
+ * @param  {AllowExpansionInContentView}        [options.allowExpansionInContentView]       Defines the availability of expansion of a table.
  * @param  {Object}                             options.table                               Configuration options for
  *                                                                                          the table which is the frame surrounding one or more CALS tables.
- * @param  {AllowExpansionInContentView}        [options.allowExpansionInContentView]       Defines the availability of expansion of a table.
  * @param  {string}                             options.table.localName                     The local name of the table.
- * @param  {string}                             [options.table.namespaceURI]                The namespace URI unique to the table.
+ * @param  {string|null}                        [options.table.namespaceURI]                The namespace URI unique to the table.
  * @param  {Object}                             [options.tgroup]                            Configuration options for the tgroup which is table defining element.
- * @param  {Object}                             [options.tgroup.localName='tgroup']         The local name of the tgroup.
- * @param  {string}                             [options.tgroup.namespaceURI]               The namespace URI for the tgroup and its child elements unless their
+ * @param  {string}                             [options.tgroup.localName='tgroup']         The local name of the tgroup.
+ * @param  {string|null}                        [options.tgroup.namespaceURI]               The namespace URI for the tgroup and its child elements unless their
  *                                                                                          namespaceURIs are set.
- * @param  {string}                             [options.tgroup.tableFigureFilterSelector]  An optional selector which is used to filter which possible tables should
+ * @param  {XPathTest}                          [options.tgroup.tableFigureFilterSelector]  An optional selector which is used to filter which possible tables should
  *                                                                                          be seen as cals tables for this configuration.
  * @param  {Object}                             [options.colspec]                           Configuration options for the colspec.
  * @param  {string}                             [options.colspec.localName='colspec']       The local name for the colspec.
- * @param  {string}                             [options.colspec.namespaceURI]              The namespace URI for the colspec.
+ * @param  {string|null}                        [options.colspec.namespaceURI]              The namespace URI for the colspec.
  * @param  {Object}                             [options.thead]                             Configuration options for the thead which is the container element of header rows.
  * @param  {string}                             [options.thead.localName='thead']           The local name for the thead.
- * @param  {string}                             [options.thead.namespaceURI]                The namespace URI for the thead.
+ * @param  {string|null}                        [options.thead.namespaceURI]                The namespace URI for the thead.
  * @param  {Object}                             [options.tbody]                             Configuration options for the tbody which is the container element of the normal rows.
  * @param  {string}                             [options.tbody.localName='tbody']           The local name for the tbody.
- * @param  {string}                             [options.tbody.namespaceURI]                The namespace URI for the tbody.
+ * @param  {string|null}                        [options.tbody.namespaceURI]                The namespace URI for the tbody.
  * @param  {Object}                             [options.row]                               Configuration options for the row.
  * @param  {string}                             [options.row.localName='row']               The local name for the row.
- * @param  {string}                             [options.row.namespaceURI]                  The namespace URI for the row.
+ * @param  {string|null}                        [options.row.namespaceURI]                  The namespace URI for the row.
  * @param  {Object}                             [options.entry]                             Configuration options for the entry.
  * @param  {string}                             [options.entry.localName='entry']           The local name for the entry.
- * @param  {string}                             [options.entry.namespaceURI]                The namespace URI for the entry.
- * @param  {string}                             [options.entry.defaultTextContainer]        The default text container for the entry.
+ * @param  {string|null}                        [options.entry.namespaceURI]                The namespace URI for the entry.
+ * @param  {DefaultTextContainer}               [options.entry.defaultTextContainer]        The default text container for the entry.
  * @param  {Object}                             [options.frame]                             Configuration options for the frame attribute which describes
  *                                                                                          position of outer rulings.
  * @param  {string}                             [options.frame.localName='frame']           The local name for the frame attribute.
@@ -369,10 +375,10 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  * @param  {WidgetSubAreaByName|Widget[]|null}  [options.rowBefore]                         Used to add a single icon widget before each row using {@link createIconWidget}.
  *                                                                                          Row widgets are linked to the row elements of the table. Any widget can be
  *                                                                                          added but only icon widget is supported.
- * @param  {Object[]|null}                      [options.columnWidgetMenuOperations]        To configure table widget menu for columns. It accepts an array of
+ * @param  {ContextualOperation[]|null}         [options.columnWidgetMenuOperations]        To configure table widget menu for columns. It accepts an array of
  *                                                                                          {@link ContextualOperation}s, but only supports "name" and "contents" properties.
  *                                                                                          It is allowed to have only one layer of menu.
- * @param  {Object[]|null}                      [options.rowWidgetMenuOperations]           To configure table widget menu for rows. It accepts an array of
+ * @param  {ContextualOperation[]|null}         [options.rowWidgetMenuOperations]           To configure table widget menu for rows. It accepts an array of
  *                                                                                          {@link ContextualOperation}s, but only supports "name" and "contents" properties.
  *                                                                                          It is allowed to have only one layer of menu.
  * @param  {boolean}                            [options.useDefaultContextMenu=true]        Whether or not to use a preconfigured context menu for elements within the table.
@@ -387,39 +393,39 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  *                                                                                          which evaluate to the total rows and total columns in a table.
  */
 export default function configureAsCalsTableElements(
-	sxModule: Object,
+	sxModule: SxModule,
 	options: {
 		priority?: number;
-		table: Object;
-		allowExpansionInContentView?: {
+		allowExpansionInContentView?: boolean;
+		table: {
 			localName: string;
-			namespaceURI?: string;
+			namespaceURI?: string | null;
 		};
 		tgroup?: {
-			localName?: Object;
-			namespaceURI?: string;
-			tableFigureFilterSelector?: string;
+			localName?: string;
+			namespaceURI?: string | null;
+			tableFigureFilterSelector?: XPathTest;
 		};
 		colspec?: {
 			localName?: string;
-			namespaceURI?: string;
+			namespaceURI?: string | null;
 		};
 		thead?: {
 			localName?: string;
-			namespaceURI?: string;
+			namespaceURI?: string | null;
 		};
 		tbody?: {
 			localName?: string;
-			namespaceURI?: string;
+			namespaceURI?: string | null;
 		};
 		row?: {
 			localName?: string;
-			namespaceURI?: string;
+			namespaceURI?: string | null;
 		};
 		entry?: {
 			localName?: string;
-			namespaceURI?: string;
-			defaultTextContainer?: string;
+			namespaceURI?: string | null;
+			defaultTextContainer?: DefaultTextContainer;
 		};
 		frame?: {
 			localName?: string;
@@ -479,20 +485,25 @@ export default function configureAsCalsTableElements(
 		showSelectionWidget?: boolean;
 		columnBefore?: Widget[] | WidgetSubAreaByName | null;
 		rowBefore?: Widget[] | WidgetSubAreaByName | null;
-		columnWidgetMenuOperations?: Object[] | null;
-		rowWidgetMenuOperations?: Object[] | null;
+		columnWidgetMenuOperations?: ContextualOperation[] | null;
+		rowWidgetMenuOperations?: ContextualOperation[] | null;
 		useDefaultContextMenu?: boolean;
 		isCollapsibleQuery?: XPathQuery;
 		isInitiallyCollapsedQuery?: XPathQuery;
 	}
 ): void {
-	options = options || {};
 	const tableDefinition = new CalsTableDefinition(options);
-	options.cell = {
-		defaultTextContainer:
-			options.entry && options.entry.defaultTextContainer
-				? options.entry.defaultTextContainer
-				: null,
-	};
-	configureAsTableElements(sxModule, options, tableDefinition);
+	configureAsTableElements(
+		sxModule,
+		{
+			...options,
+			cell: {
+				defaultTextContainer:
+					options.entry && options.entry.defaultTextContainer
+						? options.entry.defaultTextContainer
+						: null,
+			},
+		},
+		tableDefinition
+	);
 }
