@@ -497,12 +497,13 @@ export default function configureAsCalsTableElements(
 		sxModule,
 		{
 			...options,
-			cell: {
-				defaultTextContainer:
-					options.entry && options.entry.defaultTextContainer
-						? options.entry.defaultTextContainer
-						: null,
-			},
+			cell:
+				options.entry && 'defaultTextContainer' in options.entry
+					? {
+							defaultTextContainer:
+								options.entry.defaultTextContainer,
+					  }
+					: {},
 		},
 		tableDefinition
 	);
