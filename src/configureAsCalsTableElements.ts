@@ -5,7 +5,11 @@ import type {
 } from 'fontoxml-families/src/types';
 import type { SxModule } from 'fontoxml-modular-schema-experience/src/sxManager';
 import type { ContextualOperation } from 'fontoxml-operations/src/types';
-import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
+import type {
+	XPathQuery,
+	XPathTest,
+	XQExpression,
+} from 'fontoxml-selectors/src/types';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
 
 import CalsTableDefinition from './table-definition/CalsTableDefinition';
@@ -296,7 +300,7 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  * @param  {string}                             [options.tgroup.localName='tgroup']         The local name of the tgroup.
  * @param  {string|null}                        [options.tgroup.namespaceURI]               The namespace URI for the tgroup and its child elements unless their
  *                                                                                          namespaceURIs are set.
- * @param  {XPathTest}                          [options.tgroup.tableFigureFilterSelector]  An optional selector which is used to filter which possible tables should
+ * @param  {XPathTest | XQExpression}           [options.tgroup.tableFigureFilterSelector]  An optional selector which is used to filter which possible tables should
  *                                                                                          be seen as cals tables for this configuration.
  * @param  {Object}                             [options.colspec]                           Configuration options for the colspec.
  * @param  {string}                             [options.colspec.localName='colspec']       The local name for the colspec.
@@ -382,11 +386,11 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  *                                                                                          {@link ContextualOperation}s, but only supports "name" and "contents" properties.
  *                                                                                          It is allowed to have only one layer of menu.
  * @param  {boolean}                            [options.useDefaultContextMenu=true]        Whether or not to use a preconfigured context menu for elements within the table.
- * @param  {XPathQuery}                         [options.isCollapsibleQuery=false()]        The {@link XPathQuery} to determine whether or not a table has the ability
+ * @param  {XPathQuery | XQExpression}          [options.isCollapsibleQuery=false()]        The {@link XPathQuery} or {@link XQExpression} to determine whether or not a table has the ability
  *                                                                                          to be collapsible. Optional, defaults to 'false()'. $rowCount and $columnCount
  *                                                                                          helper variables can optionally be used in this XPath expression which evaluate
  *                                                                                          to the total rows and total columns in a table.
- * @param  {XPathQuery}                         [options.isInitiallyCollapsedQuery=true()]  The {@link XPathQuery} to determine whether or not a table should initially
+ * @param  {XPathQuery | XQExpression}          [options.isInitiallyCollapsedQuery=true()]  The {@link XPathQuery} or {@link XQExpression} to determine whether or not a table should initially
  *                                                                                          start off as collapsed. Tables must first have the ability to be collapsible
  *                                                                                          with isCollapsibleQuery. Optional, defaults to 'true()'. $rowCount and
  *                                                                                          $columnCount helper variables can optionally be used in this XPath expression
@@ -404,7 +408,7 @@ export default function configureAsCalsTableElements(
 		tgroup?: {
 			localName?: string;
 			namespaceURI?: string | null;
-			tableFigureFilterSelector?: XPathTest;
+			tableFigureFilterSelector?: XPathTest | XQExpression;
 		};
 		colspec?: {
 			localName?: string;
@@ -488,8 +492,8 @@ export default function configureAsCalsTableElements(
 		columnWidgetMenuOperations?: ContextualOperation[] | null;
 		rowWidgetMenuOperations?: ContextualOperation[] | null;
 		useDefaultContextMenu?: boolean;
-		isCollapsibleQuery?: XPathQuery;
-		isInitiallyCollapsedQuery?: XPathQuery;
+		isCollapsibleQuery?: XPathQuery | XQExpression;
+		isInitiallyCollapsedQuery?: XPathQuery | XQExpression;
 	}
 ): void {
 	const tableDefinition = new CalsTableDefinition(options);
