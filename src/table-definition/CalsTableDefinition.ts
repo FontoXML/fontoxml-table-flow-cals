@@ -808,6 +808,7 @@ function getTableDefinitionProperties(
 }
 
 /**
+ * @remarks
  * Configures the table definition for CALS tables.
  */
 export default class CalsTableDefinition extends TableDefinition {
@@ -826,7 +827,7 @@ export default class CalsTableDefinition extends TableDefinition {
 	falseValue: $TSFixMeAny;
 
 	/**
-	 * @param {CalsTableOptions} options
+	 * @param options -
 	 */
 	constructor(options: CalsTableOptions) {
 		super(getTableDefinitionProperties(options));
@@ -844,9 +845,8 @@ export default class CalsTableDefinition extends TableDefinition {
 	}
 
 	/**
-	 * @param  {Node}      node      The node to deserialize
-	 * @param  {Blueprint} blueprint The blueprint to use
-	 * @return {TableGridModel}
+	 * @param node      - The node to deserialize
+	 * @param blueprint - The blueprint to use
 	 */
 	buildTableGridModel(node: FontoNode, blueprint: Blueprint): TableGridModel {
 		const tableElement = evaluateXPathToFirstNode(
@@ -862,11 +862,10 @@ export default class CalsTableDefinition extends TableDefinition {
 	}
 
 	/**
-	 * @param  {TableGridModel} tableGridModel The TableGridModel to serialize
-	 * @param  {Node}           tableNode      The node to serialize to
-	 * @param  {Blueprint}      blueprint      The blueprint to use
-	 * @param  {Format}         format         The format to use
-	 * @return {boolean}
+	 * @param tableGridModel - The TableGridModel to serialize
+	 * @param tableNode      - The node to serialize to
+	 * @param blueprint      - The blueprint to use
+	 * @param format         - The format to use
 	 */
 	applyToDom(
 		tableGridModel: TableGridModel,

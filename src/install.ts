@@ -17,17 +17,14 @@ export default function install(): void {
 	addCustomMutation('calsToggleCellBorder', toggleCellBorder);
 
 	/**
-	 * Returns whether the given node is a cals table node. This will return true for both table
-	 * figure node (table) and table defining node (tgroup). If null or nothing is passed, the
-	 * function will return false.
+	 * @remarks
+	 * Returns whether the given node is a cals table node. This will return true for
+	 * both table figure node (table) and table defining node (tgroup). If null or
+	 * nothing is passed, the function will return false.
 	 *
-	 * @name fonto:is-cals-table
+	 * @param node -
 	 *
-	 * @category xpath
-	 *
-	 * @param  {node()}  [node]
-	 *
-	 * @return {xs:boolean}  Whether the passed node is a cals table.
+	 * @returns Whether the passed node is a cals table.
 	 */
 	registerCustomXPathFunction(
 		{ namespaceURI: FONTO_FUNCTIONS, localName: 'is-cals-table' },
