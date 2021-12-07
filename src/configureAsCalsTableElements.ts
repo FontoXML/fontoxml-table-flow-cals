@@ -386,7 +386,7 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  * @param options.yesOrNo.noValue                  - The false value.
  * @param options.showInsertionWidget              - To add insertion buttons which insert a column or
  *                                                   a row to a specific place, default false.
- * @param options.showHighlightingWidget           - This is @deprecated. Instead use
+ * @param options.showHighlightingWidget           - This is deprecated. Instead use
  *                                                   showSelectionWidget.
  * @param options.showSelectionWidget              - To add selection bars which select columns and
  *                                                   rows, and provide operations popover, default
