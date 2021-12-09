@@ -394,7 +394,7 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  * @param options.columnBefore                     - Used to add one or multiple widgets before each
  *                                                   column. The context node of each column widget is
  *                                                   the colspec element. {@link
- *                                                   fonto-documentation/docs/editor/api/index.xml#id-9d2b1ad5-bbc1-6c44-d491-16dc213c53f2
+ *                                                   fonto-documentation/docs/generated-content/editor-api/index.xml#id-cd5577eb-9790-92d6-e3ac-8d1554fe6b12
  *                                                   | All widgets} are supported.
  * @param options.rowBefore                        - Used to add a single icon widget before each row
  *                                                   using {@link createIconWidget}. Row widgets are
