@@ -23,67 +23,67 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  * | our guide} for more information on table widgets. Example usage for the table
  * widgets:
  *
- * ```
- * configureAsCalsTableElements(sxModule, {
- * 	table: {
- * 		localName: 'table'
- * 	},
- * 	entry: {
- * 		defaultTextContainer: 'p'
- * 	},
- * 	columnBefore: [
- * 		createIconWidget('clock-o', {
- * 			clickOperation: 'lcTime-value-edit',
- * 			tooltipContent: 'Click here to edit the duration'
- * 		})
- * 	],
- * 	rowBefore: [
- * 		createIconWidget('dot-circle-o', {
- * 			clickOperation: 'do-nothing'
- * 		})
- * 	],
- * 	showInsertionWidget: true,
- * 	showSelectionWidget: true,
- * 	columnWidgetMenuOperations: [
- * 		{
- * 			contents: [
- * 				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
- * 				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
- * 				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
- * 				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
- * 			]
- * 		},
- * 		{
- * 			contents: [
- * 				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
- * 				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
- * 				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
- * 			]
- * 		},
- * 		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
- * 		{ contents: [{ name: 'column-delete-at-index' }] }
- * 	],
- * 	rowWidgetMenuOperations: [
- * 		{
- * 			contents: [
- * 				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
- * 				{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
- * 				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
- * 				{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
- * 			]
- * 		},
- * 		{
- * 			contents: [
- * 				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
- * 				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
- * 				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
- * 			]
- * 		},
- * 		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
- * 		{ contents: [{ name: 'contextual-row-delete' }] }
- * 	]
- * });
- * ```
+ *```
+ *	configureAsCalsTableElements(sxModule, {
+ *		table: {
+ *			localName: 'table'
+ *		},
+ *		entry: {
+ *			defaultTextContainer: 'p'
+ *		},
+ *		columnBefore: [
+ *			createIconWidget('clock-o', {
+ *				clickOperation: 'lcTime-value-edit',
+ *				tooltipContent: 'Click here to edit the duration'
+ *			})
+ *		],
+ *		rowBefore: [
+ *			createIconWidget('dot-circle-o', {
+ *				clickOperation: 'do-nothing'
+ *			})
+ *		],
+ *		showInsertionWidget: true,
+ *		showSelectionWidget: true,
+ *		columnsWidgetMenuOperations: [
+ *			{
+ *				contents: [
+ *					{ name: 'cals-set-cell-horizontal-alignment-left' },
+ *					{ name: 'cals-set-cell-horizontal-alignment-center' },
+ *					{ name: 'cals-set-cell-horizontal-alignment-right' },
+ *					{ name: 'cals-set-cell-horizontal-alignment-justify' }
+ *				]
+ *			},
+ *			{
+ *				contents: [
+ *					{ name: 'cals-set-cell-vertical-alignment-top' },
+ *					{ name: 'cals-set-cell-vertical-alignment-center' },
+ *					{ name: 'cals-set-cell-vertical-alignment-bottom' }
+ *				]
+ *			},
+ *			{ contents: [{ name: 'cals-set-cell-border-all' }] },
+ *			{ contents: [{ name: 'columns-delete' }] }
+ *		],
+ *		rowsWidgetMenuOperations: [
+ *			{
+ *				contents: [
+ *					{ name: 'cals-set-cell-horizontal-alignment-left' },
+ *					{ name: 'cals-set-cell-horizontal-alignment-center' },
+ *					{ name: 'cals-set-cell-horizontal-alignment-right' },
+ *					{ name: 'cals-set-cell-horizontal-alignment-justify' }
+ *				]
+ *			},
+ *			{
+ *				contents: [
+ *					{ name: 'cals-set-cell-vertical-alignment-top' },
+ *					{ name: 'cals-set-cell-vertical-alignment-center' },
+ *					{ name: 'cals-set-cell-vertical-alignment-bottom' }
+ *				]
+ *			},
+ *			{ contents: [{ name: 'cals-set-cell-border-all' }] },
+ *			{ contents: [{ name: 'rows-delete' }] }
+ *		]
+ *	});
+ *```
  *
  * It is also possible to configure all element names and attributes, and attribute
  * names and possible values.
@@ -401,16 +401,16 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  *                                                   linked to the row elements of the table. Any
  *                                                   widget can be added but only icon widget is
  *                                                   supported.
- * @param options.columnWidgetMenuOperations       - To configure table widget menu for columns. It
- *                                                   accepts an array of {@link ContextualOperation}s,
- *                                                   but only supports "name" and "contents"
- *                                                   properties. It is allowed to have only one layer
- *                                                   of menu.
- * @param options.rowWidgetMenuOperations          - To configure table widget menu for rows. It
- *                                                   accepts an array of {@link ContextualOperation}s,
- *                                                   but only supports "name" and "contents"
- *                                                   properties. It is allowed to have only one layer
- *                                                   of menu.
+ * @param options.columnWidgetMenuOperations       - This is deprecated. Use columnsWidgetMenuOperations instead.
+ * @param options.columnsWidgetMenuOperations      - To configure table widget menu for columns.
+ *                                                   It accepts an array of {@link ContextualOperation}s,
+ *                                                   but only supports "name" and "contents" properties.
+ *                                                 - It is allowed to have only one layer of menu.
+ * @param options.rowWidgetMenuOperations          - This is deprecated. Use rowsWidgetMenuOperations instead.
+ * @param options.rowsWidgetMenuOperations         - To configure table widget menu for rows.
+ *                                                   It accepts an array of {@link ContextualOperation}s,
+ *                                                   but only supports "name" and "contents" properties.
+ *                                                 - It is allowed to have only one layer of menu.
  * @param options.useDefaultContextMenu            - Whether or not to use a preconfigured context menu
  *                                                   for elements within the table.
  * @param options.isCollapsibleQuery               - The {@link XPathQuery} or {@link XQExpression} to
@@ -521,8 +521,18 @@ export default function configureAsCalsTableElements(
 		showSelectionWidget?: boolean;
 		columnBefore?: Widget[] | WidgetSubAreaByName | null;
 		rowBefore?: Widget[] | WidgetSubAreaByName | null;
+		/**
+		 * @deprecated
+		 * Instead use columnsWidgetMenuOperations.
+		 */
 		columnWidgetMenuOperations?: ContextualOperation[] | null;
+		columnsWidgetMenuOperations?: ContextualOperation[] | null;
+		/**
+		 * @deprecated
+		 * Instead use rowsWidgetMenuOperations.
+		 */
 		rowWidgetMenuOperations?: ContextualOperation[] | null;
+		rowsWidgetMenuOperations?: ContextualOperation[] | null;
 		useDefaultContextMenu?: boolean;
 		isCollapsibleQuery?: XPathQuery | XQExpression;
 		isInitiallyCollapsedQuery?: XPathQuery | XQExpression;

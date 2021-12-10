@@ -161,52 +161,55 @@ const DEFAULT_OPTIONS = {
 	isInitiallyCollapsedQuery: 'true()',
 	priority: null,
 
+	// Deprecated
+	columnWidgetMenuOperations: undefined,
+	rowWidgetMenuOperations: undefined,
 	// Widget menu operations
-	columnWidgetMenuOperations: [
+	columnsWidgetMenuOperations: [
 		{
 			contents: [
-				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+				{ name: 'cals-set-cell-horizontal-alignment-left' },
 				{
-					name: 'contextual-cals-set-cell-horizontal-alignment-center',
+					name: 'cals-set-cell-horizontal-alignment-center',
 				},
-				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+				{ name: 'cals-set-cell-horizontal-alignment-right' },
 				{
-					name: 'contextual-cals-set-cell-horizontal-alignment-justify',
+					name: 'cals-set-cell-horizontal-alignment-justify',
 				},
 			],
 		},
 		{
 			contents: [
-				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
-				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
-				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' },
+				{ name: 'cals-set-cell-vertical-alignment-top' },
+				{ name: 'cals-set-cell-vertical-alignment-center' },
+				{ name: 'cals-set-cell-vertical-alignment-bottom' },
 			],
 		},
-		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
-		{ contents: [{ name: 'column-delete-at-index' }] },
+		{ contents: [{ name: 'cals-set-cell-border-all' }] },
+		{ contents: [{ name: 'columns-delete' }] },
 	],
-	rowWidgetMenuOperations: [
+	rowsWidgetMenuOperations: [
 		{
 			contents: [
-				{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+				{ name: 'cals-set-cell-horizontal-alignment-left' },
 				{
-					name: 'contextual-cals-set-cell-horizontal-alignment-center',
+					name: 'cals-set-cell-horizontal-alignment-center',
 				},
-				{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+				{ name: 'cals-set-cell-horizontal-alignment-right' },
 				{
-					name: 'contextual-cals-set-cell-horizontal-alignment-justify',
+					name: 'cals-set-cell-horizontal-alignment-justify',
 				},
 			],
 		},
 		{
 			contents: [
-				{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
-				{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
-				{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' },
+				{ name: 'cals-set-cell-vertical-alignment-top' },
+				{ name: 'cals-set-cell-vertical-alignment-center' },
+				{ name: 'cals-set-cell-vertical-alignment-bottom' },
 			],
 		},
-		{ contents: [{ name: 'contextual-cals-toggle-cell-border-all' }] },
-		{ contents: [{ name: 'contextual-row-delete' }] },
+		{ contents: [{ name: 'cals-set-cell-border-all' }] },
+		{ contents: [{ name: 'rows-delete' }] },
 	],
 };
 
@@ -800,8 +803,12 @@ function getTableDefinitionProperties(
 		],
 
 		// Widget menu operations
+		// This is deprecated. Remove in 7.20
 		columnWidgetMenuOperations: options.columnWidgetMenuOperations,
+		columnsWidgetMenuOperations: options.columnsWidgetMenuOperations,
+		// This is deprecated. Remove in 7.20
 		rowWidgetMenuOperations: options.rowWidgetMenuOperations,
+		rowsWidgetMenuOperations: options.rowsWidgetMenuOperations,
 	};
 
 	return properties;
