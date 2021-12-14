@@ -1,16 +1,9 @@
-import type {
-	DefaultTextContainer,
-	Widget,
-	WidgetSubAreaByName,
-} from 'fontoxml-families/src/types';
 import type { SxModule } from 'fontoxml-modular-schema-experience/src/sxManager';
-import type { ContextualOperation } from 'fontoxml-operations/src/types';
-import type {
-	XPathQuery,
-	XPathTest,
-	XQExpression,
-} from 'fontoxml-selectors/src/types';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
+import type {
+	TableElementsCalsOptions,
+	TableElementsSharedOptions,
+} from 'fontoxml-table-flow/src/types.configureAsTableElements';
 
 import CalsTableDefinition from './table-definition/CalsTableDefinition';
 
@@ -431,112 +424,7 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  */
 export default function configureAsCalsTableElements(
 	sxModule: SxModule,
-	options: {
-		priority?: number;
-		allowExpansionInContentView?: boolean;
-		table: {
-			localName: string;
-			namespaceURI?: string | null;
-		};
-		tgroup?: {
-			localName?: string;
-			namespaceURI?: string | null;
-			tableFigureFilterSelector?: XPathTest | XQExpression;
-		};
-		colspec?: {
-			localName?: string;
-			namespaceURI?: string | null;
-		};
-		thead?: {
-			localName?: string;
-			namespaceURI?: string | null;
-		};
-		tbody?: {
-			localName?: string;
-			namespaceURI?: string | null;
-		};
-		row?: {
-			localName?: string;
-			namespaceURI?: string | null;
-		};
-		entry?: {
-			localName?: string;
-			namespaceURI?: string | null;
-			defaultTextContainer?: DefaultTextContainer;
-		};
-		frame?: {
-			localName?: string;
-			allValue?: string;
-			noneValue?: string;
-		};
-		cols?: {
-			localName?: string;
-		};
-		colname?: {
-			localName?: string;
-		};
-		colnum?: {
-			localName?: string;
-		};
-		colwidth?: {
-			localName?: string;
-		};
-		colsep?: {
-			localName?: string;
-		};
-		rowsep?: {
-			localName?: string;
-		};
-		morerows?: {
-			localName?: string;
-		};
-		namest?: {
-			localName?: string;
-		};
-		nameend?: {
-			localName?: string;
-		};
-		align?: {
-			localName?: string;
-			leftValue?: string;
-			rightValue?: string;
-			centerValue?: string;
-			justifyValue?: string;
-		};
-		valign?: {
-			localName?: string;
-			leftValue?: string;
-			rightValue?: string;
-			centerValue?: string;
-		};
-		yesOrNo?: {
-			yesValue?: string;
-			noValue?: string;
-		};
-		showInsertionWidget?: boolean;
-		/**
-		 * @deprecated Instead use showSelectionWidget.
-		 */
-		showHighlightingWidget?: boolean;
-		showSelectionWidget?: boolean;
-		columnBefore?: Widget[] | WidgetSubAreaByName | null;
-		rowBefore?: Widget[] | WidgetSubAreaByName | null;
-		/**
-		 * @deprecated
-		 * Instead use columnsWidgetMenuOperations.
-		 */
-		columnWidgetMenuOperations?: ContextualOperation[] | null;
-		columnsWidgetMenuOperations?: ContextualOperation[] | null;
-		/**
-		 * @deprecated
-		 * Instead use rowsWidgetMenuOperations.
-		 */
-		rowWidgetMenuOperations?: ContextualOperation[] | null;
-		rowsWidgetMenuOperations?: ContextualOperation[] | null;
-		useDefaultContextMenu?: boolean;
-		isCollapsibleQuery?: XPathQuery | XQExpression;
-		isInitiallyCollapsedQuery?: XPathQuery | XQExpression;
-	}
+	options: TableElementsCalsOptions & TableElementsSharedOptions
 ): void {
 	const tableDefinition = new CalsTableDefinition(options);
 	configureAsTableElements(
