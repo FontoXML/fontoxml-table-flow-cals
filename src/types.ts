@@ -1,4 +1,4 @@
-import type { DefaultTextContainer } from 'fontoxml-families/src/types';
+import type { DefaultTextContainerConfiguration } from 'fontoxml-base-flow/src/types';
 import type { XPathTest, XQExpression } from 'fontoxml-selectors/src/types';
 
 /**
@@ -181,7 +181,11 @@ export type TableElementsCalsOptions = {
 		 *
 		 * @fontosdk
 		 */
-		defaultTextContainer?: DefaultTextContainer;
+		defaultTextContainer?:
+			| DefaultTextContainerConfiguration
+			| string
+			| null
+			| undefined;
 	};
 	/**
 	 * @remarks
