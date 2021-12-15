@@ -7,7 +7,13 @@
 				{
 					"name": "contextNodeId",
 					"type": "NodeId",
-					"description": "The Node ID of the table defining node."
+					"description": [
+						"The Node ID of 'tgroup' element or 'table' element.",
+						"If your 'table' element can have multiple 'tgroup' element at the same time,",
+						"it is recommended to pass 'tgroup' element as context node.",
+						"If the context node is 'table' element, the column sizing popover will",
+						"change the column sizes of the first 'tgroup' element."
+					]
 				}
 			]
 		},
@@ -18,7 +24,8 @@
 			{
 				"type": "operation/open-table-column-sizing-popover",
 				"data": {
-					"popoverAnchorNodeId": "x__$data('contextNode')/child::*[fonto:is-cals-table(.)] => head()"
+					"popoverAnchorNodeId": "x__ let $table := $data?contextNode return if (fonto:is-table-figure($table)) then $table/child::*[fonto:is-table(.)][1] else $table",
+					"contextNodeId": "x__ let $table := $data?contextNode return if (fonto:is-table-figure($table)) then $table/child::*[fonto:is-table(.)][1] else $table"
 				}
 			}
 		]
