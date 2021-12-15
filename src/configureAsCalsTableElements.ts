@@ -1,11 +1,9 @@
 import type { SxModule } from 'fontoxml-modular-schema-experience/src/sxManager';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
-import type {
-	TableElementsCalsOptions,
-	TableElementsSharedOptions,
-} from 'fontoxml-table-flow/src/types.configureAsTableElements';
+import type { TableElementsSharedOptions } from 'fontoxml-table-flow/src/types';
 
 import CalsTableDefinition from './table-definition/CalsTableDefinition';
+import type { TableElementsCalsOptions } from './types';
 
 /**
  * @remarks
@@ -285,142 +283,6 @@ import CalsTableDefinition from './table-definition/CalsTableDefinition';
  * | our guide} to learn more.
  *
  * @fontosdk importable
- *
- * @param sxModule                                 -
- * @param options                                  -
- * @param options.priority                         - Selector priority for all elements configured by
- *                                                   this function.
- * @param options.allowExpansionInContentView      - Defines the availability of expansion of a table.
- * @param options.table                            - Configuration options for the table which is the
- *                                                   frame surrounding one or more CALS tables.
- * @param options.table.localName                  - The local name of the table.
- * @param options.table.namespaceURI               - The namespace URI unique to the table.
- * @param options.tgroup                           - Configuration options for the tgroup which is
- *                                                   table defining element.
- * @param options.tgroup.localName                 - The local name of the tgroup.
- * @param options.tgroup.namespaceURI              - The namespace URI for the tgroup and its child
- *                                                   elements unless their namespaceURIs are set.
- * @param options.tgroup.tableFigureFilterSelector - An optional selector which is used to filter which
- *                                                   possible tables should be seen as cals tables for
- *                                                   this configuration.
- * @param options.colspec                          - Configuration options for the colspec.
- * @param options.colspec.localName                - The local name for the colspec.
- * @param options.colspec.namespaceURI             - The namespace URI for the colspec.
- * @param options.thead                            - Configuration options for the thead which is the
- *                                                   container element of header rows.
- * @param options.thead.localName                  - The local name for the thead.
- * @param options.thead.namespaceURI               - The namespace URI for the thead.
- * @param options.tbody                            - Configuration options for the tbody which is the
- *                                                   container element of the normal rows.
- * @param options.tbody.localName                  - The local name for the tbody.
- * @param options.tbody.namespaceURI               - The namespace URI for the tbody.
- * @param options.row                              - Configuration options for the row.
- * @param options.row.localName                    - The local name for the row.
- * @param options.row.namespaceURI                 - The namespace URI for the row.
- * @param options.entry                            - Configuration options for the entry.
- * @param options.entry.localName                  - The local name for the entry.
- * @param options.entry.namespaceURI               - The namespace URI for the entry.
- * @param options.entry.defaultTextContainer       - The default text container for the entry.
- * @param options.frame                            - Configuration options for the frame attribute
- *                                                   which describes position of outer rulings.
- * @param options.frame.localName                  - The local name for the frame attribute.
- * @param options.frame.allValue                   - The all value.
- * @param options.frame.noneValue                  - The none value.
- * @param options.cols                             - Configuration options for the cols attribute which
- *                                                   shows number of columns in the tgroup.
- * @param options.cols.localName                   - The local name for the cols attribute.
- * @param options.colname                          - Configuration options for the colname attribute
- *                                                   which is the name of the column.
- * @param options.colname.localName                - The local name for the colname attribute.
- * @param options.colnum                           - Configuration options for the colnum attribute
- *                                                   which is the number of the column.
- * @param options.colnum.localName                 - The local name for the colnum attribute.
- * @param options.colwidth                         - Configuration options for the colwidth attribute
- *                                                   which determines the width of the column.
- * @param options.colwidth.localName               - The local name for the colwidth attribute.
- * @param options.colsep                           - Configuration options for the colsep attribute
- *                                                   which display the internal vertical column ruling
- *                                                   at the right of the entry if other than that false
- *                                                   value; if false value, do not display it.
- * @param options.colsep.localName                 - The local name for the colsep attribute.
- * @param options.rowsep                           - Configuration options for the rowsep attribute
- *                                                   which display the internal horizontal row ruling
- *                                                   at the bottom of the entry if other than that
- *                                                   false value; if false value, do not display it.
- * @param options.rowsep.localName                 - The local name for the rowsep attribute.
- * @param options.morerows                         - Configuration options for the morerows attribute
- *                                                   which is the number of additional rows in a
- *                                                   vertical straddle.
- * @param options.morerows.localName               - The local name for the morerows attribute.
- * @param options.namest                           - Configuration options for the namest attribute
- *                                                   which is the name of leftmost column of span.
- * @param options.namest.localName                 - The local name for the namest attribute.
- * @param options.nameend                          - Configuration options for the nameend attribute
- *                                                   which is the name of rightmost column of span.
- * @param options.nameend.localName                - The local name for the nameend attribute.
- * @param options.align                            - Configuration options for the align attribute
- *                                                   which determines the text horizontal position
- *                                                   within the entry.
- * @param options.align.localName                  - The local name for the align attribute.
- * @param options.align.leftValue                  - The left alignment value.
- * @param options.align.rightValue                 - The right alignment value.
- * @param options.align.centerValue                - The center alignment value.
- * @param options.align.justifyValue               - The justify alignment value.
- * @param options.valign                           - Configuration options for the valign attribute
- *                                                   which determines the text vertical positioning
- *                                                   within the entry.
- * @param options.valign.localName                 - The local name for the valign attribute.
- * @param options.valign.leftValue                 - The top vertical alignment value.
- * @param options.valign.rightValue                - The bottom vertical alignment value.
- * @param options.valign.centerValue               - The middle vertical alignment value.
- * @param options.yesOrNo                          - Defines the true and false values for attributes
- *                                                   like colsep, rowsep.
- * @param options.yesOrNo.yesValue                 - The true value.
- * @param options.yesOrNo.noValue                  - The false value.
- * @param options.showInsertionWidget              - To add insertion buttons which insert a column or
- *                                                   a row to a specific place, default false.
- * @param options.showHighlightingWidget           - This is deprecated. Instead use
- *                                                   showSelectionWidget.
- * @param options.showSelectionWidget              - To add selection bars which select columns and
- *                                                   rows, and provide operations popover, default
- *                                                   false.
- * @param options.columnBefore                     - Used to add one or multiple widgets before each
- *                                                   column. The context node of each column widget is
- *                                                   the colspec element. {@link
- *                                                   fonto-documentation/docs/generated-content/editor-api/index.xml#id-cd5577eb-9790-92d6-e3ac-8d1554fe6b12
- *                                                   | All widgets} are supported.
- * @param options.rowBefore                        - Used to add a single icon widget before each row
- *                                                   using {@link createIconWidget}. Row widgets are
- *                                                   linked to the row elements of the table. Any
- *                                                   widget can be added but only icon widget is
- *                                                   supported.
- * @param options.columnWidgetMenuOperations       - This is deprecated. Use columnsWidgetMenuOperations instead.
- * @param options.columnsWidgetMenuOperations      - To configure table widget menu for columns.
- *                                                   It accepts an array of {@link ContextualOperation}s,
- *                                                   but only supports "name" and "contents" properties.
- *                                                 - It is allowed to have only one layer of menu.
- * @param options.rowWidgetMenuOperations          - This is deprecated. Use rowsWidgetMenuOperations instead.
- * @param options.rowsWidgetMenuOperations         - To configure table widget menu for rows.
- *                                                   It accepts an array of {@link ContextualOperation}s,
- *                                                   but only supports "name" and "contents" properties.
- *                                                 - It is allowed to have only one layer of menu.
- * @param options.useDefaultContextMenu            - Whether or not to use a preconfigured context menu
- *                                                   for elements within the table.
- * @param options.isCollapsibleQuery               - The {@link XPathQuery} or {@link XQExpression} to
- *                                                   determine whether or not a table has the ability
- *                                                   to be collapsible. Optional, defaults to
- *                                                   'false()'. $rowCount and $columnCount helper
- *                                                   variables can optionally be used in this XPath
- *                                                   expression which evaluate to the total rows and
- *                                                   total columns in a table.
- * @param options.isInitiallyCollapsedQuery        - The {@link XPathQuery} or {@link XQExpression} to
- *                                                   determine whether or not a table should initially
- *                                                   start off as collapsed. Tables must first have the
- *                                                   ability to be collapsible with isCollapsibleQuery.
- *                                                   Optional, defaults to 'true()'. $rowCount and
- *                                                   $columnCount helper variables can optionally be
- *                                                   used in this XPath expression which evaluate to
- *                                                   the total rows and total columns in a table.
  */
 export default function configureAsCalsTableElements(
 	sxModule: SxModule,
