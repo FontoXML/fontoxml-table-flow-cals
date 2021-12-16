@@ -247,7 +247,7 @@ describe('toggleCellBorder custom mutation', () => {
 
 				chai.assert.deepEqual(
 					result,
-					CustomMutationResult.notAllowed()
+					CustomMutationResult.notAllowed().setActive(true)
 				);
 			});
 
@@ -279,7 +279,7 @@ describe('toggleCellBorder custom mutation', () => {
 
 				chai.assert.deepEqual(
 					result,
-					CustomMutationResult.notAllowed()
+					CustomMutationResult.notAllowed().setActive(true)
 				);
 			});
 			// case: top left
@@ -310,7 +310,7 @@ describe('toggleCellBorder custom mutation', () => {
 
 				chai.assert.deepEqual(
 					result,
-					CustomMutationResult.notAllowed()
+					CustomMutationResult.notAllowed().setActive(true)
 				);
 			});
 			// case: top right
@@ -341,7 +341,7 @@ describe('toggleCellBorder custom mutation', () => {
 
 				chai.assert.deepEqual(
 					result,
-					CustomMutationResult.notAllowed()
+					CustomMutationResult.notAllowed().setActive(true)
 				);
 			});
 			// case: top right
@@ -434,7 +434,7 @@ describe('toggleCellBorder custom mutation', () => {
 
 				chai.assert.deepEqual(
 					result,
-					CustomMutationResult.notAllowed()
+					CustomMutationResult.notAllowed().setActive(true)
 				);
 			});
 			it('can set the top border on the middle cell in a 3x3 table', () => {
@@ -2378,7 +2378,16 @@ describe('toggleCellBorder custom mutation', () => {
 					},
 					blueprint
 				);
-				chai.assert.equal(result.operationIsActive, true);
+				chai.assert.equal(
+					result.operationIsActive,
+					true,
+					'Operation should be active'
+				);
+				chai.assert.equal(
+					result.operationIsEnabled,
+					false,
+					'Operation should not be enabled because it wont do anything'
+				);
 			});
 
 			it('sets inactive if you unset all borders on the middle cell when all borders are present', () => {
