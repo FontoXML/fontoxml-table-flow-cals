@@ -6,6 +6,7 @@ import type { Format } from 'fontoxml-schema-experience/src/format';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
 import xq from 'fontoxml-selectors/src/xq';
 import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels';
+
 import type CalsTableDefinition from '../table-definition/CalsTableDefinition';
 
 export default function toggleCellBorder(
@@ -27,7 +28,7 @@ export default function toggleCellBorder(
 		!cellNode ||
 		// ancestors: row, tbody/thead, tgroup
 		!evaluateXPathToBoolean(
-			'ancestor::*[3][fonto:is-cals-table(.)]',
+			xq`ancestor::*[3][fonto:is-cals-table(.)]`,
 			cellNode,
 			blueprint
 		)
@@ -51,7 +52,7 @@ export default function toggleCellBorder(
 	const isToggle = argument.isToggle;
 
 	const tableGridModel = getGridModel(cellNode, blueprint);
-	if (!tableGridModel || tableGridModel.error) {
+	if (!tableGridModel || 'error' in tableGridModel) {
 		return CustomMutationResult.notAllowed();
 	}
 
@@ -73,7 +74,7 @@ export default function toggleCellBorder(
 		currentBorders.bottom =
 			currentBorders.bottom &&
 			evaluateXPathToBoolean(
-				`./@${tableDefinition.rowsepLocalName} = $setValue`,
+				xq`./@*[name(.)=${tableDefinition.rowsepLocalName}] = $setValue`,
 				cellInfo.element,
 				blueprint,
 				{
@@ -84,7 +85,7 @@ export default function toggleCellBorder(
 		currentBorders.right =
 			currentBorders.right &&
 			evaluateXPathToBoolean(
-				`./@${tableDefinition.colsepLocalName} = $setValue`,
+				xq`./@*[name(.)=${tableDefinition.colsepLocalName}] = $setValue`,
 				cellInfo.element,
 				blueprint,
 				{
@@ -99,10 +100,14 @@ export default function toggleCellBorder(
 					cellInfo.origin.column + i
 				);
 
+				if (!neighborCellInfo) {
+					throw new Error('A cell could not be found.');
+				}
+
 				currentBorders.top =
 					currentBorders.top &&
 					evaluateXPathToBoolean(
-						`./@${tableDefinition.rowsepLocalName} = $setValue`,
+						xq`./@*[name(.)=${tableDefinition.rowsepLocalName}] = $setValue`,
 						neighborCellInfo.element,
 						blueprint,
 						{ setValue: borders.top ? trueValue : falseValue }
@@ -117,10 +122,14 @@ export default function toggleCellBorder(
 					cellInfo.origin.column - 1
 				);
 
+				if (!neighborCellInfo) {
+					throw new Error('A cell could not be found.');
+				}
+
 				currentBorders.left =
 					currentBorders.left &&
 					evaluateXPathToBoolean(
-						`./@${tableDefinition.colsepLocalName} = $setValue`,
+						xq`./@*[name(.)=${tableDefinition.colsepLocalName}] = $setValue`,
 						neighborCellInfo.element,
 						blueprint,
 						{ setValue: borders.left ? trueValue : falseValue }
@@ -204,6 +213,10 @@ export default function toggleCellBorder(
 					cellInfo.origin.column + i
 				);
 
+				if (!neighborCellInfo) {
+					throw new Error('A cell could not be found.');
+				}
+
 				blueprint.setAttribute(
 					neighborCellInfo.element,
 					tableDefinition.rowsepLocalName,
@@ -233,6 +246,10 @@ export default function toggleCellBorder(
 					cellInfo.origin.row + i,
 					cellInfo.origin.column - 1
 				);
+
+				if (!neighborCellInfo) {
+					throw new Error('A cell could not be found.');
+				}
 
 				blueprint.setAttribute(
 					neighborCellInfo.element,

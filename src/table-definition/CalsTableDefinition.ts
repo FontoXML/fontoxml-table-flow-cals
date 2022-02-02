@@ -3,13 +3,29 @@ import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
 import type { FontoNode } from 'fontoxml-dom-utils/src/types';
 import type { Format } from 'fontoxml-schema-experience/src/format';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
+import type { XQExpression } from 'fontoxml-selectors/src/types';
+import xq from 'fontoxml-selectors/src/xq';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
 import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
-import getSpecificationValueStrategies from 'fontoxml-table-flow/src/getSpecificationValueStrategies';
-import normalizeColumnSpecificationStrategies from 'fontoxml-table-flow/src/normalizeColumnSpecificationStrategies';
-import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
-import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
+import {
+	createGetValueAsBooleanStrategy,
+	createGetValueAsNumberStrategy,
+	createGetValueAsStringStrategy,
+} from 'fontoxml-table-flow/src/getSpecificationValueStrategies';
+import { createRecreateColumnName } from 'fontoxml-table-flow/src/normalizeColumnSpecificationStrategies';
+import {
+	createAddBodyContainerNodeStrategy,
+	createAddHeaderContainerNodeStrategy,
+} from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
+import {
+	createBooleanValueAsAttributeStrategy,
+	createColumnCountAsAttributeStrategy,
+	createColumnNameAsAttributeStrategy,
+	createColumnNumberAsAttributeStrategy,
+	createRowSpanAsAttributeStrategy,
+	createStringValueAsAttributeStrategy,
+} from 'fontoxml-table-flow/src/setAttributeStrategies';
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 import type { TableDefinitionProperties } from 'fontoxml-table-flow/src/types';
@@ -157,8 +173,8 @@ const DEFAULT_OPTIONS = {
 	rowBefore: false,
 	columnBefore: false,
 	useDefaultContextMenu: true,
-	isCollapsibleQuery: 'false()',
-	isInitiallyCollapsedQuery: 'true()',
+	isCollapsibleQuery: `false()`,
+	isInitiallyCollapsedQuery: `true()`,
 	priority: null,
 
 	// Deprecated
@@ -350,34 +366,39 @@ function getTableDefinitionProperties(
 	const falseValue = options.yesOrNo.noValue;
 
 	const tableFigureFilter = options.tgroup.tableFigureFilterSelector
-		? `[${options.tgroup.tableFigureFilterSelector}]`
-		: '';
-	const tableFigureSelectorPart = `Q{${tableFigureNamespaceURI}}${tableFigureLocalName}${tableFigureFilter}`;
-	const tableFigureParentFilter = tableFigureFilter
-		? `[parent::${tableFigureSelectorPart}]`
-		: '';
-	const selectorParts = {
+		? xq`${options.tgroup.tableFigureFilterSelector}`
+		: xq`true()`;
+	const tableFigureSelectorPart = xq`${xq(
+		`self::Q{${tableFigureNamespaceURI}}${tableFigureLocalName}`
+	)}[${tableFigureFilter}]`;
+	const tableFigureParentFilter = options.tgroup.tableFigureFilterSelector
+		? xq`parent::*[${tableFigureSelectorPart}]`
+		: xq`true()`;
+	const tablePartSelectors = {
 		tableFigure: tableFigureSelectorPart,
-		table: `Q{${tgroupNamespaceURI}}${tgroupLocalName}${tableFigureParentFilter}`,
-		headerContainer: `Q{${theadNamespaceURI}}${theadLocalName}`,
-		bodyContainer: `Q{${tbodyNamespaceURI}}${tbodyLocalName}`,
-		row: `Q{${rowNamespaceURI}}${rowLocalName}`,
-		cell: `Q{${entryNamespaceURI}}${entryLocalName}`,
-		columnSpecification: `Q{${colspecNamespaceURI}}${colspecLocalName}`,
+		table: xq`${xq(
+			`self::Q{${tgroupNamespaceURI}}${tgroupLocalName}`
+		)}[${tableFigureParentFilter}]`,
+		headerContainer: xq(`self::Q{${theadNamespaceURI}}${theadLocalName}`),
+		bodyContainer: xq(`self::Q{${tbodyNamespaceURI}}${tbodyLocalName}`),
+		row: xq(`self::Q{${rowNamespaceURI}}${rowLocalName}`),
+		cell: xq(`self::Q{${entryNamespaceURI}}${entryLocalName}`),
+		columnSpecification: xq(
+			`self::Q{${colspecNamespaceURI}}${colspecLocalName}`
+		),
 	};
 
 	// Alias selector parts
-	const tableFigure = selectorParts.tableFigure;
-	const thead = selectorParts.headerContainer;
-	const tbody = selectorParts.bodyContainer;
-	const tfoot = selectorParts.footerContainer;
-	const row = selectorParts.row;
-	const entry = selectorParts.cell;
-	const colspec = selectorParts.columnSpecification;
+	const tableFigure = tablePartSelectors.tableFigure;
+	const thead = tablePartSelectors.headerContainer;
+	const tbody = tablePartSelectors.bodyContainer;
+	const row = tablePartSelectors.row;
+	const entry = tablePartSelectors.cell;
+	const colspec = tablePartSelectors.columnSpecification;
 
 	// Properties object
 	const properties: TableDefinitionProperties = {
-		selectorParts,
+		tablePartSelectors,
 
 		supportsBorders: true,
 		supportsCellBorder: true,
@@ -469,23 +490,22 @@ function getTableDefinitionProperties(
 		},
 
 		// Header row node selector
-		headerRowNodeSelector: `self::${row}[parent::${thead}]`,
+		headerRowNodeSelector: xq`${row}[parent::*[${thead}]]`,
 
 		// Finds
-		findHeaderRowNodesXPathQuery: `./${thead}/${row}`,
-		findBodyRowNodesXPathQuery: `./${tbody}/${row}`,
-		findFooterRowNodesXPathQuery: `./${tfoot}/${row}`,
+		findHeaderRowNodesXPathQuery: xq`child::*[${thead}]/child::*[${row}]`,
+		findBodyRowNodesXPathQuery: xq`child::*[${tbody}]/child::*[${row}]`,
 
-		findHeaderContainerNodesXPathQuery: `./${thead}`,
-		findBodyContainerNodesXPathQuery: `./${tbody}`,
+		findHeaderContainerNodesXPathQuery: xq`child::*[${thead}]`,
+		findBodyContainerNodesXPathQuery: xq`child::*[${tbody}]`,
 
-		findColumnSpecificationNodesXPathQuery: `./${colspec}`,
+		findColumnSpecificationNodesXPathQuery: xq`child::*[${colspec}]`,
 
-		findCellNodesXPathQuery: `./${entry}`,
+		findCellNodesXPathQuery: xq`child::*[${entry}]`,
 
-		getColumnIdentifiersXPathQuery: `map {"columnName": string(./@${colnameLocalName}), "namest": string(./@${namestLocalName}), "nameend": string(./@${nameendLocalName})}`,
+		getColumnIdentifiersXPathQuery: xq`map {"columnName": string(./@*[name(.)=${colnameLocalName}]), "namest": string(./@*[name(.)=${namestLocalName}]), "nameend": string(./@*[name(.)=${nameendLocalName}])}`,
 
-		getColumnDataForCellXPathQuery: `
+		getColumnDataForCellXPathQuery: xq`
 			if($columnIdentifiers("namest") and $columnIdentifiers("nameend")) then
 				let $colSpecifications := [
 					fonto:column-spec(., $columnIdentifiers("namest")),
@@ -517,26 +537,24 @@ function getTableDefinitionProperties(
 				map {"colsep": true(), "rowsep": true(), "colspan": 1}`,
 
 		// Data
-		getNumberOfColumnsXPathQuery: `./@${colsLocalName} => number()`,
-		getRowSpanForCellNodeXPathQuery: `let $rowspan := ./@${morerowsLocalName} => number() return if ($rowspan) then $rowspan + 1 else 1`,
-		getColumnSpanForCellNodeXPathQuery: '$columnDataForCell("colspan")',
+		getNumberOfColumnsXPathQuery: xq`./@*[name(.)=${colsLocalName}] => number()`,
+		getRowSpanForCellNodeXPathQuery: xq`let $rowspan := ./@*[name(.)=${morerowsLocalName}] => number() return if ($rowspan) then $rowspan + 1 else 1`,
+		getColumnSpanForCellNodeXPathQuery: xq`$columnDataForCell("colspan")`,
 
 		// Normalizations
 		normalizeContainerNodeStrategies: [
-			normalizeContainerNodeStrategies.createAddHeaderContainerNodeStrategy(
+			createAddHeaderContainerNodeStrategy(
 				theadNamespaceURI,
 				theadLocalName
 			),
-			normalizeContainerNodeStrategies.createAddBodyContainerNodeStrategy(
+			createAddBodyContainerNodeStrategy(
 				tbodyNamespaceURI,
 				tbodyLocalName
 			),
 		],
 
 		normalizeColumnSpecificationStrategies: [
-			normalizeColumnSpecificationStrategies.createRecreateColumnName(
-				'column'
-			),
+			createRecreateColumnName('column'),
 		],
 		findNextColumnSpecification(
 			columnIndex,
@@ -583,7 +601,7 @@ function getTableDefinitionProperties(
 			createCreateColumnSpecificationNodeStrategy(
 				colspecNamespaceURI,
 				colspecLocalName,
-				`./*[self::${thead} or self::${tbody}]`
+				xq`./*[${thead} or ${tbody}]`
 			),
 		createRowStrategy: createCreateRowStrategy(
 			rowNamespaceURI,
@@ -592,47 +610,47 @@ function getTableDefinitionProperties(
 
 		// Specifications
 		getTableSpecificationStrategies: [
-			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+			createGetValueAsBooleanStrategy(
 				'borders',
-				`./parent::${tableFigure}/@${frameLocalName} = "${options.frame.allValue}"`
+				xq`./parent::*[${tableFigure}]/@*[name(.)=${frameLocalName}] = ${options.frame.allValue}`
 			),
 		],
 
 		getColumnSpecificationStrategies: [
-			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+			createGetValueAsBooleanStrategy(
 				'columnSeparator',
-				`let $sep := ./@${colsepLocalName} return if ($sep) then $sep = "${trueValue}" else true()`
+				xq`let $sep := ./@*[name(.)=${colsepLocalName}] return if ($sep) then $sep = ${trueValue} else true()`
 			),
-			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+			createGetValueAsBooleanStrategy(
 				'rowSeparator',
-				`let $sep := ./@${rowsepLocalName} return if ($sep) then $sep = "${trueValue}" else true()`
+				xq`let $sep := ./@*[name(.)=${rowsepLocalName}] return if ($sep) then $sep = ${trueValue} else true()`
 			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'horizontalAlignment',
-				`./@${alignLocalName}`
+				xq`./@*[name(.)=${alignLocalName}]`
 			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'columnWidth',
-				`let $colwidth := ./@${colwidthLocalName} return if ($colwidth) then $colwidth else "1*"`
+				xq`let $colwidth := ./@*[name(.)=${colwidthLocalName}] return if ($colwidth) then $colwidth else "1*"`
 			),
-			getSpecificationValueStrategies.createGetValueAsNumberStrategy(
+			createGetValueAsNumberStrategy(
 				'columnNumber',
-				`number(./@${colnumLocalName})`
+				xq`number(./@*[name(.)=${colnumLocalName}])`
 			),
-			getSpecificationValueStrategies.createGetValueAsNumberStrategy(
+			createGetValueAsNumberStrategy(
 				'index',
-				`if(./@${colnumLocalName}) then number(./@${colnumLocalName}) else preceding-sibling::${colspecLocalName} => count()`
+				xq`if(./@*[name(.)=${colnumLocalName}]) then number(./@*[name(.)=${colnumLocalName}]) else preceding-sibling::*[name(.)=${colspecLocalName}] => count()`
 			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'columnName',
-				`let $name := ./@${colnameLocalName} return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()`
+				xq`let $name := ./@*[name(.)=${colnameLocalName}] return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()`
 			),
 		],
 
 		getRowSpecificationStrategies: [
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'verticalAlignment',
-				`let $valign := ./@${valignLocalName} return if ($valign) then $valign else "bottom"`,
+				xq`let $valign := ./@*[name(.)=${valignLocalName}] return if ($valign) then $valign else "bottom"`,
 				(value) => {
 					const verticalAlignmentValuesByKey =
 						attributeValuesByAttributeName.get('verticalAlignment');
@@ -648,9 +666,9 @@ function getTableDefinitionProperties(
 
 		getCellSpecificationStrategies: [
 			// first option
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'horizontalAlignment',
-				`./@${alignLocalName}`,
+				xq`./@*[name(.)=${alignLocalName}]`,
 				(value) => {
 					const horizontalAlignmentValuesByKey =
 						attributeValuesByAttributeName.get(
@@ -665,9 +683,9 @@ function getTableDefinitionProperties(
 				}
 			),
 			// second option
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'verticalAlignment',
-				`./@${valignLocalName}`,
+				xq`./@*[name(.)=${valignLocalName}]`,
 				(value) => {
 					const verticalAlignmentValuesByKey =
 						attributeValuesByAttributeName.get('verticalAlignment');
@@ -679,71 +697,66 @@ function getTableDefinitionProperties(
 					);
 				}
 			),
-			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+			createGetValueAsBooleanStrategy(
 				'rowSeparator',
-				`if (./@${rowsepLocalName}) then
-					./@${rowsepLocalName} = "${trueValue}"
+				xq`if (./@*[name(.)=${rowsepLocalName}]) then
+					./@*[name(.)=${rowsepLocalName}] = ${trueValue}
 				else
 					$columnDataForCell("rowsep")`
 			),
 
-			getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+			createGetValueAsBooleanStrategy(
 				'columnSeparator',
-				`if (./@${colsepLocalName}) then
-					./@${colsepLocalName} = "${trueValue}"
+				xq`if (./@*[name(.)=${colsepLocalName}]) then
+					./@*[name(.)=${colsepLocalName}] = ${trueValue}
 				else
 					$columnDataForCell("colsep")`
 			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'columnName',
-				`./@${colnameLocalName}`
+				xq`./@*[name(.)=${colnameLocalName}]`
 			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'nameEnd',
-				`./@${nameendLocalName}`
+				xq`./@*[name(.)=${nameendLocalName}]`
 			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+			createGetValueAsStringStrategy(
 				'nameStart',
-				`./@${namestLocalName}`
+				xq`./@*[name(.)=${namestLocalName}]`
 			),
 		],
 
 		// Set attributes
 		setTableNodeAttributeStrategies: [
-			setAttributeStrategies.createColumnCountAsAttributeStrategy(
-				colsLocalName
-			),
+			createColumnCountAsAttributeStrategy(colsLocalName),
 			createTableBorderAttributeStrategy(
-				`./parent::${tableFigure}`,
+				xq`./parent::*[${tableFigure}]`,
 				frameLocalName,
 				frameValues
 			),
 		],
 
 		setColumnSpecificationNodeAttributeStrategies: [
-			setAttributeStrategies.createStringValueAsAttributeStrategy(
+			createStringValueAsAttributeStrategy(
 				colnameLocalName,
 				'columnName'
 			),
-			setAttributeStrategies.createColumnNumberAsAttributeStrategy(
-				colnumLocalName,
-				1
-			),
-			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
+			createColumnNumberAsAttributeStrategy(colnumLocalName, 1),
+			createBooleanValueAsAttributeStrategy(
 				colsepLocalName,
 				'columnSeparator',
 				trueValue,
 				trueValue,
 				falseValue
 			),
-			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
+			createBooleanValueAsAttributeStrategy(
 				rowsepLocalName,
 				'rowSeparator',
 				trueValue,
 				trueValue,
 				falseValue
 			),
-			setAttributeStrategies.createStringValueAsAttributeStrategy(
+			createStringValueAsAttributeStrategy(
 				alignLocalName,
 				'horizontalAlignment',
 				undefined,
@@ -752,37 +765,34 @@ function getTableDefinitionProperties(
 						value
 					]
 			),
-			setAttributeStrategies.createStringValueAsAttributeStrategy(
+			createStringValueAsAttributeStrategy(
 				colwidthLocalName,
 				'columnWidth'
 			),
 		],
 
 		setCellNodeAttributeStrategies: [
-			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
+			createBooleanValueAsAttributeStrategy(
 				rowsepLocalName,
 				'rowSeparator',
 				trueValue,
 				trueValue,
 				falseValue
 			),
-			setAttributeStrategies.createBooleanValueAsAttributeStrategy(
+			createBooleanValueAsAttributeStrategy(
 				colsepLocalName,
 				'columnSeparator',
 				trueValue,
 				trueValue,
 				falseValue
 			),
-			setAttributeStrategies.createColumnNameAsAttributeStrategy(
+			createColumnNameAsAttributeStrategy(
 				colnameLocalName,
 				namestLocalName,
 				nameendLocalName
 			),
-			setAttributeStrategies.createRowSpanAsAttributeStrategy(
-				morerowsLocalName,
-				true
-			),
-			setAttributeStrategies.createStringValueAsAttributeStrategy(
+			createRowSpanAsAttributeStrategy(morerowsLocalName, true),
+			createStringValueAsAttributeStrategy(
 				alignLocalName,
 				'horizontalAlignment',
 				undefined,
@@ -791,7 +801,7 @@ function getTableDefinitionProperties(
 						value
 					]
 			),
-			setAttributeStrategies.createStringValueAsAttributeStrategy(
+			createStringValueAsAttributeStrategy(
 				valignLocalName,
 				'verticalAlignment',
 				undefined,
@@ -819,28 +829,33 @@ function getTableDefinitionProperties(
  * Configures the table definition for CALS tables.
  */
 export default class CalsTableDefinition extends TableDefinition {
-	_options: $TSFixMeAny;
+	private readonly _options: $TSFixMeAny;
 
-	_tgroupNamespaceURI: $TSFixMeAny;
+	private readonly _tgroupNamespaceURI: string;
 
-	_tgroupLocalName: $TSFixMeAny;
+	private readonly _tgroupLocalName: string;
 
-	colsepLocalName: $TSFixMeAny;
+	private readonly _tableSelector: XQExpression;
 
-	rowsepLocalName: $TSFixMeAny;
+	public colsepLocalName: string;
 
-	trueValue: $TSFixMeAny;
+	public rowsepLocalName: string;
 
-	falseValue: $TSFixMeAny;
+	public trueValue: string;
+
+	public falseValue: string;
 
 	/**
 	 * @param options -
 	 */
-	constructor(options: CalsTableOptions) {
-		super(getTableDefinitionProperties(options));
+	public constructor(options: CalsTableOptions) {
+		const properties = getTableDefinitionProperties(options);
+		super(properties);
 		this._options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
 		this._tgroupNamespaceURI = this._options.tgroup.namespaceURI || '';
 		this._tgroupLocalName = this._options.tgroup.localName;
+		this._tableSelector = properties.tablePartSelectors
+			.table as XQExpression;
 
 		// This attribute names are required at other places
 		this.colsepLocalName = this._options.colsep.localName;
@@ -855,9 +870,12 @@ export default class CalsTableDefinition extends TableDefinition {
 	 * @param node      - The node to deserialize
 	 * @param blueprint - The blueprint to use
 	 */
-	buildTableGridModel(node: FontoNode, blueprint: Blueprint): TableGridModel {
+	public override buildTableGridModel(
+		node: FontoNode,
+		blueprint: Blueprint
+	): TableGridModel {
 		const tableElement = evaluateXPathToFirstNode(
-			`descendant-or-self::${this.selectorParts.table}`,
+			xq`descendant-or-self::element()[${this._tableSelector}]`,
 			node,
 			blueprint
 		);
@@ -874,14 +892,14 @@ export default class CalsTableDefinition extends TableDefinition {
 	 * @param blueprint      - The blueprint to use
 	 * @param format         - The format to use
 	 */
-	applyToDom(
+	public override applyToDom(
 		tableGridModel: TableGridModel,
 		tableNode: FontoNode,
 		blueprint: Blueprint,
 		format: Format
 	): boolean {
 		let actualTableNode = evaluateXPathToFirstNode(
-			`descendant-or-self::${this.selectorParts.table}`,
+			xq`descendant-or-self::element()[${this._tableSelector}]`,
 			tableNode,
 			blueprint
 		);
