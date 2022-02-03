@@ -366,7 +366,7 @@ function getTableDefinitionProperties(
 	const falseValue = options.yesOrNo.noValue;
 
 	const tableFigureFilter = options.tgroup.tableFigureFilterSelector
-		? xq`${options.tgroup.tableFigureFilterSelector}`
+		? xq(options.tgroup.tableFigureFilterSelector)
 		: xq`true()`;
 	const tableFigureSelectorPart = xq`${xq(
 		`self::Q{${tableFigureNamespaceURI}}${tableFigureLocalName}`
