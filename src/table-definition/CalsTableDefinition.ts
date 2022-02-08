@@ -4,7 +4,7 @@ import type { FontoNode } from 'fontoxml-dom-utils/src/types';
 import type { Format } from 'fontoxml-schema-experience/src/format';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
 import type { XQExpression } from 'fontoxml-selectors/src/types';
-import xq from 'fontoxml-selectors/src/xq';
+import xq, { ensureXQExpression } from 'fontoxml-selectors/src/xq';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
 import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
@@ -366,9 +366,9 @@ function getTableDefinitionProperties(
 	const falseValue = options.yesOrNo.noValue;
 
 	const tableFigureFilter = options.tgroup.tableFigureFilterSelector
-		? xq(options.tgroup.tableFigureFilterSelector)
+		? ensureXQExpression(options.tgroup.tableFigureFilterSelector)
 		: xq`true()`;
-	const tableFigureSelectorPart = xq`${xq(
+	const tableFigureSelectorPart = xq`${ensureXQExpression(
 		`self::Q{${tableFigureNamespaceURI}}${tableFigureLocalName}`
 	)}[${tableFigureFilter}]`;
 	const tableFigureParentFilter = options.tgroup.tableFigureFilterSelector
@@ -376,14 +376,20 @@ function getTableDefinitionProperties(
 		: xq`true()`;
 	const tablePartSelectors = {
 		tableFigure: tableFigureSelectorPart,
-		table: xq`${xq(
+		table: xq`${ensureXQExpression(
 			`self::Q{${tgroupNamespaceURI}}${tgroupLocalName}`
 		)}[${tableFigureParentFilter}]`,
-		headerContainer: xq(`self::Q{${theadNamespaceURI}}${theadLocalName}`),
-		bodyContainer: xq(`self::Q{${tbodyNamespaceURI}}${tbodyLocalName}`),
-		row: xq(`self::Q{${rowNamespaceURI}}${rowLocalName}`),
-		cell: xq(`self::Q{${entryNamespaceURI}}${entryLocalName}`),
-		columnSpecification: xq(
+		headerContainer: ensureXQExpression(
+			`self::Q{${theadNamespaceURI}}${theadLocalName}`
+		),
+		bodyContainer: ensureXQExpression(
+			`self::Q{${tbodyNamespaceURI}}${tbodyLocalName}`
+		),
+		row: ensureXQExpression(`self::Q{${rowNamespaceURI}}${rowLocalName}`),
+		cell: ensureXQExpression(
+			`self::Q{${entryNamespaceURI}}${entryLocalName}`
+		),
+		columnSpecification: ensureXQExpression(
 			`self::Q{${colspecNamespaceURI}}${colspecLocalName}`
 		),
 	};
