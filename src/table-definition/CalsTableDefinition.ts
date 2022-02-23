@@ -819,7 +819,7 @@ function getTableDefinitionProperties(
 		],
 
 		// Widget menu operations
-		// This is deprecated. Remove in 7.20
+		// This is deprecated. Remove in 8.2
 		columnWidgetMenuOperations: options.columnWidgetMenuOperations,
 		columnsWidgetMenuOperations: options.columnsWidgetMenuOperations,
 		// This is deprecated. Remove in 7.20
@@ -860,8 +860,7 @@ export default class CalsTableDefinition extends TableDefinition {
 		this._options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
 		this._tgroupNamespaceURI = this._options.tgroup.namespaceURI || '';
 		this._tgroupLocalName = this._options.tgroup.localName;
-		this._tableSelector = properties.tablePartSelectors
-			.table as XQExpression;
+		this._tableSelector = properties.tablePartSelectors.table!;
 
 		// This attribute names are required at other places
 		this.colsepLocalName = this._options.colsep.localName;
