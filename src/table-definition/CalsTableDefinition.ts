@@ -167,8 +167,6 @@ const DEFAULT_OPTIONS = {
 	},
 
 	showInsertionWidget: false,
-	// This is deprecated.
-	showHighlightingWidget: undefined,
 	showSelectionWidget: false,
 	rowBefore: false,
 	columnBefore: false,
@@ -868,7 +866,7 @@ export default class CalsTableDefinition extends TableDefinition {
 		this._options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
 		this._tgroupNamespaceURI = this._options.tgroup.namespaceURI || '';
 		this._tgroupLocalName = this._options.tgroup.localName;
-		this._tableSelector = properties.tablePartSelectors.table!;
+		this._tableSelector = properties.tablePartSelectors.table;
 
 		// This attribute names are required at other places
 		this.colsepLocalName = this._options.colsep.localName;

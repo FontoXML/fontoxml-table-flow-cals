@@ -94,7 +94,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-cals-set-cell-border-all"
@@ -146,7 +146,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-cals-set-cell-border-none"
