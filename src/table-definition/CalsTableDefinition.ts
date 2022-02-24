@@ -361,6 +361,23 @@ function getTableDefinitionProperties(
 	const morerowsLocalName = options.morerows.localName;
 	const colsLocalName = options.cols.localName;
 
+	const colnameAttributeQuery = ensureXQExpression(`@*:${colnameLocalName}`);
+	const frameAttributeQuery = ensureXQExpression(`@*:${frameLocalName}`);
+	const namestAttributeQuery = ensureXQExpression(`@*:${namestLocalName}`);
+	const nameendAttributeQuery = ensureXQExpression(`@*:${nameendLocalName}`);
+	const colnumAttributeQuery = ensureXQExpression(`@*:${colnumLocalName}`);
+	const colsepAttributeQuery = ensureXQExpression(`@*:${colsepLocalName}`);
+	const rowsepAttributeQuery = ensureXQExpression(`@*:${rowsepLocalName}`);
+	const alignAttributeQuery = ensureXQExpression(`@*:${alignLocalName}`);
+	const valignAttributeQuery = ensureXQExpression(`@*:${valignLocalName}`);
+	const colwidthAttributeQuery = ensureXQExpression(
+		`@*:${colwidthLocalName}`
+	);
+	const morerowsAttributeQuery = ensureXQExpression(
+		`@*:${morerowsLocalName}`
+	);
+	const colsAttributeQuery = ensureXQExpression(`@*:${colsLocalName}`);
+
 	// Configurable true/false values
 	const trueValue = options.yesOrNo.yesValue;
 	const falseValue = options.yesOrNo.noValue;
@@ -509,7 +526,7 @@ function getTableDefinitionProperties(
 
 		findCellNodesXPathQuery: xq`child::*[${entry}]`,
 
-		getColumnIdentifiersXPathQuery: xq`map {"columnName": string(./@*[name(.)=${colnameLocalName}]), "namest": string(./@*[name(.)=${namestLocalName}]), "nameend": string(./@*[name(.)=${nameendLocalName}])}`,
+		getColumnIdentifiersXPathQuery: xq`map {"columnName": string(${colnameAttributeQuery}), "namest": string(${namestAttributeQuery}), "nameend": string(${nameendAttributeQuery})}`,
 
 		getColumnDataForCellXPathQuery: xq`
 			if($columnIdentifiers("namest") and $columnIdentifiers("nameend")) then
@@ -543,8 +560,8 @@ function getTableDefinitionProperties(
 				map {"colsep": true(), "rowsep": true(), "colspan": 1}`,
 
 		// Data
-		getNumberOfColumnsXPathQuery: xq`./@*[name(.)=${colsLocalName}] => number()`,
-		getRowSpanForCellNodeXPathQuery: xq`let $rowspan := ./@*[name(.)=${morerowsLocalName}] => number() return if ($rowspan) then $rowspan + 1 else 1`,
+		getNumberOfColumnsXPathQuery: xq`${colsAttributeQuery} => number()`,
+		getRowSpanForCellNodeXPathQuery: xq`let $rowspan := ${morerowsAttributeQuery} => number() return if ($rowspan) then $rowspan + 1 else 1`,
 		getColumnSpanForCellNodeXPathQuery: xq`$columnDataForCell("colspan")`,
 
 		// Normalizations
@@ -618,38 +635,38 @@ function getTableDefinitionProperties(
 		getTableSpecificationStrategies: [
 			createGetValueAsBooleanStrategy(
 				'borders',
-				xq`./parent::*[${tableFigure}]/@*[name(.)=${frameLocalName}] = ${options.frame.allValue}`
+				xq`./parent::*[${tableFigure}]/${frameAttributeQuery} = ${options.frame.allValue}`
 			),
 		],
 
 		getColumnSpecificationStrategies: [
 			createGetValueAsBooleanStrategy(
 				'columnSeparator',
-				xq`let $sep := ./@*[name(.)=${colsepLocalName}] return if ($sep) then $sep = ${trueValue} else true()`
+				xq`let $sep := ${colsepAttributeQuery} return if ($sep) then $sep = ${trueValue} else true()`
 			),
 			createGetValueAsBooleanStrategy(
 				'rowSeparator',
-				xq`let $sep := ./@*[name(.)=${rowsepLocalName}] return if ($sep) then $sep = ${trueValue} else true()`
+				xq`let $sep := ${rowsepAttributeQuery} return if ($sep) then $sep = ${trueValue} else true()`
 			),
 			createGetValueAsStringStrategy(
 				'horizontalAlignment',
-				xq`./@*[name(.)=${alignLocalName}]`
+				alignAttributeQuery
 			),
 			createGetValueAsStringStrategy(
 				'columnWidth',
-				xq`let $colwidth := ./@*[name(.)=${colwidthLocalName}] return if ($colwidth) then $colwidth else "1*"`
+				xq`let $colwidth := ${colwidthAttributeQuery} return if ($colwidth) then $colwidth else "1*"`
 			),
 			createGetValueAsNumberStrategy(
 				'columnNumber',
-				xq`number(./@*[name(.)=${colnumLocalName}])`
+				xq`number(${colnumAttributeQuery})`
 			),
 			createGetValueAsNumberStrategy(
 				'index',
-				xq`if(./@*[name(.)=${colnumLocalName}]) then number(./@*[name(.)=${colnumLocalName}]) else preceding-sibling::*[name(.)=${colspecLocalName}] => count()`
+				xq`if(${colnumAttributeQuery}) then number(${colnumAttributeQuery}) else preceding-sibling::*[name(.)=${colspecLocalName}] => count()`
 			),
 			createGetValueAsStringStrategy(
 				'columnName',
-				xq`let $name := ./@*[name(.)=${colnameLocalName}] return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()`
+				xq`let $name := ${colnameAttributeQuery} return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()`
 			),
 		],
 
@@ -674,7 +691,7 @@ function getTableDefinitionProperties(
 			// first option
 			createGetValueAsStringStrategy(
 				'horizontalAlignment',
-				xq`./@*[name(.)=${alignLocalName}]`,
+				alignAttributeQuery,
 				(value) => {
 					const horizontalAlignmentValuesByKey =
 						attributeValuesByAttributeName.get(
@@ -691,7 +708,7 @@ function getTableDefinitionProperties(
 			// second option
 			createGetValueAsStringStrategy(
 				'verticalAlignment',
-				xq`./@*[name(.)=${valignLocalName}]`,
+				valignAttributeQuery,
 				(value) => {
 					const verticalAlignmentValuesByKey =
 						attributeValuesByAttributeName.get('verticalAlignment');
@@ -705,31 +722,22 @@ function getTableDefinitionProperties(
 			),
 			createGetValueAsBooleanStrategy(
 				'rowSeparator',
-				xq`if (./@*[name(.)=${rowsepLocalName}]) then
-					./@*[name(.)=${rowsepLocalName}] = ${trueValue}
+				xq`if (${rowsepAttributeQuery}) then
+					${rowsepAttributeQuery} = ${trueValue}
 				else
 					$columnDataForCell("rowsep")`
 			),
 
 			createGetValueAsBooleanStrategy(
 				'columnSeparator',
-				xq`if (./@*[name(.)=${colsepLocalName}]) then
-					./@*[name(.)=${colsepLocalName}] = ${trueValue}
+				xq`if (${colsepAttributeQuery}) then
+					${colsepAttributeQuery} = ${trueValue}
 				else
 					$columnDataForCell("colsep")`
 			),
-			createGetValueAsStringStrategy(
-				'columnName',
-				xq`./@*[name(.)=${colnameLocalName}]`
-			),
-			createGetValueAsStringStrategy(
-				'nameEnd',
-				xq`./@*[name(.)=${nameendLocalName}]`
-			),
-			createGetValueAsStringStrategy(
-				'nameStart',
-				xq`./@*[name(.)=${namestLocalName}]`
-			),
+			createGetValueAsStringStrategy('columnName', colnameAttributeQuery),
+			createGetValueAsStringStrategy('nameEnd', nameendAttributeQuery),
+			createGetValueAsStringStrategy('nameStart', namestAttributeQuery),
 		],
 
 		// Set attributes
