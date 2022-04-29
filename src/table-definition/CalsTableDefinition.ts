@@ -29,7 +29,8 @@ import {
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 import type { TableDefinitionProperties } from 'fontoxml-table-flow/src/types';
-import type { CalsTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
+
+import type { TableElementsCalsOptions } from '../types';
 
 function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
 	if (width === '*') {
@@ -860,7 +861,7 @@ export default class CalsTableDefinition extends TableDefinition {
 	/**
 	 * @param options -
 	 */
-	public constructor(options: CalsTableOptions) {
+	public constructor(options: TableElementsCalsOptions) {
 		const properties = getTableDefinitionProperties(options);
 		super(properties);
 		this._options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
