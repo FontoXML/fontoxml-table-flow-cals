@@ -1,8 +1,6 @@
 import CustomMutationResult from 'fontoxml-base-flow/src/CustomMutationResult';
 import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import type BlueprintSelection from 'fontoxml-blueprints/src/BlueprintSelection';
 import type { NodeId } from 'fontoxml-dom-identification/src/types';
-import type { Format } from 'fontoxml-schema-experience/src/format';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
 import xq from 'fontoxml-selectors/src/xq';
 import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels';
@@ -18,9 +16,7 @@ export default function toggleCellBorder(
 		top: boolean;
 		isToggle: boolean;
 	},
-	blueprint: Blueprint,
-	_format: Format,
-	_selection: BlueprintSelection
+	blueprint: Blueprint
 ): CustomMutationResult {
 	const cellNodeIds = argument.cellNodeIds;
 	const cellNode = cellNodeIds[0] && blueprint.lookup(cellNodeIds[0]);

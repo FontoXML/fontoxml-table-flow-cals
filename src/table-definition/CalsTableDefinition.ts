@@ -1,6 +1,7 @@
 import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import blueprintQuery from 'fontoxml-blueprints/src/blueprintQuery';
 import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
-import type { FontoNode } from 'fontoxml-dom-utils/src/types';
+import type { FontoElementNode, FontoNode } from 'fontoxml-dom-utils/src/types';
 import type { Format } from 'fontoxml-schema-experience/src/format';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
 import type { XQExpression } from 'fontoxml-selectors/src/types';
@@ -28,11 +29,16 @@ import {
 } from 'fontoxml-table-flow/src/setAttributeStrategies';
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
-import type { TableDefinitionProperties } from 'fontoxml-table-flow/src/types';
+import type {
+	TableContextObject,
+	TableDataObject,
+	TableDefinitionProperties,
+	TableElementsSharedOptions,
+} from 'fontoxml-table-flow/src/types';
 
 import type { TableElementsCalsOptions } from '../types';
 
-function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
+function parseWidth(width: string): (string | undefined)[] {
 	if (width === '*') {
 		// '*' is actually '1*'
 		return [width, '1', undefined];
@@ -41,16 +47,20 @@ function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
 }
 
 function createTableBorderAttributeStrategy(
-	parentNodeSelector: $TSFixMeAny,
-	frameLocalName: $TSFixMeAny,
-	frameValues: $TSFixMeAny
-): $TSFixMeAny {
+	parentNodeSelector: XQExpression,
+	frameLocalName: string,
+	frameValues: { all: string; none: string }
+): (
+	context: TableContextObject,
+	data: TableDataObject,
+	blueprint: Blueprint
+) => void {
 	return function tableBorderAttributeStrategy(context, _data, blueprint) {
 		const tableFigureNode = evaluateXPathToFirstNode(
 			parentNodeSelector,
 			context.node,
 			blueprint
-		);
+		) as FontoElementNode | null;
 		if (tableFigureNode) {
 			blueprint.setAttribute(
 				tableFigureNode,
@@ -63,7 +73,7 @@ function createTableBorderAttributeStrategy(
 	};
 }
 
-function gcd(x: $TSFixMeAny, y: $TSFixMeAny): $TSFixMeAny {
+function gcd(x: number, y: number): number {
 	while (y) {
 		const t = y;
 		y = x % y;
@@ -72,7 +82,7 @@ function gcd(x: $TSFixMeAny, y: $TSFixMeAny): $TSFixMeAny {
 	return x;
 }
 
-function findGreatestCommonDivisor(input: $TSFixMeAny): $TSFixMeAny {
+function findGreatestCommonDivisor(input: number[]): number {
 	let a = input[0];
 	let b;
 	for (let i = 1; i < input.length; i++) {
@@ -228,7 +238,7 @@ const DEFAULT_OPTIONS = {
 	],
 };
 
-function isObject(variable: $TSFixMeAny): $TSFixMeAny {
+function isObject(variable: unknown): variable is { [key: string]: unknown } {
 	return (
 		variable !== null &&
 		typeof variable === 'object' &&
@@ -237,11 +247,11 @@ function isObject(variable: $TSFixMeAny): $TSFixMeAny {
 }
 
 function applyDefaults(
-	options: $TSFixMeAny,
-	defaultOptions: $TSFixMeAny,
-	path: $TSFixMeAny,
-	rootOptions: $TSFixMeAny
-): $TSFixMeAny {
+	options: { [key: string]: unknown },
+	defaultOptions: { [key: string]: unknown },
+	path: string[],
+	rootOptions: TableElementsCalsOptions & TableElementsSharedOptions
+): { [key: string]: unknown } {
 	const newOptions = {};
 	for (const defaultOptionKey of Object.keys(defaultOptions)) {
 		const defaultOption = defaultOptions[defaultOptionKey];
@@ -274,7 +284,7 @@ function applyDefaults(
 
 			if (isObject(defaultOption)) {
 				newOptions[defaultOptionKey] = applyDefaults(
-					option,
+					option as { [key: string]: unknown },
 					defaultOption,
 					[...path, defaultOptionKey],
 					rootOptions
@@ -302,9 +312,14 @@ function applyDefaults(
 }
 
 function getTableDefinitionProperties(
-	options: $TSFixMeAny
+	options: TableElementsCalsOptions & TableElementsSharedOptions
 ): TableDefinitionProperties {
-	options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
+	options = applyDefaults(
+		options,
+		DEFAULT_OPTIONS,
+		[],
+		options
+	) as TableElementsCalsOptions & TableElementsSharedOptions;
 
 	const attributeValuesByAttributeName = new Map();
 	const alignValues = {
@@ -758,14 +773,14 @@ function getTableDefinitionProperties(
 			createBooleanValueAsAttributeStrategy(
 				colsepLocalName,
 				'columnSeparator',
-				trueValue,
+				true,
 				trueValue,
 				falseValue
 			),
 			createBooleanValueAsAttributeStrategy(
 				rowsepLocalName,
 				'rowSeparator',
-				trueValue,
+				true,
 				trueValue,
 				falseValue
 			),
@@ -788,14 +803,14 @@ function getTableDefinitionProperties(
 			createBooleanValueAsAttributeStrategy(
 				rowsepLocalName,
 				'rowSeparator',
-				trueValue,
+				true,
 				trueValue,
 				falseValue
 			),
 			createBooleanValueAsAttributeStrategy(
 				colsepLocalName,
 				'columnSeparator',
-				trueValue,
+				true,
 				trueValue,
 				falseValue
 			),
@@ -842,7 +857,8 @@ function getTableDefinitionProperties(
  * Configures the table definition for CALS tables.
  */
 export default class CalsTableDefinition extends TableDefinition {
-	private readonly _options: $TSFixMeAny;
+	private readonly _options: TableElementsCalsOptions &
+		TableElementsSharedOptions;
 
 	private readonly _tgroupNamespaceURI: string;
 
@@ -864,7 +880,12 @@ export default class CalsTableDefinition extends TableDefinition {
 	public constructor(options: TableElementsCalsOptions) {
 		const properties = getTableDefinitionProperties(options);
 		super(properties);
-		this._options = applyDefaults(options, DEFAULT_OPTIONS, [], options);
+		this._options = applyDefaults(
+			options,
+			DEFAULT_OPTIONS,
+			[],
+			options
+		) as TableElementsCalsOptions & TableElementsSharedOptions;
 		this._tgroupNamespaceURI = this._options.tgroup.namespaceURI || '';
 		this._tgroupLocalName = this._options.tgroup.localName;
 		this._tableSelector = properties.tablePartSelectors.table;
@@ -885,17 +906,13 @@ export default class CalsTableDefinition extends TableDefinition {
 	public override buildTableGridModel(
 		node: FontoNode,
 		blueprint: Blueprint
-	): TableGridModel {
+	): TableGridModel | { error: Error } {
 		const tableElement = evaluateXPathToFirstNode(
 			xq`descendant-or-self::element()[${this._tableSelector}]`,
 			node,
 			blueprint
-		);
-		return TableDefinition.prototype.buildTableGridModel.call(
-			this,
-			tableElement,
-			blueprint
-		);
+		) as FontoElementNode;
+		return super.buildTableGridModel(tableElement, blueprint);
 	}
 
 	/**
@@ -914,19 +931,18 @@ export default class CalsTableDefinition extends TableDefinition {
 			xq`descendant-or-self::element()[${this._tableSelector}]`,
 			tableNode,
 			blueprint
-		);
+		) as FontoElementNode;
 		if (!actualTableNode) {
 			actualTableNode = blueprint.appendChild(
 				tableNode,
 				namespaceManager.createElementNS(
-					tableNode.ownerDocument,
+					blueprintQuery.getDocumentNode(blueprint, tableNode),
 					this._tgroupNamespaceURI,
 					this._tgroupLocalName
 				)
-			);
+			) as FontoElementNode;
 		}
-		return TableDefinition.prototype.applyToDom.call(
-			this,
+		return super.applyToDom(
 			tableGridModel,
 			actualTableNode,
 			blueprint,
