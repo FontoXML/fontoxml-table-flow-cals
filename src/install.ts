@@ -8,7 +8,7 @@ import addTransform from 'fontoxml-operations/src/addTransform';
 import operationsManager from 'fontoxml-operations/src/operationsManager';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
 import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction';
-import type { DynamicContext } from 'fontoxml-selectors/src/types';
+import type { XQDynamicContext } from 'fontoxml-selectors/src/types';
 import xq from 'fontoxml-selectors/src/xq';
 import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 
@@ -34,7 +34,7 @@ export default function install(): void {
 		{ namespaceURI: FONTO_FUNCTIONS, localName: 'is-cals-table' },
 		['node()?'],
 		'xs:boolean',
-		(dynamicContext: DynamicContext, node: FontoNode<'readable'>) => {
+		(dynamicContext: XQDynamicContext, node: FontoNode<'readable'>) => {
 			if (!node) {
 				return false;
 			}
