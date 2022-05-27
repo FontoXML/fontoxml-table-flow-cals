@@ -7,7 +7,7 @@ import type { XPathTest, XQExpression } from 'fontoxml-selectors/src/types';
  * {@link TableElementsSharedOptions} for more information on the other
  * options accepted by this function.
  *
- * @fontosdk
+ * @fontosdk importable
  */
 export type TableElementsCalsOptions = {
 	/**
