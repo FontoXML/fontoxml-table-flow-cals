@@ -2,5 +2,8 @@
 	"dependencies": {
 		"fontoxml-platform-base": "*"
 	},
+	"devDependencies": {
+		"fontoxml-remote-documents": "*"
+	},
 	"role": "add-on"
 }

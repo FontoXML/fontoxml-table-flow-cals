@@ -1,7 +1,8 @@
+import './utils/installOperationStubs';
+
 import * as slimdom from 'slimdom';
 
 import Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import DocumentFile from 'fontoxml-connector/src/DocumentFile';
 import CoreDocument from 'fontoxml-core/src/Document';
 import DocumentController from 'fontoxml-core/src/DocumentController';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
@@ -10,14 +11,13 @@ import type {
 	FontoDocumentNode,
 	FontoRange,
 } from 'fontoxml-dom-utils/src/types';
+import DocumentFile from 'fontoxml-remote-documents/src/DocumentFile';
 import SchemaExperience from 'fontoxml-schema-experience/src/SchemaExperience';
 import cellSelectionManager from 'fontoxml-table-flow/src/cellSelectionManager';
 import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 import type TableCell from 'fontoxml-table-flow/src/TableGridModel/TableCell';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
-
-import _installOperationStubs from './utils/installOperationStubs';
 
 describe('cellSelectionManager', () => {
 	let documentNode: FontoDocumentNode<'writable'>;
