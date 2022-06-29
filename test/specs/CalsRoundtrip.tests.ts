@@ -106,7 +106,8 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		const tableNode = documentNode.firstChild;
 		const gridModel = tableDefinition.buildTableGridModel(
-			tableNode,
+			// the first child is tgroup which is table defining node
+			tableNode.firstChild,
 			blueprint
 		);
 		chai.assert.isUndefined(gridModel.error);
@@ -115,7 +116,8 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 		const success = tableDefinition.applyToDom(
 			gridModel,
-			tableNode,
+			// the first child is tgroup which is table defining node
+			tableNode.firstChild,
 			blueprint,
 			stubFormat
 		);

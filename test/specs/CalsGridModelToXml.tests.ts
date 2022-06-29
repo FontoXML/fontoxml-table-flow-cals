@@ -27,6 +27,7 @@ describe('CALS tables: Grid model to XML', () => {
 	let documentNode;
 	let tableDefinition;
 	let tableNode;
+	let tgroupNode;
 
 	beforeEach(() => {
 		documentNode = new slimdom.Document();
@@ -34,6 +35,8 @@ describe('CALS tables: Grid model to XML', () => {
 		blueprint = new Blueprint(coreDocument.dom);
 
 		tableNode = documentNode.createElement('table');
+		tgroupNode = documentNode.createElement('tgroup');
+		tableNode.appendChild(tgroupNode);
 
 		tableDefinition = new CalsTableDefinition({
 			table: {
@@ -53,7 +56,7 @@ describe('CALS tables: Grid model to XML', () => {
 			chai.assert.isTrue(
 				tableDefinition.applyToDom(
 					tableGridModel,
-					tableNode,
+					tgroupNode,
 					blueprint,
 					stubFormat
 				)
@@ -88,7 +91,7 @@ describe('CALS tables: Grid model to XML', () => {
 			chai.assert.isTrue(
 				tableDefinition.applyToDom(
 					tableGridModel,
-					tableNode,
+					tgroupNode,
 					blueprint,
 					stubFormat
 				)
@@ -179,7 +182,7 @@ describe('CALS tables: Grid model to XML', () => {
 			chai.assert.isTrue(
 				tableDefinition.applyToDom(
 					tableGridModel,
-					tableNode,
+					tgroupNode,
 					blueprint,
 					stubFormat
 				)
@@ -279,7 +282,7 @@ describe('CALS tables: Grid model to XML', () => {
 			chai.assert.isTrue(
 				tableDefinition.applyToDom(
 					tableGridModel,
-					tableNode,
+					tgroupNode,
 					blueprint,
 					stubFormat
 				)
@@ -379,7 +382,7 @@ describe('CALS tables: Grid model to XML', () => {
 			chai.assert.isTrue(
 				tableDefinition.applyToDom(
 					tableGridModel,
-					tableNode,
+					tgroupNode,
 					blueprint,
 					stubFormat
 				)
@@ -479,7 +482,7 @@ describe('CALS tables: Grid model to XML', () => {
 			chai.assert.isTrue(
 				tableDefinition.applyToDom(
 					tableGridModel,
-					tableNode,
+					tgroupNode,
 					blueprint,
 					stubFormat
 				)

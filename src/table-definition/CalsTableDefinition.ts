@@ -28,7 +28,6 @@ import {
 	createStringValueAsAttributeStrategy,
 } from 'fontoxml-table-flow/src/setAttributeStrategies';
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
-import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 import type {
 	TableContextObject,
 	TableDataObject,
@@ -897,56 +896,5 @@ export default class CalsTableDefinition extends TableDefinition {
 		// Configurable true/false values
 		this.trueValue = this._options.yesOrNo.yesValue;
 		this.falseValue = this._options.yesOrNo.noValue;
-	}
-
-	/**
-	 * @param node      - The node to deserialize
-	 * @param blueprint - The blueprint to use
-	 */
-	public override buildTableGridModel(
-		node: FontoNode,
-		blueprint: Blueprint
-	): TableGridModel | { error: Error } {
-		const tableElement = evaluateXPathToFirstNode(
-			xq`descendant-or-self::element()[${this._tableSelector}]`,
-			node,
-			blueprint
-		) as FontoElementNode;
-		return super.buildTableGridModel(tableElement, blueprint);
-	}
-
-	/**
-	 * @param tableGridModel - The TableGridModel to serialize
-	 * @param tableNode      - The node to serialize to
-	 * @param blueprint      - The blueprint to use
-	 * @param format         - The format to use
-	 */
-	public override applyToDom(
-		tableGridModel: TableGridModel,
-		tableNode: FontoNode,
-		blueprint: Blueprint,
-		format: Format
-	): boolean {
-		let actualTableNode = evaluateXPathToFirstNode(
-			xq`descendant-or-self::element()[${this._tableSelector}]`,
-			tableNode,
-			blueprint
-		) as FontoElementNode;
-		if (!actualTableNode) {
-			actualTableNode = blueprint.appendChild(
-				tableNode,
-				namespaceManager.createElementNS(
-					blueprintQuery.getDocumentNode(blueprint, tableNode),
-					this._tgroupNamespaceURI,
-					this._tgroupLocalName
-				)
-			) as FontoElementNode;
-		}
-		return super.applyToDom(
-			tableGridModel,
-			actualTableNode,
-			blueprint,
-			format
-		);
 	}
 }
