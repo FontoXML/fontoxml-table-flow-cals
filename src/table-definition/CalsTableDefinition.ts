@@ -186,9 +186,6 @@ const DEFAULT_OPTIONS = {
 	isInitiallyCollapsedQuery: `true()`,
 	priority: null,
 
-	// Deprecated
-	columnWidgetMenuOperations: undefined,
-	rowWidgetMenuOperations: undefined,
 	// Widget menu operations
 	columnsWidgetMenuOperations: [
 		{
@@ -841,11 +838,7 @@ function getTableDefinitionProperties(
 		],
 
 		// Widget menu operations
-		// This is deprecated. Remove in 8.2
-		columnWidgetMenuOperations: options.columnWidgetMenuOperations,
 		columnsWidgetMenuOperations: options.columnsWidgetMenuOperations,
-		// This is deprecated. Remove in 7.20
-		rowWidgetMenuOperations: options.rowWidgetMenuOperations,
 		rowsWidgetMenuOperations: options.rowsWidgetMenuOperations,
 	};
 

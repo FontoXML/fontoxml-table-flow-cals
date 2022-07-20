@@ -1,12 +1,18 @@
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
-import normalizeRowNodeStrategies from 'fontoxml-table-flow/src/normalizeRowNodeStrategies';
-import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
+import {
+	createConvertFormerHeaderRowNodeStrategy,
+	createConvertNormalRowNodeStrategy,
+} from 'fontoxml-table-flow/src/normalizeRowNodeStrategies';
+import {
+	createColumnSpanAsAttributeStrategy,
+	createRowSpanAsAttributeStrategy,
+} from 'fontoxml-table-flow/src/setAttributeStrategies';
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 
 class TestTableDefinition extends TableDefinition {
 	constructor() {
-		const selectorParts = {
+		const tablePartSelectors = {
 			table: 'table',
 			headerRow: 'headrow',
 			row: 'row',
@@ -14,13 +20,13 @@ class TestTableDefinition extends TableDefinition {
 		};
 
 		// Alias for selector parts
-		const head = selectorParts.headerRow;
-		const row = selectorParts.row;
-		const cell = selectorParts.cell;
+		const head = tablePartSelectors.headerRow;
+		const row = tablePartSelectors.row;
+		const cell = tablePartSelectors.cell;
 
 		// Properties object
 		const properties = {
-			selectorParts,
+			tablePartSelectors,
 
 			// Finds
 			findHeaderRowNodesXPathQuery: `./${head}`,
@@ -36,14 +42,8 @@ class TestTableDefinition extends TableDefinition {
 
 			// Normalizations
 			normalizeRowNodeStrategies: [
-				normalizeRowNodeStrategies.createConvertNormalRowNodeStrategy(
-					null,
-					'headrow'
-				),
-				normalizeRowNodeStrategies.createConvertFormerHeaderRowNodeStrategy(
-					null,
-					'row'
-				),
+				createConvertNormalRowNodeStrategy(null, 'headrow'),
+				createConvertFormerHeaderRowNodeStrategy(null, 'row'),
 			],
 
 			// Creates
@@ -52,12 +52,8 @@ class TestTableDefinition extends TableDefinition {
 
 			// Set attributes
 			setCellNodeAttributeStrategies: [
-				setAttributeStrategies.createRowSpanAsAttributeStrategy(
-					'rowspan'
-				),
-				setAttributeStrategies.createColumnSpanAsAttributeStrategy(
-					'colspan'
-				),
+				createRowSpanAsAttributeStrategy('rowspan'),
+				createColumnSpanAsAttributeStrategy('colspan'),
 			],
 		};
 
