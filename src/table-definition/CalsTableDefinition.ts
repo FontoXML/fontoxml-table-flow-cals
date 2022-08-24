@@ -1,8 +1,5 @@
 import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import blueprintQuery from 'fontoxml-blueprints/src/blueprintQuery';
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
-import type { FontoElementNode, FontoNode } from 'fontoxml-dom-utils/src/types';
-import type { Format } from 'fontoxml-schema-experience/src/format';
+import type { FontoElementNode } from 'fontoxml-dom-utils/src/types';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
 import type { XQExpression } from 'fontoxml-selectors/src/types';
 import xq, { ensureXQExpression } from 'fontoxml-selectors/src/xq';
@@ -28,7 +25,6 @@ import {
 	createStringValueAsAttributeStrategy,
 } from 'fontoxml-table-flow/src/setAttributeStrategies';
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
-import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 import type {
 	TableContextObject,
 	TableDataObject,
@@ -181,6 +177,7 @@ const DEFAULT_OPTIONS = {
 	showSelectionWidget: false,
 	rowBefore: false,
 	columnBefore: false,
+	showTableWidgetsWhen: 'has-focus',
 	useDefaultContextMenu: true,
 	isCollapsibleQuery: `false()`,
 	isInitiallyCollapsedQuery: `true()`,
