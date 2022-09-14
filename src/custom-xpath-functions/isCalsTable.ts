@@ -7,15 +7,14 @@ import CalsTableDefinition from '../table-definition/CalsTableDefinition';
 
 /**
  * @remarks
- * Returns whether the given node is a cals table node. This will return true for
- * both table figure node (table) and table defining node (tgroup). If null or
- * nothing is passed, the function will return false.
+ * Returns true for any CALS table element (tgroup) or any CALS table figure
+ * element (table) and false for any other node or empty sequence.
  *
  * @fontosdk
  *
  * @param node - The node to check
  *
- * @returns The result of the test as an xs:boolean
+ * @returns True for any CALS table or table figure element, false otherwise.
  */
 const fn: DocumentedXPathFunction<
 	{
