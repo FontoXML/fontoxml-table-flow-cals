@@ -1,67 +1,20 @@
 import addCustomMutation from 'fontoxml-base-flow/src/addCustomMutation';
 import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
-import type { DocumentedXPathFunction } from 'fontoxml-documentation-helpers/src/types';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
 import type { NodeId } from 'fontoxml-dom-identification/src/types';
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
-import type { FontoNode } from 'fontoxml-dom-utils/src/types';
 import addTransform from 'fontoxml-operations/src/addTransform';
 import operationsManager from 'fontoxml-operations/src/operationsManager';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
 import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction';
-import type { XQDynamicContext } from 'fontoxml-selectors/src/types';
 import xq from 'fontoxml-selectors/src/xq';
-import isTableNodeInstanceOfTableDefinition from 'fontoxml-table-flow/src/isTableNodeInstanceOfTableDefinition';
 
 import toggleCellBorder from './custom-mutations/toggleCellBorder';
-import CalsTableDefinition from './table-definition/CalsTableDefinition';
-
-const FONTO_FUNCTIONS = namespaceManager.getNamespaceUri(null, 'fonto');
+import isCalsTable from './custom-xpath-functions/isCalsTable';
 
 export default function install(): void {
 	addCustomMutation('calsToggleCellBorder', toggleCellBorder);
 
-	/**
-	 * @remarks
-	 * Returns whether the given node is a cals table node. This will return true for
-	 * both table figure node (table) and table defining node (tgroup). If null or
-	 * nothing is passed, the function will return false.
-	 *
-	 * @fontosdk
-	 *
-	 * @param node - The node to check
-	 *
-	 * @returns The result of the test as an xs:boolean
-	 */
-	const isCalsTableXPathFunction: DocumentedXPathFunction<
-		{
-			namespaceURI: typeof FONTO_FUNCTIONS;
-			localName: 'is-cals-table';
-		},
-		['node()?'],
-		'xs:boolean'
-	> = [
-		{
-			namespaceURI: FONTO_FUNCTIONS,
-			localName: 'is-cals-table',
-		},
-		['node()?'],
-		'xs:boolean',
-		function (
-			dynamicContext: XQDynamicContext,
-			node: FontoNode<'readable'>
-		): boolean {
-			return (
-				node &&
-				isTableNodeInstanceOfTableDefinition(
-					dynamicContext.domFacade,
-					node,
-					CalsTableDefinition
-				)
-			);
-		},
-	];
-	registerCustomXPathFunction(...isCalsTableXPathFunction);
+	registerCustomXPathFunction(...isCalsTable);
 
 	operationsManager.addAlternativeOperation(
 		'set-cell-border-none',
