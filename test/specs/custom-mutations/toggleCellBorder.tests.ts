@@ -94,14 +94,11 @@ describe('toggleCellBorder custom mutation', () => {
 		let tableDefinition;
 		let documentId;
 
-		beforeEach(async () => {
+		beforeEach(() => {
 			documentNode = new slimdom.Document();
 			coreDocument = new CoreDocument(documentNode);
 			const documentController = new DocumentController(coreDocument);
-			documentId = await documentsManager.addDocument(
-				{},
-				documentController
-			);
+			documentId = documentsManager.addDocument({}, documentController);
 
 			blueprint = new Blueprint(coreDocument.dom);
 			tableDefinition = new CalsTableDefinition({
@@ -2080,14 +2077,11 @@ describe('toggleCellBorder custom mutation', () => {
 		let tableDefinition;
 		let documentId;
 
-		beforeEach(async () => {
+		beforeEach(() => {
 			documentNode = new slimdom.Document();
 			coreDocument = new CoreDocument(documentNode);
 			const documentController = new DocumentController(coreDocument);
-			documentId = await documentsManager.addDocument(
-				{},
-				documentController
-			);
+			documentId = documentsManager.addDocument({}, documentController);
 
 			blueprint = new Blueprint(coreDocument.dom);
 			tableDefinition = new TestTableDefinition({
@@ -2150,14 +2144,11 @@ describe('toggleCellBorder custom mutation', () => {
 		let tableDefinition;
 		let documentId;
 
-		beforeEach(async () => {
+		beforeEach(() => {
 			documentNode = new slimdom.Document();
 			coreDocument = new CoreDocument(documentNode);
 			const documentController = new DocumentController(coreDocument);
-			documentId = await documentsManager.addDocument(
-				{},
-				documentController
-			);
+			documentId = documentsManager.addDocument({}, documentController);
 
 			blueprint = new Blueprint(coreDocument.dom);
 			tableDefinition = new CalsTableDefinition({

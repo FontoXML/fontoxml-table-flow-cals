@@ -6,11 +6,9 @@ import Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import CoreDocument from 'fontoxml-core/src/Document';
 import DocumentController from 'fontoxml-core/src/DocumentController';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
+import type { DocumentId } from 'fontoxml-documents/src/types';
 import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
-import type {
-	FontoDocumentNode,
-	FontoRange,
-} from 'fontoxml-dom-utils/src/types';
+import type { FontoDocumentNode } from 'fontoxml-dom-utils/src/types';
 import DocumentFile from 'fontoxml-remote-documents/src/DocumentFile';
 import SchemaExperience from 'fontoxml-schema-experience/src/SchemaExperience';
 import cellSelectionManager from 'fontoxml-table-flow/src/cellSelectionManager';
@@ -23,17 +21,17 @@ describe('cellSelectionManager', () => {
 	let documentNode: FontoDocumentNode<'writable'>;
 	let coreDocument: CoreDocument;
 	let blueprint: Blueprint | null;
-	let selectionRange: FontoRange<'readable'>;
 	let tableDefinition;
+	let documentId: DocumentId;
 
-	beforeEach(async () => {
+	beforeEach(() => {
 		documentNode = new slimdom.Document() as FontoDocumentNode<'writable'>;
 		coreDocument = new CoreDocument(
 			documentNode,
 			new SchemaExperience([], [])
 		);
 		blueprint = null;
-		await documentsManager.addDocument(
+		documentId = documentsManager.addDocument(
 			new DocumentFile(
 				'abc',
 				{},
@@ -42,8 +40,6 @@ describe('cellSelectionManager', () => {
 			),
 			new DocumentController(coreDocument)
 		);
-
-		selectionRange = documentNode.createRange();
 
 		tableDefinition = new CalsTableDefinition({
 			table: {
@@ -54,10 +50,10 @@ describe('cellSelectionManager', () => {
 	});
 
 	afterEach(() => {
-		coreDocument.destroy();
 		if (blueprint) {
 			blueprint.destroy();
 		}
+		documentsManager.removeDocument(documentId);
 		tableDefinitionManager.removeTableDefinition(tableDefinition);
 	});
 
