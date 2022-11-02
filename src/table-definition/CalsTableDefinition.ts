@@ -657,10 +657,6 @@ function getTableDefinitionProperties(
 				xq`let $sep := ${rowsepAttributeQuery} return if ($sep) then $sep = ${trueValue} else true()`
 			),
 			createGetValueAsStringStrategy(
-				'horizontalAlignment',
-				alignAttributeQuery
-			),
-			createGetValueAsStringStrategy(
 				'columnWidth',
 				xq`let $colwidth := ${colwidthAttributeQuery} return if ($colwidth) then $colwidth else "1*"`
 			),
@@ -675,23 +671,6 @@ function getTableDefinitionProperties(
 			createGetValueAsStringStrategy(
 				'columnName',
 				xq`let $name := ${colnameAttributeQuery} return if ($name) then $name else ("column-", $columnIndex => string()) => string-join()`
-			),
-		],
-
-		getRowSpecificationStrategies: [
-			createGetValueAsStringStrategy(
-				'verticalAlignment',
-				xq`let $valign := ./@*[name(.)=${valignLocalName}] return if ($valign) then $valign else "bottom"`,
-				(value) => {
-					const verticalAlignmentValuesByKey =
-						attributeValuesByAttributeName.get('verticalAlignment');
-					return Object.keys(verticalAlignmentValuesByKey).find(
-						(verticalAlignmentKey) =>
-							verticalAlignmentValuesByKey[
-								verticalAlignmentKey
-							] === value
-					);
-				}
 			),
 		],
 
@@ -777,15 +756,6 @@ function getTableDefinitionProperties(
 				true,
 				trueValue,
 				falseValue
-			),
-			createStringValueAsAttributeStrategy(
-				alignLocalName,
-				'horizontalAlignment',
-				undefined,
-				(value) =>
-					attributeValuesByAttributeName.get('horizontalAlignment')[
-						value
-					]
 			),
 			createStringValueAsAttributeStrategy(
 				colwidthLocalName,

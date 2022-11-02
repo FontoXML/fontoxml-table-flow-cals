@@ -1511,14 +1511,10 @@ describe('CALS tables: XML to GridModel', () => {
 			chai.assert.equal(gridModel.getHeight(), 3);
 			chai.assert.equal(gridModel.getWidth(), 3);
 
-			const leftColumn = gridModel.getCellByNode(
-				tgroupElement.lastChild.lastChild.firstChild
-			);
-			const rightColumn = gridModel.getCellByNode(
-				tgroupElement.lastChild.lastChild.lastChild
-			);
-			chai.assert.equal(leftColumn.data.width, '1*');
-			chai.assert.equal(rightColumn.data.width, '2*');
+			const leftColumn = gridModel.columnSpecifications[0];
+			const rightColumn = gridModel.columnSpecifications[2];
+			chai.assert.equal(leftColumn.columnWidth, '1*');
+			chai.assert.equal(rightColumn.columnWidth, '2*');
 		});
 
 		it('can create a table with proportional widths and translate those widths to the right percentages', () => {
@@ -1615,15 +1611,11 @@ describe('CALS tables: XML to GridModel', () => {
 			chai.assert.equal(gridModel.getHeight(), 3);
 			chai.assert.equal(gridModel.getWidth(), 3);
 
-			const leftColumn = gridModel.getCellByNode(
-				tgroupElement.lastChild.lastChild.firstChild
-			);
-			const rightColumn = gridModel.getCellByNode(
-				tgroupElement.lastChild.lastChild.lastChild
-			);
+			const leftColumn = gridModel.columnSpecifications[0];
+			const rightColumn = gridModel.columnSpecifications[2];
 
-			chai.assert.equal(leftColumn.data.width, '10px');
-			chai.assert.equal(rightColumn.data.width, '20px');
+			chai.assert.equal(leftColumn.columnWidth, '10px');
+			chai.assert.equal(rightColumn.columnWidth, '20px');
 		});
 	});
 });
