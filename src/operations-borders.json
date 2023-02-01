@@ -275,6 +275,7 @@
 			}
 		]
 	},
+
 	"cals-set-cell-border-right": {
 		"__documentation": {
 			"summary": "Toggle the right border of this cell",
@@ -296,6 +297,54 @@
 					"right": true,
 					"isToggle": true
 				}
+			}
+		]
+	},
+	"cals-toggle-borders-for-selected-cells": {
+		"__documentation": {
+			"summary": [
+				"Toggles the borders to solid or none for selected cells based on the given border ",
+				"mode. The borders will be set to none when there are only solid borders in the ",
+				"selection, else the borders will be set to solid."
+			],
+			"fontosdk": true,
+			"params": [
+				{
+					"name": "borderMode",
+					"type": "string",
+					"description": [
+						"The border mode, which can be one of 'all', 'outer', 'inner', 'top', ",
+						"'bottom', 'left', 'right', 'inner-horizontal' and 'inner-vertical'. "
+					]
+				}
+			]
+		},
+		"description": "t__Toggle the borders in the selected cells for the border mode.",
+		"steps": [
+			{
+				"type": "action/setBorderModeForSelectedCells"
+			},
+			{
+				"type": "transform/setBordersByCellNodeIdToSelectedCells",
+				"data": {
+					"includeAdjacentCells": true,
+					"borderMode": "{{borderMode}}"
+				}
+			},
+			{
+				"type": "custom-mutation/cals-toggle-borders-for-selected-cells"
+			}
+		],
+		"getStateSteps": [
+			{
+				"type": "transform/setBordersByCellNodeIdToSelectedCells",
+				"data": {
+					"includeAdjacentCells": true,
+					"borderMode": "{{borderMode}}"
+				}
+			},
+			{
+				"type": "custom-mutation/cals-toggle-borders-for-selected-cells"
 			}
 		]
 	}
