@@ -1,12 +1,17 @@
 import CustomMutationResult from 'fontoxml-base-flow/src/CustomMutationResult';
 import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import type { NodeId } from 'fontoxml-dom-identification/src/types';
+import type { FontoElementNode } from 'fontoxml-dom-utils/src/types';
+import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
+import xq from 'fontoxml-selectors/src/xq';
 import { borderModes } from 'fontoxml-table-flow/src/actions/setBorderModeForSelectedCells';
-import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels';
+import {
+	getGridModel,
+	isTableGridModel,
+} from 'fontoxml-table-flow/src/indexedTableGridModels';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 import type {
-	TableCellBordersByCellNodeId,
 	TableCellBorderMode,
+	TableCellBordersByCellNodeId,
 } from 'fontoxml-table-flow/src/types';
 
 import type CalsTableDefinition from '../table-definition/CalsTableDefinition';
@@ -53,26 +58,26 @@ function createActiveBordersMap() {
  *
  * @param blueprint           -
  * @param bordersByCellNodeId - Contains the affected borders per cell node ID.
- * @param cellNodeIds		  - Contains the affected cell node IDs.
  * @param tableGridModel      -
  * @param activeBordersMap    - Keeps track of which borders are active.
+ * @param isLTR               -
  *
  * @returns The new border style, which either is solid or none.
  */
 function determineBorderStyleValue(
 	blueprint: Blueprint,
 	bordersByCellNodeId: TableCellBordersByCellNodeId,
-	cellNodeIds: NodeId[],
 	tableGridModel: TableGridModel,
 	activeBordersMap: Map<
 		string,
 		{ hasSolidBorders: boolean; hasNoneBorders: boolean }
-	>
+	>,
+	isLTR: boolean
 ) {
 	let hasNoneBorderInSelection = false;
 	let hasSolidBorderInSelection = false;
 
-	for (const cellNodeId of cellNodeIds) {
+	for (const cellNodeId in bordersByCellNodeId) {
 		const cellInfo = tableGridModel.getCellByNode(
 			blueprint.lookup(cellNodeId)
 		);
@@ -103,7 +108,24 @@ function determineBorderStyleValue(
 
 			// Right border.
 			if (borderDirection === 'borderRight') {
-				if (columnSeparator) {
+				let hasRightBorder: boolean;
+				if (isLTR) {
+					hasRightBorder = columnSeparator;
+				} else {
+					const neighborCellInfo =
+						tableGridModel.getCellAtCoordinates(
+							cellInfo.origin.row,
+							cellInfo.origin.column - 1
+						);
+
+					if (!neighborCellInfo) {
+						throw new Error('A cell could not be found.');
+					}
+
+					hasRightBorder = neighborCellInfo.data.columnSeparator;
+				}
+
+				if (hasRightBorder) {
 					hasSolidBorderInSelection = true;
 
 					activeBordersMap.set('right', {
@@ -183,21 +205,24 @@ function determineBorderStyleValue(
 				borderDirection === 'borderLeft' &&
 				cellInfo.origin.column > 0
 			) {
-				const neighborCellInfo = tableGridModel.getCellAtCoordinates(
-					cellInfo.origin.row,
-					cellInfo.origin.column - 1
-				);
+				let hasLeftBorder: boolean;
+				if (isLTR) {
+					const neighborCellInfo =
+						tableGridModel.getCellAtCoordinates(
+							cellInfo.origin.row,
+							cellInfo.origin.column - 1
+						);
 
-				if (!neighborCellInfo) {
-					throw new Error('A cell could not be found.');
+					if (!neighborCellInfo) {
+						throw new Error('A cell could not be found.');
+					}
+
+					hasLeftBorder = neighborCellInfo.data.columnSeparator;
+				} else {
+					hasLeftBorder = columnSeparator;
 				}
 
-				const {
-					rowSeparator: _rowSeparatorNeighborCell,
-					columnSeparator: columnSeparatorNeighborCell,
-				} = neighborCellInfo.data;
-
-				if (columnSeparatorNeighborCell) {
+				if (hasLeftBorder) {
 					hasSolidBorderInSelection = true;
 
 					activeBordersMap.set('left', {
@@ -232,20 +257,20 @@ function determineBorderStyleValue(
  *
  * @param blueprint           -
  * @param bordersByCellNodeId - Contains the affected borders per cell node ID.
- * @param cellNodeIds		  - Contains the affected cell node IDs.
  * @param tableGridModel      -
+ * @param isLTR      -
  *
  * @returns True if the selected borders are part of the table border.
  */
 function areBordersTableBorders(
 	blueprint: Blueprint,
 	bordersByCellNodeId: TableCellBordersByCellNodeId,
-	cellNodeIds: NodeId[],
-	tableGridModel: TableGridModel
+	tableGridModel: TableGridModel,
+	isLTR: boolean
 ) {
 	let isBorderModeDisabled = false;
 
-	for (const cellNodeId of cellNodeIds) {
+	for (const cellNodeId in bordersByCellNodeId) {
 		const cellInfo = tableGridModel.getCellByNode(
 			blueprint.lookup(cellNodeId)
 		);
@@ -270,7 +295,7 @@ function areBordersTableBorders(
 			}
 
 			switch (borderDirection) {
-				case 'borderRight':
+				case isLTR ? 'borderRight' : 'borderLeft':
 					if (
 						tableGridModel.getWidth() ===
 						cellInfo.origin.column + 1
@@ -279,7 +304,7 @@ function areBordersTableBorders(
 					}
 
 					break;
-				case 'borderLeft':
+				case isLTR ? 'borderLeft' : 'borderRight':
 					if (cellInfo.origin.column === 0) {
 						isBorderModeDisabled = true;
 					}
@@ -365,7 +390,7 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 		);
 	}
 
-	const bordersByCellNodeId = argument.bordersByCellNodeId || {};
+	const bordersByCellNodeId = argument.bordersByCellNodeId;
 
 	// Get affected cell node IDs.
 	const cellNodeIds = Object.keys(bordersByCellNodeId);
@@ -374,19 +399,18 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 		return CustomMutationResult.notAllowed();
 	}
 
-	const cellNode = cellNodeIds[0] && blueprint.lookup(cellNodeIds[0]);
+	const cellNode = blueprint.lookup(cellNodeIds[0]);
 	const tableGridModel = getGridModel(cellNode, blueprint);
 
-	if (!tableGridModel || 'error' in tableGridModel) {
+	if (!isTableGridModel(tableGridModel)) {
 		return CustomMutationResult.notAllowed();
 	}
 
-	const tableDefinition =
-		tableGridModel.tableDefinition as CalsTableDefinition;
-
-	// Note: The trueValue and falseValue properties on the table definition are CALS-specific.
-	const trueValue = tableDefinition.trueValue;
-	const falseValue = tableDefinition.falseValue;
+	const isLTR = evaluateXPathToBoolean(
+		xq`fonto:direction(.)="ltr"`,
+		cellNode,
+		blueprint
+	);
 
 	// Used to check which border mode should be active.
 	const activeBordersMap = createActiveBordersMap();
@@ -395,8 +419,8 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 	const isBorderModeDisabled = areBordersTableBorders(
 		blueprint,
 		bordersByCellNodeId,
-		cellNodeIds,
-		tableGridModel
+		tableGridModel,
+		isLTR
 	);
 
 	// The borderMode is part of the table border, so we disable the borderMode.
@@ -422,14 +446,20 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 	const newBorderStyleValue = determineBorderStyleValue(
 		blueprint,
 		bordersByCellNodeId,
-		cellNodeIds,
 		tableGridModel,
-		activeBordersMap
+		activeBordersMap,
+		isLTR
 	);
 
+	// Note: The trueValue and falseValue properties on the table definition are CALS-specific.
+	const tableDefinition =
+		tableGridModel.tableDefinition as CalsTableDefinition;
+	const trueValue = tableDefinition.trueValue;
+	const falseValue = tableDefinition.falseValue;
+
 	// Iterate over the cells from the cell selection and the adjacent cells.
-	for (const cellNodeId of cellNodeIds) {
-		const cellNode = blueprint.lookup(cellNodeId);
+	for (const cellNodeId in bordersByCellNodeId) {
+		const cellNode = blueprint.lookup(cellNodeId) as FontoElementNode;
 
 		// The border of the cell that will be affected by a border style change.
 		const borderDirections = bordersByCellNodeId[cellNodeId];
@@ -445,7 +475,7 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 				return;
 			}
 
-			if (borderDirection === 'borderRight') {
+			if (borderDirection === (isLTR ? 'borderRight' : 'borderLeft')) {
 				// Change border value in blueprint.
 				blueprint.setAttribute(
 					cellNode,
