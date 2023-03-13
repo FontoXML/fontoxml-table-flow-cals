@@ -1,44 +1,33 @@
 import './utils/installOperationStubs';
 
-import * as slimdom from 'slimdom';
-
-import Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import CoreDocument from 'fontoxml-core/src/Document';
-import DocumentController from 'fontoxml-core/src/DocumentController';
-import documentsManager from 'fontoxml-documents/src/documentsManager';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
 import type { DocumentId } from 'fontoxml-documents/src/types';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
-import type { FontoDocumentNode } from 'fontoxml-dom-utils/src/types';
-import DocumentFile from 'fontoxml-remote-documents/src/DocumentFile';
-import SchemaExperience from 'fontoxml-schema-experience/src/SchemaExperience';
 import cellSelectionManager from 'fontoxml-table-flow/src/cellSelectionManager';
 import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 import type TableCell from 'fontoxml-table-flow/src/TableGridModel/TableCell';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
+import UnitTestEnvironment from 'fontoxml-unit-test-utils/src/UnitTestEnvironment';
+import { findFirstNodeInDocument } from 'fontoxml-unit-test-utils/src/unitTestSetupHelpers';
 
 describe('cellSelectionManager', () => {
-	let documentNode: FontoDocumentNode<'writable'>;
-	let coreDocument: CoreDocument;
-	let blueprint: Blueprint | null;
 	let tableDefinition;
 	let documentId: DocumentId;
 
+	let environment: UnitTestEnvironment;
+
 	beforeEach(() => {
-		documentNode = new slimdom.Document() as FontoDocumentNode<'writable'>;
-		coreDocument = new CoreDocument(
-			documentNode,
-			new SchemaExperience([], [])
-		);
-		blueprint = null;
-		documentId = documentsManager.addDocument(
-			new DocumentFile(
-				'abc',
-				{},
-				{ isLockAvailable: true, isLockAcquired: false, reason: 'n/a' },
-				'abc'
-			),
-			new DocumentController(coreDocument)
+		environment = new UnitTestEnvironment();
+		environment.stubXPathFunction(
+			{
+				namespaceURI: 'http://www.fontoxml.com/functions',
+				localName: 'direction',
+			},
+			['node()?'],
+			'xs:string',
+			(_dynamicContext) => {
+				return 'ltr';
+			}
 		);
 
 		tableDefinition = new CalsTableDefinition({
@@ -50,21 +39,20 @@ describe('cellSelectionManager', () => {
 	});
 
 	afterEach(() => {
-		if (blueprint) {
-			blueprint.destroy();
-		}
-		documentsManager.removeDocument(documentId);
+		environment.destroy();
 		tableDefinitionManager.removeTableDefinition(tableDefinition);
 	});
 
 	function getTableGridModel(jsonIn): TableGridModel {
-		coreDocument.dom.mutate(() => jsonMLMapper.parse(jsonIn, documentNode));
-		blueprint = new Blueprint(coreDocument.dom);
+		documentId = environment.createDocumentFromJsonMl(jsonIn);
 
-		const tableNode = documentNode.firstChild.firstChild;
+		const tableNode = findFirstNodeInDocument(
+			documentId,
+			'descendant::tgroup[1]'
+		);
 		const gridModel = tableDefinition.buildTableGridModel(
 			tableNode,
-			blueprint
+			readOnlyBlueprint
 		);
 		chai.assert.isUndefined(gridModel.error);
 		return gridModel;
@@ -108,7 +96,7 @@ describe('cellSelectionManager', () => {
 			chai.assert.equal(
 				cellSelectionManager.getCommonAncestor(),
 				// tbody
-				documentNode.firstChild.firstChild.lastChild
+				findFirstNodeInDocument(documentId, 'descendant::tbody')
 			);
 		});
 	});
