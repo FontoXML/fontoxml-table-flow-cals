@@ -2,12 +2,12 @@ import CustomMutationResult from 'fontoxml-base-flow/src/CustomMutationResult';
 import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import type { NodeId } from 'fontoxml-dom-identification/src/types';
 import { borderModes } from 'fontoxml-table-flow/src/actions/setBorderModeForSelectedCells';
-import type {
-	BorderModeState,
-	BordersForBorderModeBySelectedCellNodeId,
-} from 'fontoxml-table-flow/src/api/types';
 import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
+import type {
+	TableCellBorderByCellNodeId,
+	TableCellBorderMode,
+} from 'fontoxml-table-flow/src/types';
 
 import type CalsTableDefinition from '../table-definition/CalsTableDefinition';
 
@@ -61,7 +61,7 @@ function createActiveBordersMap() {
  */
 function determineBorderStyleValue(
 	blueprint: Blueprint,
-	bordersByCellNodeId: BordersForBorderModeBySelectedCellNodeId,
+	bordersByCellNodeId: TableCellBorderByCellNodeId,
 	cellNodeIds: NodeId[],
 	tableGridModel: TableGridModel,
 	activeBordersMap: Map<
@@ -239,7 +239,7 @@ function determineBorderStyleValue(
  */
 function areBordersTableBorders(
 	blueprint: Blueprint,
-	bordersByCellNodeId: BordersForBorderModeBySelectedCellNodeId,
+	bordersByCellNodeId: TableCellBorderByCellNodeId,
 	cellNodeIds: NodeId[],
 	tableGridModel: TableGridModel
 ) {
@@ -320,7 +320,7 @@ function areBordersTableBorders(
  * @returns If the inner borderMode should be enabled.
  */
 function getStateInnerBorderModes(
-	bordersByCellNodeId: BordersForBorderModeBySelectedCellNodeId
+	bordersByCellNodeId: TableCellBorderByCellNodeId
 ): boolean {
 	let isInnerBorderModeEnabled = false;
 
@@ -350,8 +350,8 @@ function getStateInnerBorderModes(
  */
 export default function calsToggleBordersForSelectedCellsCustomMutation(
 	argument: {
-		borderMode: BorderModeState;
-		bordersByCellNodeId: BordersForBorderModeBySelectedCellNodeId;
+		borderMode: TableCellBorderMode;
+		bordersByCellNodeId: TableCellBorderByCellNodeId;
 	},
 	blueprint: Blueprint
 ): CustomMutationResult {
