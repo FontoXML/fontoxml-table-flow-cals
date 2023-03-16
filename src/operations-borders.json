@@ -157,8 +157,21 @@
 		"__documentation": {
 			"summary": "Remove all borders of the given cells",
 			"category": "add-on/fontoxml-table-flow-cals",
+			"deprecated": [
+				"This operation is deprecated as of 8.4.0 and will be removed in 8.6.0.",
+				"Please check the upgrade instructions for further instructions."
+			],
 			"fontosdk": true,
 			"params": [
+				{
+					"type": "transform/log-deprecation-warning",
+					"data": {
+						"featureName": "CALS tables border operations",
+						"link": "https://documentation.fontoxml.com/latest/upcoming-removals-8-6-ea48bfbfc233",
+						"removalRelease": "8.6.0",
+						"message?": "Border operations for CALS tables are being deprecated. We've added a new improved operation which allows you to toggle the selected cell borders in CALS tables. Please check the upgrade instructions for further instructions."
+					}
+				},
 				{
 					"name": "cellNodeIds",
 					"type": "NodeId[]",
@@ -222,6 +235,10 @@
 		"__documentation": {
 			"summary": "Set all borders of the given cells",
 			"category": "add-on/fontoxml-table-flow-cals",
+			"deprecated": [
+				"This operation is deprecated as of 8.4.0 and will be removed in 8.6.0.",
+				"Please check the upgrade instructions for further instructions."
+			],
 			"fontosdk": true,
 			"params": [
 				{
@@ -235,6 +252,15 @@
 		"description": "t__Add borders to the current cells",
 		"icon": "cell-border",
 		"steps": [
+			{
+				"type": "transform/log-deprecation-warning",
+				"data": {
+					"featureName": "CALS tables border operations",
+					"link": "https://documentation.fontoxml.com/latest/upcoming-removals-8-6-ea48bfbfc233",
+					"removalRelease": "8.6.0",
+					"message?": "Border operations for CALS tables are being deprecated. We've added a new improved operation which allows you to toggle the selected cell borders in CALS tables. Please check the upgrade instructions for further instructions."
+				}
+			},
 			{
 				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
