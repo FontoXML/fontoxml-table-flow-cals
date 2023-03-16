@@ -164,15 +164,6 @@
 			"fontosdk": true,
 			"params": [
 				{
-					"type": "transform/log-deprecation-warning",
-					"data": {
-						"featureName": "CALS tables border operations",
-						"link": "https://documentation.fontoxml.com/latest/upcoming-removals-8-6-ea48bfbfc233",
-						"removalRelease": "8.6.0",
-						"message?": "Border operations for CALS tables are being deprecated. We've added a new improved operation which allows you to toggle the selected cell borders in CALS tables. Please check the upgrade instructions for further instructions."
-					}
-				},
-				{
 					"name": "cellNodeIds",
 					"type": "NodeId[]",
 					"description": "The NodeIds of the cells for which to change the border"
@@ -183,6 +174,15 @@
 		"description": "Remove borders from the current cells",
 		"icon": "delete-cell-border",
 		"steps": [
+			{
+				"type": "transform/log-deprecation-warning",
+				"data": {
+					"featureName": "CALS tables border operations",
+					"link": "https://documentation.fontoxml.com/latest/upcoming-removals-8-6-ea48bfbfc233",
+					"removalRelease": "8.6.0",
+					"message?": "Border operations for CALS tables are being deprecated. We've added a new improved operation which allows you to toggle the selected cell borders in CALS tables. Please check the upgrade instructions for further instructions."
+				}
+			},
 			{
 				"type": "custom-mutation/calsToggleCellBorder",
 				"data": {
