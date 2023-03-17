@@ -5,7 +5,7 @@ import { borderModes } from 'fontoxml-table-flow/src/actions/setBorderModeForSel
 import { getGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels';
 import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
 import type {
-	TableCellBorderByCellNodeId,
+	TableCellBordersByCellNodeId,
 	TableCellBorderMode,
 } from 'fontoxml-table-flow/src/types';
 
@@ -61,7 +61,7 @@ function createActiveBordersMap() {
  */
 function determineBorderStyleValue(
 	blueprint: Blueprint,
-	bordersByCellNodeId: TableCellBorderByCellNodeId,
+	bordersByCellNodeId: TableCellBordersByCellNodeId,
 	cellNodeIds: NodeId[],
 	tableGridModel: TableGridModel,
 	activeBordersMap: Map<
@@ -239,7 +239,7 @@ function determineBorderStyleValue(
  */
 function areBordersTableBorders(
 	blueprint: Blueprint,
-	bordersByCellNodeId: TableCellBorderByCellNodeId,
+	bordersByCellNodeId: TableCellBordersByCellNodeId,
 	cellNodeIds: NodeId[],
 	tableGridModel: TableGridModel
 ) {
@@ -320,7 +320,7 @@ function areBordersTableBorders(
  * @returns If the inner borderMode should be enabled.
  */
 function getStateInnerBorderModes(
-	bordersByCellNodeId: TableCellBorderByCellNodeId
+	bordersByCellNodeId: TableCellBordersByCellNodeId
 ): boolean {
 	let isInnerBorderModeEnabled = false;
 
@@ -351,7 +351,7 @@ function getStateInnerBorderModes(
 export default function calsToggleBordersForSelectedCellsCustomMutation(
 	argument: {
 		borderMode: TableCellBorderMode;
-		bordersByCellNodeId: TableCellBorderByCellNodeId;
+		bordersByCellNodeId: TableCellBordersByCellNodeId;
 	},
 	blueprint: Blueprint
 ): CustomMutationResult {
