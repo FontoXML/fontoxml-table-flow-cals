@@ -18,7 +18,13 @@ import CalsTableDefinition from '../table-definition/CalsTableDefinition';
  */
 const fn: DocumentedXPathFunction<
 	{
+		/**
+		 * @fontosdk
+		 */
 		namespaceURI: 'http://www.fontoxml.com/functions';
+		/**
+		 * @fontosdk
+		 */
 		localName: 'is-cals-table';
 	},
 	['node()?'],
