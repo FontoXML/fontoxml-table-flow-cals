@@ -1,14 +1,24 @@
-import * as slimdom from 'slimdom';
-
-import Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import CoreDocument from 'fontoxml-core/src/Document';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
-import indicesManager from 'fontoxml-indices/src/indicesManager';
+import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import type { FontoElementNode, JsonMl } from 'fontoxml-dom-utils/src/types';
+import format from 'fontoxml-schema-experience/src/format';
+import xq from 'fontoxml-selectors/src/xq';
+import { isTableGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels';
 import registerCustomXPathFunctions from 'fontoxml-table-flow/src/registerCustomXPathFunctions';
 import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells';
 import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell';
+import type TableCell from 'fontoxml-table-flow/src/TableGridModel/TableCell';
+import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
+import type { TableElementsSharedOptions } from 'fontoxml-table-flow/src/types';
 import CalsTableDefinition from 'fontoxml-table-flow-cals/src/table-definition/CalsTableDefinition';
+import type { TableElementsCalsOptions } from 'fontoxml-table-flow-cals/src/types';
+import { assertDocumentAsJsonMl } from 'fontoxml-unit-test-utils/src/unitTestAssertionHelpers';
+import UnitTestEnvironment from 'fontoxml-unit-test-utils/src/UnitTestEnvironment';
+import {
+	findFirstNodeInDocument,
+	findNodesInDocument,
+	runWithBlueprint,
+} from 'fontoxml-unit-test-utils/src/unitTestSetupHelpers';
 
 const mergeCellWithCellToTheRight = mergeCells.mergeCellWithCellToTheRight;
 const mergeCellWithCellToTheLeft = mergeCells.mergeCellWithCellToTheLeft;
@@ -18,124 +28,95 @@ const mergeCellWithCellAbove = mergeCells.mergeCellWithCellAbove;
 const splitCellIntoRows = splitSpanningCell.splitCellIntoRows;
 const splitCellIntoColumns = splitSpanningCell.splitCellIntoColumns;
 
-const stubFormat = {
-	synthesizer: {
-		completeStructure: () => true,
-	},
-	metadata: {
-		get: (_option, _node) => false,
-	},
-	validator: {
-		canContain: () => true,
-		validateDown: () => [],
-	},
-};
-
 registerCustomXPathFunctions();
 
-function deepEqual(actual, expected, colNamesMapping) {
-	if (typeof actual === 'string') {
-		chai.assert.deepEqual(actual, expected);
-		return;
-	}
-
-	if (Array.isArray(actual)) {
-		if (!Array.isArray(expected) || actual.length !== expected.length) {
-			chai.assert.deepEqual(actual, expected);
-		}
-
-		for (let i = 0; i < actual.length; i++) {
-			deepEqual(actual[i], expected[i], colNamesMapping);
-		}
-
-		return;
-	}
-
-	const actualProperties = Object.getOwnPropertyNames(actual);
-	const expectedProperties = Object.getOwnPropertyNames(expected);
-
-	if (actualProperties.length !== expectedProperties.length) {
-		chai.assert.deepEqual(actual, expected);
-	}
-
-	for (let i = 0; i < actualProperties.length; i++) {
-		const propertyName = actualProperties[i];
-
-		if (propertyName === 'colname') {
-			const mappedColName = colNamesMapping.get(expected[propertyName]);
-			if (mappedColName === undefined) {
-				colNamesMapping.set(
-					expected[propertyName],
-					actual[propertyName]
-				);
-			} else {
-				chai.assert.deepEqual(actual[propertyName], mappedColName);
-			}
-		} else {
-			deepEqual(
-				actual[propertyName],
-				expected[propertyName],
-				colNamesMapping
-			);
-		}
-	}
-}
-
 describe('CALS tables: XML to XML roundtrip', () => {
-	let documentNode;
-	let coreDocument;
-	let blueprint;
-
+	let environment: UnitTestEnvironment;
 	beforeEach(() => {
-		documentNode = new slimdom.Document();
-		coreDocument = new CoreDocument(documentNode);
-
-		blueprint = new Blueprint(coreDocument.dom);
+		environment = new UnitTestEnvironment();
+	});
+	afterEach(() => {
+		environment.destroy();
 	});
 
-	function transformTable(
-		jsonIn,
-		jsonOut,
-		options = {},
-		mutateGridModel = () => {}
-	) {
-		coreDocument.dom.mutate(() => jsonMLMapper.parse(jsonIn, documentNode));
-
+	function runTest(
+		jsonIn: JsonMl,
+		jsonOut: JsonMl,
+		options: TableElementsCalsOptions & TableElementsSharedOptions = {
+			table: {
+				localName: 'table',
+			},
+		},
+		mutateGridModel: (
+			gridModel: TableGridModel,
+			blueprint: Blueprint
+		) => void = () => {
+			// Do nothing
+		},
+		ignoreColNames = false
+	): void {
+		const documentId = environment.createDocumentFromJsonMl(jsonIn);
 		const tableDefinition = new CalsTableDefinition(options);
 		tableDefinitionManager.addTableDefinition(tableDefinition);
 
-		const tableNode = documentNode.firstChild;
-		const gridModel = tableDefinition.buildTableGridModel(
-			// the first child is tgroup which is table defining node
-			tableNode.firstChild,
-			blueprint
-		);
-		chai.assert.isUndefined(gridModel.error);
+		const tgroupNode = findFirstNodeInDocument(
+			documentId,
+			xq`//tgroup`
+		) as FontoElementNode;
+		runWithBlueprint((blueprint) => {
+			const gridModel = tableDefinition.buildTableGridModel(
+				tgroupNode,
+				blueprint
+			);
+			if (!isTableGridModel(gridModel)) {
+				throw gridModel.error;
+			}
 
-		mutateGridModel(gridModel);
+			mutateGridModel(gridModel, blueprint);
 
-		const success = tableDefinition.applyToDom(
-			gridModel,
-			// the first child is tgroup which is table defining node
-			tableNode.firstChild,
-			blueprint,
-			stubFormat
-		);
-		chai.assert.isTrue(success);
+			const success = tableDefinition.applyToDom(
+				gridModel,
+				tgroupNode,
+				blueprint,
+				format
+			);
+			chai.assert.isTrue(success);
 
-		blueprint.realize();
-		// The changes will be set to merge with the base index, this needs to be commited.
-		indicesManager.getIndexSet().commitMerge();
-		deepEqual(
-			jsonMLMapper.serialize(documentNode.firstChild),
-			jsonOut,
-			new Map()
-		);
+			if (ignoreColNames) {
+				// Remove colname attributes from the blueprint...
+				for (const element of findNodesInDocument(
+					documentId,
+					xq`//*[@colname]`,
+					blueprint
+				) as FontoElementNode[]) {
+					blueprint.removeAttribute(element, 'colname');
+				}
+				// ...and from the expected JsonMl
+				(function remove(jsonEl: JsonMl) {
+					const [_name, attrs, ...children] = jsonEl;
+					if (typeof attrs === 'object') {
+						if (Array.isArray(attrs)) {
+							remove(attrs);
+						} else {
+							delete attrs['colname'];
+							if (Object.keys(attrs).length === 0) {
+								(jsonEl as unknown[]).splice(1, 1);
+							}
+						}
+					}
+					for (const child of children) {
+						remove(child as JsonMl);
+					}
+				})(jsonOut);
+			}
+		});
+
+		assertDocumentAsJsonMl(documentId, jsonOut);
 	}
 
 	describe('Without changes', () => {
 		it('can handle a 1x1 table, changing nothing', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -153,7 +134,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -177,11 +158,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options);
+			runTest(jsonIn, jsonOut, options);
 		});
 
 		it('can handle a 1x1 table with rowsep and colsep, changing nothing', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -214,7 +195,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -253,11 +234,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options);
+			runTest(jsonIn, jsonOut, options);
 		});
 
 		it('can handle a 4x4 table, changing nothing', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -329,7 +310,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -407,11 +388,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options);
+			runTest(jsonIn, jsonOut, options);
 		});
 
 		it('can handle a 4x4 table with rowsep and colsep, changing nothing', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -606,7 +587,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -807,13 +788,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options);
+			runTest(jsonIn, jsonOut, options);
 		});
 	});
 
 	describe('Header rows', () => {
 		it('can handle a 4x4 table, increasing header row count by 1', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -888,7 +869,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.increaseHeaderRowCount(1);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -969,11 +950,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 1 header row, increasing header row count by 1', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1051,7 +1032,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.increaseHeaderRowCount(1);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1132,11 +1113,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 1 header row, decreasing header row count by 1', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1214,7 +1195,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.decreaseHeaderRowCount();
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1292,11 +1273,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 2 header rows, decreasing header row count by 1', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1374,7 +1355,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.decreaseHeaderRowCount();
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1455,13 +1436,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 	});
 
 	describe('Insert row', () => {
 		it('can handle a 4x4 table, adding 1 row before index 0', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1536,7 +1517,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertRow(0, false);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1621,11 +1602,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table, adding 1 row before index 2 (middle)', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1700,7 +1681,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertRow(2, false);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1785,11 +1766,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table, adding 1 row after index 3 (last)', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1863,7 +1844,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.insertRow(3, true);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -1948,11 +1929,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table, adding 1 row before index 3 (last)', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2027,7 +2008,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertRow(3, false);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2112,11 +2093,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 1 header row, adding 1 row before index 0', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2194,7 +2175,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertRow(0, false);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2282,11 +2263,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 2 header rows, adding 1 row after index 1 (last header row)', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2363,7 +2344,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.insertRow(1, true);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2451,13 +2432,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 	});
 
 	describe('Delete row', () => {
 		it('can handle a 4x4 table, deleting 1 row at index 0', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2531,7 +2512,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteRow(1);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2602,11 +2583,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table, deleting 1 row at index 2 (middle)', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2680,7 +2661,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteRow(2);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2751,11 +2732,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table, deleting 1 row at index 3 (last)', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2829,7 +2810,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteRow(3);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2900,11 +2881,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 1 header row, deleting 1 row at index 0', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -2981,7 +2962,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3052,11 +3033,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 2 header rows, deleting 1 row at index 0 (first header row)', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3133,7 +3114,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3207,11 +3188,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 2 header rows, deleting 1 row at index 1 (last header row)', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3288,7 +3269,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteRow(1);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3362,13 +3343,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 	});
 
 	describe('Insert column', () => {
 		it('can handle a 4x4 table, adding 1 column before index 0', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3443,7 +3424,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertColumn(0, false);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3533,11 +3514,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table, adding 1 column before index 2', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3612,7 +3593,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertColumn(2, false);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3702,11 +3683,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table, adding 1 column after index 3', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3781,7 +3762,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertColumn(3, true);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3871,11 +3852,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table with 1 header row, adding 1 column before index 0', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -3953,7 +3934,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertColumn(0, false);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4046,11 +4027,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table with 1 header row, adding 1 column before index 2', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4128,7 +4109,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertColumn(2, false);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4221,11 +4202,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table with 1 header row, adding 1 column after index 3', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4303,7 +4284,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				gridModel.insertColumn(3, true);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4396,13 +4377,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 	});
 
 	describe('Delete column', () => {
 		it('can handle a 4x4 table, deleting 1 column at index 0', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4476,7 +4457,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteColumn(0);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4542,11 +4523,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table, deleting 1 column at index 2', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4620,7 +4601,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteColumn(2);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4686,11 +4667,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table, deleting 1 column at index 3', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4764,7 +4745,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteColumn(3);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4830,11 +4811,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 4x4 table with 1 header row, deleting 1 column at index 0', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4911,7 +4892,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteColumn(0);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -4980,11 +4961,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table with 1 header row, deleting 1 column at index 2', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5061,7 +5042,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteColumn(2);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5130,11 +5111,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel, true);
 		});
 
 		it('can handle a 4x4 table with 1 header row, deleting 1 column after index 3', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5211,7 +5192,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.deleteColumn(3);
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5280,13 +5261,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 	});
 
 	describe('Merging cells', () => {
 		it('can handle a 3x3 table, merging a cell with the cell above', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5409,14 +5390,18 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (
+				gridModel: TableGridModel,
+				blueprint: Blueprint
+			) => {
 				mergeCellWithCellAbove(
 					gridModel,
-					gridModel.getCellAtCoordinates(1, 1),
+					gridModel.getCellAtCoordinates(1, 1) as TableCell,
 					blueprint
 				);
+			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5538,11 +5523,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 3x3 table, merging a cell with the cell to the right', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5665,14 +5650,18 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (
+				gridModel: TableGridModel,
+				blueprint: Blueprint
+			) => {
 				mergeCellWithCellToTheRight(
 					gridModel,
-					gridModel.getCellAtCoordinates(1, 1),
+					gridModel.getCellAtCoordinates(1, 1) as TableCell,
 					blueprint
 				);
+			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5794,11 +5783,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 1x3 table, merging a cell with the cell to the right, with "*" column widths', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5867,14 +5856,18 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (
+				gridModel: TableGridModel,
+				blueprint: Blueprint
+			) => {
 				mergeCellWithCellToTheRight(
 					gridModel,
-					gridModel.getCellAtCoordinates(0, 1),
+					gridModel.getCellAtCoordinates(0, 1) as TableCell,
 					blueprint
 				);
+			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -5931,11 +5924,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 1x3 table, merging a cell with the cell to the right, with absolute column widths', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6004,14 +5997,18 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (
+				gridModel: TableGridModel,
+				blueprint: Blueprint
+			) => {
 				mergeCellWithCellToTheRight(
 					gridModel,
-					gridModel.getCellAtCoordinates(0, 1),
+					gridModel.getCellAtCoordinates(0, 1) as TableCell,
 					blueprint
 				);
+			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6068,11 +6065,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 3x3 table, merging a cell with the cell below', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6195,14 +6192,18 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (
+				gridModel: TableGridModel,
+				blueprint: Blueprint
+			) => {
 				mergeCellWithCellBelow(
 					gridModel,
-					gridModel.getCellAtCoordinates(1, 1),
+					gridModel.getCellAtCoordinates(1, 1) as TableCell,
 					blueprint
 				);
+			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6324,11 +6325,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 3x3 table, merging a cell with a cell to the left', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6451,14 +6452,18 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (
+				gridModel: TableGridModel,
+				blueprint: Blueprint
+			) => {
 				mergeCellWithCellToTheLeft(
 					gridModel,
-					gridModel.getCellAtCoordinates(1, 1),
+					gridModel.getCellAtCoordinates(1, 1) as TableCell,
 					blueprint
 				);
+			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6580,13 +6585,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 	});
 
 	describe('Splitting cells', () => {
 		it('can handle a 3x3 table, splitting a cell spanning over rows', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6709,7 +6714,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				);
 			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6838,11 +6843,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can handle a 3x3 table, splitting a cell spanning over columns', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -6965,7 +6970,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				);
 			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -7094,13 +7099,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 	});
 
 	describe('Tables not having all the colspecs', () => {
 		it('can transform a table having no colspec at all', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -7115,7 +7120,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -7175,11 +7180,11 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options);
+			runTest(jsonIn, jsonOut, options);
 		});
 
 		it('can transform a table having only 1 colspec', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -7207,7 +7212,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -7216,7 +7221,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 					[
 						'colspec',
 						{
-							colname: 'column-0',
+							colname: 'some-non-standard-colname',
 							colnum: '1',
 							colwidth: '1*',
 							colsep: '0',
@@ -7246,7 +7251,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 							[
 								'entry',
 								{
-									colname: 'column-0',
+									colname: 'some-non-standard-colname',
 									colsep: '0',
 									rowsep: '0',
 								},
@@ -7256,13 +7261,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 						],
 						[
 							'row',
-							['entry', { colname: 'column-0' }],
+							['entry', { colname: 'some-non-standard-colname' }],
 							['entry', { colname: 'column-1' }],
 							['entry', { colname: 'column-2' }],
 						],
 						[
 							'row',
-							['entry', { colname: 'column-0' }],
+							['entry', { colname: 'some-non-standard-colname' }],
 							['entry', { colname: 'column-1' }],
 							['entry', { colname: 'column-2' }],
 						],
@@ -7276,13 +7281,13 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options);
+			runTest(jsonIn, jsonOut, options);
 		});
 	});
 
 	describe('CALS specifics', () => {
 		it('can handle a 3x3 table, merging a cell with the cell below', () => {
-			const jsonIn = [
+			const jsonIn: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -7405,25 +7410,28 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) => {
+			const mutateGridModel = (
+				gridModel: TableGridModel,
+				blueprint: Blueprint
+			) => {
 				mergeCellWithCellBelow(
 					gridModel,
-					gridModel.getCellAtCoordinates(1, 0),
+					gridModel.getCellAtCoordinates(1, 0) as TableCell,
 					blueprint
 				);
 				mergeCellWithCellBelow(
 					gridModel,
-					gridModel.getCellAtCoordinates(1, 1),
+					gridModel.getCellAtCoordinates(1, 1) as TableCell,
 					blueprint
 				);
 				mergeCellWithCellBelow(
 					gridModel,
-					gridModel.getCellAtCoordinates(1, 2),
+					gridModel.getCellAtCoordinates(1, 2) as TableCell,
 					blueprint
 				);
 			};
 
-			const jsonOut = [
+			const jsonOut: JsonMl = [
 				'table',
 				{ frame: 'all' },
 				[
@@ -7525,7 +7533,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				},
 			};
 
-			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			runTest(jsonIn, jsonOut, options, mutateGridModel);
 		});
 	});
 });
