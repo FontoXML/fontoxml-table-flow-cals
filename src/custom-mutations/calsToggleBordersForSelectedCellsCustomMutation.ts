@@ -406,8 +406,9 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 		return CustomMutationResult.notAllowed();
 	}
 
-	const isLTR = evaluateXPathToBoolean(
-		xq`fonto:direction(.)="ltr"`,
+	// Check whether the table defining node is LTR or not.
+	const isTableLTR = evaluateXPathToBoolean(
+		xq`fonto:direction(ancestor::*[fonto:is-cals-table(.)][1])="ltr"`,
 		cellNode,
 		blueprint
 	);
@@ -420,7 +421,7 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 		blueprint,
 		bordersByCellNodeId,
 		tableGridModel,
-		isLTR
+		isTableLTR
 	);
 
 	// The borderMode is part of the table border, so we disable the borderMode.
@@ -448,7 +449,7 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 		bordersByCellNodeId,
 		tableGridModel,
 		activeBordersMap,
-		isLTR
+		isTableLTR
 	);
 
 	// Note: The trueValue and falseValue properties on the table definition are CALS-specific.
@@ -475,7 +476,9 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 				return;
 			}
 
-			if (borderDirection === (isLTR ? 'borderRight' : 'borderLeft')) {
+			if (
+				borderDirection === (isTableLTR ? 'borderRight' : 'borderLeft')
+			) {
 				// Change border value in blueprint.
 				blueprint.setAttribute(
 					cellNode,
