@@ -376,7 +376,7 @@ function getStateInnerBorderModes(
 export default function calsToggleBordersForSelectedCellsCustomMutation(
 	argument: {
 		borderMode: TableCellBorderMode;
-		bordersByCellNodeId: TableCellBordersByCellNodeId;
+		bordersByCellNodeId: TableCellBordersByCellNodeId | null;
 	},
 	blueprint: Blueprint
 ): CustomMutationResult {
@@ -390,7 +390,7 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 		);
 	}
 
-	const bordersByCellNodeId = argument.bordersByCellNodeId;
+	const bordersByCellNodeId = argument.bordersByCellNodeId || {};
 
 	// Get affected cell node IDs.
 	const cellNodeIds = Object.keys(bordersByCellNodeId);
