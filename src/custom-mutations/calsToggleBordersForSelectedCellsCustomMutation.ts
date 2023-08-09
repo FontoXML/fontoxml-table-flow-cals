@@ -14,7 +14,7 @@ import type {
 	TableCellBordersByCellNodeId,
 } from 'fontoxml-table-flow/src/types';
 
-import type CalsTableDefinition from '../table-definition/CalsTableDefinition';
+import CalsTableDefinition from '../table-definition/CalsTableDefinition';
 
 const CELL_BORDER_DIRECTIONS = {
 	borderRight: 'border-right',
@@ -402,7 +402,7 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 	const cellNode = blueprint.lookup(cellNodeIds[0]);
 	const tableGridModel = getGridModel(cellNode, blueprint);
 
-	if (!isTableGridModel(tableGridModel)) {
+	if (!isTableGridModel(tableGridModel) || !(tableGridModel.tableDefinition instanceof CalsTableDefinition)) {
 		return CustomMutationResult.notAllowed();
 	}
 
@@ -454,7 +454,7 @@ export default function calsToggleBordersForSelectedCellsCustomMutation(
 
 	// Note: The trueValue and falseValue properties on the table definition are CALS-specific.
 	const tableDefinition =
-		tableGridModel.tableDefinition as CalsTableDefinition;
+		tableGridModel.tableDefinition;
 	const trueValue = tableDefinition.trueValue;
 	const falseValue = tableDefinition.falseValue;
 
