@@ -204,7 +204,6 @@ const DEFAULT_OPTIONS = {
 				{ name: 'cals-set-cell-vertical-alignment-bottom' },
 			],
 		},
-		{ contents: [{ name: 'cals-set-cell-border-all' }] },
 		{ contents: [{ name: 'columns-delete' }] },
 	],
 	rowsWidgetMenuOperations: [
@@ -227,7 +226,6 @@ const DEFAULT_OPTIONS = {
 				{ name: 'cals-set-cell-vertical-alignment-bottom' },
 			],
 		},
-		{ contents: [{ name: 'cals-set-cell-border-all' }] },
 		{ contents: [{ name: 'rows-delete' }] },
 	],
 };

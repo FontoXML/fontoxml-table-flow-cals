@@ -51,7 +51,6 @@ import type { TableElementsCalsOptions } from './types';
  *					{ name: 'cals-set-cell-vertical-alignment-bottom' }
  *				]
  *			},
- *			{ contents: [{ name: 'cals-set-cell-border-all' }] },
  *			{ contents: [{ name: 'columns-delete' }] }
  *		],
  *		rowsWidgetMenuOperations: [
@@ -70,7 +69,6 @@ import type { TableElementsCalsOptions } from './types';
  *					{ name: 'cals-set-cell-vertical-alignment-bottom' }
  *				]
  *			},
- *			{ contents: [{ name: 'cals-set-cell-border-all' }] },
  *			{ contents: [{ name: 'rows-delete' }] }
  *		]
  *	});

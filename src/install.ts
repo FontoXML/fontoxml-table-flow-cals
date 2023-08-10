@@ -9,11 +9,9 @@ import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXP
 import xq from 'fontoxml-selectors/src/xq';
 
 import calsToggleBordersForSelectedCellsCustomMutation from './custom-mutations/calsToggleBordersForSelectedCellsCustomMutation';
-import toggleCellBorder from './custom-mutations/toggleCellBorder';
 import isCalsTable from './custom-xpath-functions/isCalsTable';
 
 export default function install(): void {
-	addCustomMutation('calsToggleCellBorder', toggleCellBorder);
 	addCustomMutation(
 		'cals-toggle-borders-for-selected-cells',
 		calsToggleBordersForSelectedCellsCustomMutation
@@ -24,17 +22,6 @@ export default function install(): void {
 	operationsManager.addAlternativeOperation(
 		'toggle-borders-for-selected-cells',
 		'cals-toggle-borders-for-selected-cells',
-		0
-	);
-
-	operationsManager.addAlternativeOperation(
-		'set-cell-border-none',
-		'cals-set-cell-border-none',
-		0
-	);
-	operationsManager.addAlternativeOperation(
-		'set-cell-border-all',
-		'cals-set-cell-border-all',
 		0
 	);
 
