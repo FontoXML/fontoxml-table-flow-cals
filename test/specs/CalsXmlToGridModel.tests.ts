@@ -244,6 +244,62 @@ describe('CALS tables: XML to GridModel', () => {
 			chai.assert.equal(gridModel.getWidth(), 4);
 			chai.assert.equal(gridModel.headerRowCount, 0);
 		});
+
+		[
+			{
+				attributes: { frame: 'all' },
+				hasBorder: true,
+				message: 'frame is all',
+			},
+			{
+				attributes: { frame: 'none' },
+				hasBorder: false,
+				message: 'frame is none',
+			},
+			{
+				attributes: { frame: 'sides' },
+				hasBorder: false,
+				message: 'frame is another dita valid value',
+			},
+			{
+				attributes: {},
+				hasBorder: true,
+				message: 'there is no frame attribute',
+			},
+		].forEach(({ attributes, hasBorder, message }) => {
+			it(`can adjust table border correctly when ${message}`, () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							attributes,
+							[
+								'tgroup',
+								{ cols: '1' },
+								['colspec'],
+								[
+									'tbody',
+									['row', ['entry']],
+									['row', ['entry']],
+								],
+							],
+						],
+						documentNode
+					)
+				);
+
+				const tgroupElement = documentNode.firstChild.firstChild;
+				const gridModel = tableDefinition.buildTableGridModel(
+					tgroupElement,
+					blueprint
+				);
+
+				chai.assert.equal(
+					gridModel.tableSpecification.borders,
+					hasBorder
+				);
+			});
+		});
 	});
 
 	describe('Headers and footers', () => {

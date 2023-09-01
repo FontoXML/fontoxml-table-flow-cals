@@ -641,7 +641,7 @@ function getTableDefinitionProperties(
 		getTableSpecificationStrategies: [
 			createGetValueAsBooleanStrategy(
 				'borders',
-				xq`./parent::*[${tableFigure}]/${frameAttributeQuery} = ${options.frame.allValue}`
+				xq`./parent::*[${tableFigure}]/${frameAttributeQuery} = ${options.frame.allValue} or not(./parent::*[${tableFigure}]/${frameAttributeQuery})`
 			),
 		],
 
