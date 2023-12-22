@@ -49,7 +49,8 @@ describe('CALS tables: XML to XML roundtrip', () => {
 		},
 		mutateGridModel: (
 			gridModel: TableGridModel,
-			blueprint: Blueprint
+			blueprint: Blueprint,
+			tgroupNode: FontoElementNode
 		) => void = () => {
 			// Do nothing
 		},
@@ -72,7 +73,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 				throw gridModel.error;
 			}
 
-			mutateGridModel(gridModel, blueprint);
+			mutateGridModel(gridModel, blueprint, tgroupNode);
 
 			const success = tableDefinition.applyToDom(
 				gridModel,
@@ -7534,6 +7535,193 @@ describe('CALS tables: XML to XML roundtrip', () => {
 			};
 
 			runTest(jsonIn, jsonOut, options, mutateGridModel);
+		});
+	});
+
+	describe('frame', () => {
+		const noFrame: JsonMl = [
+			'table',
+			[
+				'tgroup',
+				{ cols: '1' },
+				[
+					'colspec',
+					{
+						colname: 'column-0',
+						colnum: '1',
+						colwidth: '1*',
+					},
+				],
+				['tbody', ['row', ['entry', { colname: 'column-0' }]]],
+			],
+		];
+		const unsupportedFrame: JsonMl = [
+			'table',
+			{ frame: 'sides' },
+			[
+				'tgroup',
+				{ cols: '1' },
+				[
+					'colspec',
+					{
+						colname: 'column-0',
+						colnum: '1',
+						colwidth: '1*',
+					},
+				],
+				['tbody', ['row', ['entry', { colname: 'column-0' }]]],
+			],
+		];
+		const allFrame: JsonMl = [
+			'table',
+			{ frame: 'all' },
+			[
+				'tgroup',
+				{ cols: '1' },
+				[
+					'colspec',
+					{
+						colname: 'column-0',
+						colnum: '1',
+						colwidth: '1*',
+					},
+				],
+				['tbody', ['row', ['entry', { colname: 'column-0' }]]],
+			],
+		];
+		const noneFrame: JsonMl = [
+			'table',
+			{ frame: 'none' },
+			[
+				'tgroup',
+				{ cols: '1' },
+				[
+					'colspec',
+					{
+						colname: 'column-0',
+						colnum: '1',
+						colwidth: '1*',
+					},
+				],
+				['tbody', ['row', ['entry', { colname: 'column-0' }]]],
+			],
+		];
+		const options = { table: { localName: 'table' } };
+		it('can handle a 1x1 table with missing frame attribute, changing nothing', () => {
+			runTest(noFrame, noFrame, options);
+		});
+
+		it('can handle a 1x1 table with unsupported frame value, changing nothing', () => {
+			runTest(unsupportedFrame, unsupportedFrame, options);
+		});
+
+		it('can handle a 1x1 table with missing frame attribute, setting a border', () => {
+			// no frame is already equivalent to having a border, so this does nothing
+			runTest(noFrame, noFrame, options, (gridModel) => {
+				gridModel.tableSpecification.borders = true;
+			});
+		});
+
+		it('can handle a 1x1 table with missing frame attribute, removing the border', () => {
+			runTest(noFrame, noneFrame, options, (gridModel) => {
+				gridModel.tableSpecification.borders = false;
+			});
+		});
+
+		it('can handle a 1x1 table with missing frame attribute, unsetting the border and removing the attribute', () => {
+			runTest(
+				noFrame,
+				noFrame,
+				options,
+				(gridModel, blueprint, tgroupNode) => {
+					gridModel.tableSpecification.borders = undefined;
+					blueprint.removeAttribute(
+						blueprint.getParentNode(tgroupNode) as FontoElementNode,
+						'frame'
+					);
+				}
+			);
+		});
+
+		it('can handle a 1x1 table with unsupported frame attribute, setting a border', () => {
+			runTest(unsupportedFrame, allFrame, options, (gridModel) => {
+				gridModel.tableSpecification.borders = true;
+			});
+		});
+
+		it('can handle a 1x1 table with unsupported frame attribute, removing the border', () => {
+			runTest(unsupportedFrame, noneFrame, options, (gridModel) => {
+				gridModel.tableSpecification.borders = false;
+			});
+		});
+
+		it('can handle a 1x1 table with unsupported frame attribute, unsetting the border and removing the attribute', () => {
+			runTest(
+				unsupportedFrame,
+				noFrame,
+				options,
+				(gridModel, blueprint, tgroupNode) => {
+					gridModel.tableSpecification.borders = undefined;
+					blueprint.removeAttribute(
+						blueprint.getParentNode(tgroupNode) as FontoElementNode,
+						'frame'
+					);
+				}
+			);
+		});
+
+		it('can handle a 1x1 table with frame="all", setting a border', () => {
+			runTest(allFrame, allFrame, options, (gridModel) => {
+				gridModel.tableSpecification.borders = true;
+			});
+		});
+
+		it('can handle a 1x1 table with frame="all", removing the border', () => {
+			runTest(allFrame, noneFrame, options, (gridModel) => {
+				gridModel.tableSpecification.borders = false;
+			});
+		});
+
+		it('can handle a 1x1 table with frame="all", unsetting the border and removing the attribute', () => {
+			runTest(
+				allFrame,
+				noFrame,
+				options,
+				(gridModel, blueprint, tgroupNode) => {
+					gridModel.tableSpecification.borders = undefined;
+					blueprint.removeAttribute(
+						blueprint.getParentNode(tgroupNode) as FontoElementNode,
+						'frame'
+					);
+				}
+			);
+		});
+
+		it('can handle a 1x1 table with frame="none", setting a border', () => {
+			runTest(noneFrame, allFrame, options, (gridModel) => {
+				gridModel.tableSpecification.borders = true;
+			});
+		});
+
+		it('can handle a 1x1 table with frame="none", removing the border', () => {
+			runTest(noneFrame, noneFrame, options, (gridModel) => {
+				gridModel.tableSpecification.borders = false;
+			});
+		});
+
+		it('can handle a 1x1 table with frame="none", unsetting the border and removing the attribute', () => {
+			runTest(
+				noneFrame,
+				noFrame,
+				options,
+				(gridModel, blueprint, tgroupNode) => {
+					gridModel.tableSpecification.borders = undefined;
+					blueprint.removeAttribute(
+						blueprint.getParentNode(tgroupNode) as FontoElementNode,
+						'frame'
+					);
+				}
+			);
 		});
 	});
 });

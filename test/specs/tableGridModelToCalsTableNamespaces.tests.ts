@@ -85,7 +85,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		// Create a new one-by-one table
 		runTest(1, 1, true, undefined, [
 			'somenamespace:table',
-			{ 'xmlns:somenamespace': 'somenamespace-uri', frame: 'all' },
+			{ 'xmlns:somenamespace': 'somenamespace-uri' },
 			[
 				'somenamespace:tgroup',
 				{ cols: '1' },
@@ -108,7 +108,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 		// Create a new four-by-four table
 		runTest(3, 4, true, undefined, [
 			'somenamespace:table',
-			{ 'xmlns:somenamespace': 'somenamespace-uri', frame: 'all' },
+			{ 'xmlns:somenamespace': 'somenamespace-uri' },
 			[
 				'somenamespace:tgroup',
 				{ cols: '4' },
@@ -180,7 +180,7 @@ describe('tableGridModelToCalsTable with namespaces', () => {
 			},
 			[
 				'somenamespace:table',
-				{ 'xmlns:somenamespace': 'somenamespace-uri', frame: 'all' },
+				{ 'xmlns:somenamespace': 'somenamespace-uri' },
 				[
 					'somenamespace:tgroup',
 					{ cols: '4' },

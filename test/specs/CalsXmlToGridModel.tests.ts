@@ -258,7 +258,7 @@ describe('CALS tables: XML to GridModel', () => {
 			},
 			{
 				attributes: { frame: 'sides' },
-				hasBorder: false,
+				hasBorder: undefined,
 				message: 'frame is another dita valid value',
 			},
 			{

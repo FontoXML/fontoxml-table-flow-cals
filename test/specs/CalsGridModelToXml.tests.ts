@@ -77,7 +77,6 @@ describe('CALS tables: Grid model to XML', () => {
 		it('can serialize a 1x1 table', () => {
 			runTest(1, 1, false, undefined, [
 				'table',
-				{ frame: 'all' },
 				[
 					'tgroup',
 					{ cols: '1' },
@@ -97,7 +96,6 @@ describe('CALS tables: Grid model to XML', () => {
 		it('can serialize a 4x4 table', () => {
 			runTest(4, 4, false, undefined, [
 				'table',
-				{ frame: 'all' },
 				[
 					'tgroup',
 					{ cols: '4' },
@@ -173,7 +171,6 @@ describe('CALS tables: Grid model to XML', () => {
 		it('can serialize a 4x4 table with 1 header row', () => {
 			runTest(4, 4, true, undefined, [
 				'table',
-				{ frame: 'all' },
 				[
 					'tgroup',
 					{ cols: '4' },
@@ -266,7 +263,6 @@ describe('CALS tables: Grid model to XML', () => {
 				},
 				[
 					'table',
-					{ frame: 'all' },
 					[
 						'tgroup',
 						{ cols: '4' },
@@ -360,7 +356,6 @@ describe('CALS tables: Grid model to XML', () => {
 				},
 				[
 					'table',
-					{ frame: 'all' },
 					[
 						'tgroup',
 						{ cols: '4' },
@@ -454,7 +449,6 @@ describe('CALS tables: Grid model to XML', () => {
 				},
 				[
 					'table',
-					{ frame: 'all' },
 					[
 						'tgroup',
 						{ cols: '4' },
@@ -595,7 +589,7 @@ describe('CALS tables: Grid model to XML', () => {
 				true,
 				[
 					'ns1:matrix',
-					{ 'xmlns:ns1': 'http://example.com/ns1', frame: 'all' },
+					{ 'xmlns:ns1': 'http://example.com/ns1' },
 					[
 						'ns2:tgroup',
 						{ 'xmlns:ns2': 'http://example.com/ns2', cols: '4' },
@@ -881,10 +875,7 @@ describe('CALS tables: Grid model to XML', () => {
 					true,
 					[
 						'nstable:mtable',
-						{
-							'xmlns:nstable': 'http://example.com/nstable',
-							mframe: 'mall',
-						},
+						{ 'xmlns:nstable': 'http://example.com/nstable' },
 						[
 							'nstgroup:mtgroup',
 							{

@@ -1,6 +1,8 @@
 import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import type { IDomFacade } from 'fontoxml-blueprints/src/types';
 import type { FontoElementNode } from 'fontoxml-dom-utils/src/types';
 import evaluateXPathToFirstNode from 'fontoxml-selectors/src/evaluateXPathToFirstNode';
+import evaluateXPathToString from 'fontoxml-selectors/src/evaluateXPathToString';
 import type { XQExpression } from 'fontoxml-selectors/src/types';
 import xq, { ensureXQExpression } from 'fontoxml-selectors/src/xq';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
@@ -30,6 +32,7 @@ import type {
 	TableDataObject,
 	TableDefinitionProperties,
 	TableElementsSharedOptions,
+	TableSpecification,
 } from 'fontoxml-table-flow/src/types';
 
 import type { TableElementsCalsOptions } from '../types';
@@ -40,6 +43,41 @@ function parseWidth(width: string): (string | undefined)[] {
 		return [width, '1', undefined];
 	}
 	return /(?:(\d*(?:\.\d*)?)\*)?\+?(?:(\d+(?:\.\d*)?)px)?/i.exec(width);
+}
+
+function createGetTableBorderStrategy(
+	tableFigureQuery: XQExpression,
+	frameAttributeQuery: XQExpression,
+	allValue: string,
+	noneValue: string
+): (
+	context: { node: FontoElementNode },
+	data: unknown,
+	blueprint: IDomFacade
+) => TableSpecification {
+	return function getTableBorder(context, data, blueprint) {
+		const attributeValue = evaluateXPathToString(
+			xq`./parent::*[${tableFigureQuery}]/${frameAttributeQuery}`,
+			context.node,
+			blueprint
+		);
+
+		switch (attributeValue) {
+			// missing frame attribute is equivalent to frame="all"
+			case '':
+			case allValue:
+				return { borders: true };
+
+			case noneValue:
+				return { borders: false };
+		}
+
+		// Any unsupported frame attribute value should be left alone unless the
+		// user modifies the table's borders. Use `undefined` to indicate that.
+		// The `bordersFallback` property is used below in order to render the
+		// table as having borders in these cases.
+		return { borders: undefined };
+	};
 }
 
 function createTableBorderAttributeStrategy(
@@ -57,14 +95,23 @@ function createTableBorderAttributeStrategy(
 			context.node,
 			blueprint
 		) as FontoElementNode | null;
-		if (tableFigureNode) {
-			blueprint.setAttribute(
-				tableFigureNode,
-				frameLocalName,
-				context.specification.borders
-					? frameValues.all
-					: frameValues.none
-			);
+		if (tableFigureNode && context.specification.borders !== undefined) {
+			// Both frameValues.all and a missing attribute indicate that the
+			// table has borders - no need to update the attribute if it already
+			// has an appropriate value
+			const currentValue =
+				blueprint.getAttribute(tableFigureNode, frameLocalName) ??
+				frameValues.all;
+			const newValue = context.specification.borders
+				? frameValues.all
+				: frameValues.none;
+			if (currentValue !== newValue) {
+				blueprint.setAttribute(
+					tableFigureNode,
+					frameLocalName,
+					newValue
+				);
+			}
 		}
 	};
 }
@@ -430,6 +477,8 @@ function getTableDefinitionProperties(
 		tablePartSelectors,
 
 		supportsBorders: true,
+		// Render missing or unknown borders as the table having borders
+		bordersFallback: true,
 		supportsCellBorder: true,
 		supportsCellAlignment: true,
 		supportsRowSpanningCellsAtBottom: false,
@@ -639,9 +688,11 @@ function getTableDefinitionProperties(
 
 		// Specifications
 		getTableSpecificationStrategies: [
-			createGetValueAsBooleanStrategy(
-				'borders',
-				xq`./parent::*[${tableFigure}]/${frameAttributeQuery} = ${options.frame.allValue} or not(./parent::*[${tableFigure}]/${frameAttributeQuery})`
+			createGetTableBorderStrategy(
+				tableFigure,
+				frameAttributeQuery,
+				options.frame.allValue,
+				options.frame.noneValue
 			),
 		],
 
