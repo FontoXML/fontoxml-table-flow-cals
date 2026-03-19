@@ -296,7 +296,7 @@ export default function configureAsCalsTableElements(
 					? {
 							defaultTextContainer:
 								options.entry.defaultTextContainer,
-					  }
+						}
 					: {},
 		},
 		tableDefinition

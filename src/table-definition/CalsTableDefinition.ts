@@ -308,7 +308,7 @@ function applyDefaults(
 
 			if (defaultOption === FALLBACK_TO_TGROUP) {
 				// Fall back to the TGROUP namespace uri
-				if (rootOptions.tgroup && rootOptions.tgroup.namespaceURI) {
+				if (rootOptions.tgroup?.namespaceURI) {
 					newOptions[defaultOptionKey] =
 						rootOptions.tgroup.namespaceURI;
 					continue;
@@ -507,8 +507,8 @@ function getTableDefinitionProperties(
 			return proportion !== 0
 				? `${proportion}*`
 				: fixed !== 0
-				? `${fixed}px`
-				: '';
+					? `${fixed}px`
+					: '';
 		},
 		divideByTwoStrategy(width: string) {
 			const parsedWidth = parseWidth(width);
@@ -519,8 +519,8 @@ function getTableDefinitionProperties(
 			return proportion
 				? `${proportion / 2}*`
 				: fixed
-				? `${fixed / 2}px`
-				: '';
+					? `${fixed / 2}px`
+					: '';
 		},
 
 		widthsToFractionsStrategy(widths: string[]) {

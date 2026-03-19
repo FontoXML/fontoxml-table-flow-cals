@@ -99,7 +99,7 @@ describe('CALS tables: XML to XML roundtrip', () => {
 						if (Array.isArray(attrs)) {
 							remove(attrs);
 						} else {
-							delete attrs['colname'];
+							delete attrs.colname;
 							if (Object.keys(attrs).length === 0) {
 								(jsonEl as unknown[]).splice(1, 1);
 							}
